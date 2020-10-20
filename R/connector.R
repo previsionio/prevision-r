@@ -7,15 +7,29 @@ getConnectors <- function() {
   #'
   #' @export
 
-  resp <- previsionioRequest('/connectors', GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  page = 1
+  connectors = c()
 
-  if(resp$status_code == 200) {
-    respParsed[["items"]]
+  # Looping over page to get all informations
+  while(T) {
+    resp <- previsionioRequest(paste0('/connectors?page=', page), GET)
+    respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+    if(resp$status_code == 200) {
+      # Stop when no new entry appears
+      if(length(respParsed[["items"]])==0) {
+        break
+      }
+
+      # Store items and continue
+      connectors = c(connectors, respParsed[["items"]])
+      page = page + 1
+    }
+    else {
+      stop("Can't retrieve connectors list - ", resp$status_code, ":", respParsed)
+    }
   }
-  else {
-    stop("Can't retrieve connectors list - ", resp$status_code, ":", respParsed)
-  }
+  connectors
 }
 
 getConnectorInfos <- function(connectorId) {
