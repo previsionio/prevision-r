@@ -16,7 +16,8 @@ startUsecase(
   profile = NULL,
   metric = NULL,
   foldColumn = NULL,
-  models = c("LR"),
+  normalModels = NULL,
+  liteModels = c("XGB"),
   simpleModels = NULL,
   withBlend = NULL,
   weightColumn = NULL,
@@ -62,7 +63,9 @@ startUsecase(
 
 \item{foldColumn}{name of the fold column}
 
-\item{models}{list of (normal) models to select}
+\item{normalModels}{list of (normal) models to select with full FE & hyperparameters search}
+
+\item{liteModels}{list of (lite) models to select with lite FE & default hyperparameters}
 
 \item{simpleModels}{list of simple models to select}
 
