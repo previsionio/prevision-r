@@ -518,7 +518,7 @@ getSharedUsecaseUsers <- function(usecaseId) {
   }
 }
 
-startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn = NULL, holdoutDatasetId = NULL, idColumn = NULL, dropList = NULL, profile = NULL, metric = NULL, foldColumn = NULL, models = c('LR'), simpleModels = NULL, withBlend = NULL, weightColumn = NULL, featuresEngineeringSelectedList = NULL, featuresSelectionCount = NULL, featuresSelectionTime = NULL, datasetFolderId = NULL, filenameColumn = NULL, topColumn = NULL, bottomColumn = NULL, leftColumn = NULL, rightColumn = NULL, timeColumn = NULL, startDW = NULL, endDW = NULL, startFW = NULL, endFW = NULL, groupList = NULL, aprioriList = NULL, experimentalTimeseries = FALSE) {
+startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn = NULL, holdoutDatasetId = NULL, idColumn = NULL, dropList = NULL, profile = NULL, metric = NULL, foldColumn = NULL, normalModels = NULL, liteModels = c('XGB'), simpleModels = NULL, withBlend = NULL, weightColumn = NULL, featuresEngineeringSelectedList = NULL, featuresSelectionCount = NULL, featuresSelectionTime = NULL, datasetFolderId = NULL, filenameColumn = NULL, topColumn = NULL, bottomColumn = NULL, leftColumn = NULL, rightColumn = NULL, timeColumn = NULL, startDW = NULL, endDW = NULL, startFW = NULL, endFW = NULL, groupList = NULL, aprioriList = NULL, experimentalTimeseries = FALSE) {
   #' Start a new usecase on the platform.
   #'
   #' @param name name of the usecase.
@@ -532,7 +532,8 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
   #' @param profile chosen profil among "quick", "normal", "advanced"
   #' @param metric name of the metric to optimise
   #' @param foldColumn name of the fold column
-  #' @param models list of (normal) models to select
+  #' @param normalModels list of (normal) models to select with full FE & hyperparameters search
+  #' @param liteModels list of (lite) models to select with lite FE & default hyperparameters
   #' @param simpleModels list of simple models to select
   #' @param withBlend do we allow to include blend in the modelisation
   #' @param weightColumn name of the weight columns
@@ -566,8 +567,8 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
   }
 
   # CHECKING trainingType
-  if(!trainingType %in% c("regression", "classification", "multiclassification", "clustering", "object-detection", "legacy-regression")) {
-    stop("trainingType must be either \"regression\", \"classification\", \"multiclassification\", \"clustering\", \"object-detection\", \"legacy-regression\"")
+  if(!trainingType %in% c("regression", "classification", "multiclassification", "object-detection")) {
+    stop("trainingType must be either \"regression\", \"classification\", \"multiclassification\" or \"object-detection\"")
   }
 
   # CHECKING datasetId EXISTS
@@ -575,72 +576,67 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
     stop("datasetId doesn't exist")
   }
 
-  # CHECKING at least 1 model or 1 simple model is given
-  # + CHECKING models / simple models are correct
-  hasModel <- FALSE
-  if (!is.null(models)) {
-    if (length(models) > 0) {
-      hasModel <- TRUE
-    }
-    if(!all(models %in% c("LR", "RF", "ET", "XGB", "LGB", "NN"))) {
-      stop("models must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\" or \"NN\"")
-    }
+  # CHECKING CONDITIONS FOR normalModels, liteModels and simpleModels
+  if (length(normalModels) + length(liteModels) + length(simpleModels) < 1) {
+    stop("must give at least one model")
   }
-  if (!is.null(simpleModels)) {
-    if (length(simpleModels) > 0) {
-      hasModel <- TRUE
-    }
-    if(!all(simpleModels %in% c("DT", "LR"))) {
-      stop("simple models must be either \"DT\" or \"LR\"")
-    }
+  if(!all(normalModels %in% c("LR", "RF", "ET", "XGB", "LGB", "NN"))) {
+    stop("normalModels must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\" or \"NN\"")
   }
-  if(!hasModel) {
-    stop("must give at least 1 model or 1 simple model")
+  if(!all(liteModels %in% c("LR", "RF", "ET", "XGB", "LGB", "NN", "NBC"))) {
+    stop("liteModels must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\", \"NN\" or \"NBC\"")
+  }
+  if(!all(simpleModels %in% c("DT", "LR"))) {
+    stop("simple models must be either \"DT\" or \"LR\"")
+  }
+  if(!trainingType %in% c("classification", "multiclassification") & "NBC" %in% liteModels) {
+    stop("NBC liteModel is only available for classification or multiclassification")
   }
 
-  # GET PARAMS AND REMOVE NULL ONES
-  ucParams = list(name = name,
-                  datasetId = datasetId,
-                  targetColumn = targetColumn,
-                  holdoutDatasetId = holdoutDatasetId,
-                  idColumn = idColumn,
-                  dropList = dropList,
-                  profile = profile,
-                  metric = metric,
-                  foldColumn = foldColumn,
-                  models = models,
-                  simpleModels = simpleModels,
-                  withBlend = withBlend,
-                  weightColumn = weightColumn,
-                  featuresEngineeringSelectedList = featuresEngineeringSelectedList,
-                  featuresSelectionCount = featuresSelectionCount,
-                  featuresSelectionTime = featuresSelectionTime,
-                  datasetFolderId = datasetFolderId,
-                  filenameColumn = filenameColumn,
-                  topColumn = topColumn,
-                  bottomColumn = bottomColumn,
-                  leftColumn = leftColumn,
-                  rightColumn = rightColumn,
-                  timeColumn = timeColumn,
-                  startDW = startDW,
-                  endDW = endDW,
-                  startFW = startFW,
-                  endFW = endFW,
-                  groupList = groupList,
-                  aprioriList = aprioriList,
-                  experimentalTimeseries = experimentalTimeseries)
+# GET PARAMS AND REMOVE NULL ONES
+ucParams = list(name = name,
+                datasetId = datasetId,
+                targetColumn = targetColumn,
+                holdoutDatasetId = holdoutDatasetId,
+                idColumn = idColumn,
+                dropList = dropList,
+                profile = profile,
+                metric = metric,
+                foldColumn = foldColumn,
+                normalModels = normalModels,
+                liteModels = liteModels,
+                simpleModels = simpleModels,
+                withBlend = withBlend,
+                weightColumn = weightColumn,
+                featuresEngineeringSelectedList = featuresEngineeringSelectedList,
+                featuresSelectionCount = featuresSelectionCount,
+                featuresSelectionTime = featuresSelectionTime,
+                datasetFolderId = datasetFolderId,
+                filenameColumn = filenameColumn,
+                topColumn = topColumn,
+                bottomColumn = bottomColumn,
+                leftColumn = leftColumn,
+                rightColumn = rightColumn,
+                timeColumn = timeColumn,
+                startDW = startDW,
+                endDW = endDW,
+                startFW = startFW,
+                endFW = endFW,
+                groupList = groupList,
+                aprioriList = aprioriList,
+                experimentalTimeseries = experimentalTimeseries)
 
-  ucParams <- ucParams[!sapply(ucParams, is.null)]
+ucParams <- ucParams[!sapply(ucParams, is.null)]
 
-  resp <- previsionioRequest(paste0('/usecases/', dataType, '/', trainingType), POST, ucParams)
-  respParsed <- content(resp, 'parsed')
+resp <- previsionioRequest(paste0('/usecases/', dataType, '/', trainingType), POST, ucParams)
+respParsed <- content(resp, 'parsed')
 
-  if(resp$status_code == 202) {
-    message("Usecase started - ", resp$status_code, ":", respParsed$message)
-  } else {
-    stop("Usecase starting failed - ", resp$status_code, ":", respParsed$message)
-  }
-  getUsecaseInfos(respParsed$`_id`)
+if(resp$status_code == 202) {
+  message("Usecase started - ", resp$status_code, ":", respParsed$message)
+} else {
+  stop("Usecase starting failed - ", resp$status_code, ":", respParsed$message)
+}
+getUsecaseInfos(respParsed$`_id`)
 }
 
 updateUsecaseDescription <- function(usecaseId, description = "", versionNumber = 1) {
