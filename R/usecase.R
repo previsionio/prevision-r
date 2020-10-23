@@ -537,7 +537,7 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
   #' @param simpleModels list of simple models to select
   #' @param withBlend do we allow to include blend in the modelisation
   #' @param weightColumn name of the weight columns
-  #' @param featuresEngineeringSelectedList list of feature engineering to select among "Counter", "Date", "freq", "text", "tenc", "poly", "pca", "kmean"
+  #' @param featuresEngineeringSelectedList list of feature engineering to select among "Counter", "Date", "freq", "text_tfidf", "text_word2vec", "text_embedding", "tenc", "poly", "pca", "kmean"
   #' @param featuresSelectionCount number of features to keep after the feature selection process
   #' @param featuresSelectionTime time budget in minutes of the feature selection process
   #' @param datasetFolderId id of the dataset fold (images)
@@ -592,6 +592,7 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
   if(!trainingType %in% c("classification", "multiclassification") & "NBC" %in% liteModels) {
     stop("NBC liteModel is only available for classification or multiclassification")
   }
+
 
 # GET PARAMS AND REMOVE NULL ONES
 ucParams = list(name = name,

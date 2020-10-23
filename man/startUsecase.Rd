@@ -73,7 +73,7 @@ startUsecase(
 
 \item{weightColumn}{name of the weight columns}
 
-\item{featuresEngineeringSelectedList}{list of feature engineering to select among "Counter", "Date", "freq", "text", "tenc", "poly", "pca", "kmean"}
+\item{featuresEngineeringSelectedList}{list of feature engineering to select among "Counter", "Date", "freq", "text_tfidf", "text_word2vec", "text_embedding", "tenc", "poly", "pca", "kmean"}
 
 \item{featuresSelectionCount}{number of features to keep after the feature selection process}
 
