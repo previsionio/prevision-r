@@ -10,7 +10,7 @@ getDatasets <- function() {
   page = 1
   datasets = c()
 
-  # Looping over page to get all informations
+  # Looping over page to get all information
   while(T) {
     resp <- previsionioRequest(paste0('/datasets/files?page=', page), GET)
     respParsed <- content(resp, 'parsed', encoding = "UTF-8")
