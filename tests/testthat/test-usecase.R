@@ -9,13 +9,13 @@ nb_usecases = length(getUsecases())
 ### CREATE SOME USE CASES HERE ###
 ##################################
 test_that("startUsecase", {
-  expect_is(startUsecase("USECASE_REGRESSION_TESTU", "tabular", "regression", createDatasetFromDataframe("DS_REGRESSION_TESTU" ,tabularDataset("regression"))$`_id`, "TARGET", withBlend = F), "list", "getUsecases() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
-  expect_is(startUsecase("USECASE_CLASSIFICATION_TESTU", "tabular", "classification", createDatasetFromDataframe("DS_CLASSIFCICATION_TESTU", tabularDataset("classification"))$`_id`, "TARGET"), "list", "getUsecases() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
+  expect_is(startUsecase("USECASE_REGRESSION_TESTU", "tabular", "regression", createDatasetFromDataframe("DS_REGRESSION_TESTU", tabularDataset("regression"))$`_id`, "TARGET", normalModels = c("LR", "RF"), liteModels = c("LR"), simpleModels = c("LR", "DT"), withBlend = F), "list", "getUsecases() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+  expect_is(startUsecase("USECASE_CLASSIFICATION_TESTU", "tabular", "classification", createDatasetFromDataframe("DS_CLASSIFCICATION_TESTU", tabularDataset("classification"))$`_id`, "TARGET", normalModels = c("LGB", "XGB")), "list", "getUsecases() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
   expect_is(startUsecase("USECASE_MULTICLASSIFICATION_TESTU", "tabular", "multiclassification", createDatasetFromDataframe("USECASE_MULTICLASSIFICATION_TESTU", tabularDataset("multiclassification"))$`_id`, "TARGET"), "list", "getUsecases() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
   expect_is(startUsecase("USECASE_TIMESERIES_TESTU", "timeseries", "regression", createDatasetFromDataframe("USECASE_TIMESERIES_TESTU", timeseriesDataset())$`_id`, "TARGET", timeColumn = "TS", startDW = -2, endDW = -1, startFW = 1, endFW = 2), "list", "getUsecases() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
 })
 
-Sys.sleep(180)
+Sys.sleep(120)
 
 test_that("getUsecases", {
   expect_is(getUsecases(), "list", "getUsecases() doesn't retrieve a list")
@@ -67,7 +67,7 @@ test_that("startPrediction", {
   expect_is(startPrediction(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getDatasets()[[1]]$`_id`), "list", "startPrediction() doesn't retrieve a list")
 })
 
-Sys.sleep(60)
+Sys.sleep(30)
 
 test_that("getUsecasePredictions", {
   expect_is(getUsecasePredictions(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getUsecasePredictions() doesn't retrieve a list")

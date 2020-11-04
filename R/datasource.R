@@ -7,15 +7,29 @@ getDatasources <- function() {
   #'
   #' @export
 
-  resp <- previsionioRequest('/datasources', GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  page = 1
+  dataSources = c()
 
-  if(resp$status_code == 200) {
-    respParsed[["items"]]
+  # Looping over page to get all informations
+  while(T) {
+    resp <- previsionioRequest(paste0('/datasources?page=', page), GET)
+    respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+    if(resp$status_code == 200) {
+      # Stop when no new entry appears
+      if(length(respParsed[["items"]])==0) {
+        break
+      }
+
+      # Store items and continue
+      dataSources = c(dataSources, respParsed[["items"]])
+      page = page + 1
+    }
+    else {
+      stop("Can't retrieve datasources list - ", resp$status_code, ":", respParsed)
+    }
   }
-  else {
-    stop("Can't retrieve datasources list - ", resp$status_code, ":", respParsed)
-  }
+  dataSources
 }
 
 getDatasourceInfos <- function(datasourceId) {
