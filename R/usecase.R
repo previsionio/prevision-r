@@ -371,12 +371,14 @@ getPredictionInfos <- function(usecaseId, predictionId, versionNumber = 1) {
   }
 }
 
-getPrediction <- function(usecaseId, predictionId, versionNumber = 1) {
-  #' Get a specific prediction from a specific usecase / version number
+getPrediction <- function(usecaseId, predictionId, versionNumber = 1, timeOut = 3600, waitTime = 10) {
+  #' Get a specific prediction from a specific usecase / version number. Wait up until timeOut is reached and wait waitTime between each retry.
   #'
   #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param predictionId id of the prediction to be retrieved, can be obtained with usecasePredictions()
+  #' @param predictionId id of the prediction to be retrieved, can be obtained with usecasePredictions().
   #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param timeOut maximum number of seconds to wait for the prediction. 3 600 by default.
+  #' @param waitTime number of seconds to wait between each retry. 10 by default.
   #'
   #' @return a data.frame with the predictions
   #'
@@ -385,17 +387,27 @@ getPrediction <- function(usecaseId, predictionId, versionNumber = 1) {
   #'
   #' @export
 
-  temp <- tempfile()
-  resp <- previsionDownload(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/predictions/', predictionId, '/download'), temp)
+  attempt = 0
+  while(attempt < timeOut/waitTime) {
+    temp <- tempfile()
+    resp <- previsionDownload(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/predictions/', predictionId, '/download'), temp)
 
-  if(resp$status_code == 200) {
-    data <- fread(unzip(temp))
-    file.remove(unzip(temp))
-    file.remove(temp)
-    data
-  } else {
-    stop("Can't retrieve prediction prediction ", predictionId, " for usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    # IF STATUS 200 RETURN PREDICTION
+    if(resp$status_code == 200) {
+      data <- fread(unzip(temp))
+      file.remove(unzip(temp))
+      file.remove(temp)
+      return(data)
+    }
+
+    # IF STATUS 404 SLEEP AND RETRY
+    if(resp$status_code == 404) {
+      message("Prediction is beeing computed...")
+      Sys.sleep(waitTime)
+      attempt = attempt + 1
+    }
   }
+  stop("Can't retrieve prediction prediction ", predictionId, " for usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
 }
 
 deletePrediction <- function(usecaseId, predictionId, versionNumber = 1) {
@@ -594,50 +606,50 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
   }
 
 
-# GET PARAMS AND REMOVE NULL ONES
-ucParams = list(name = name,
-                datasetId = datasetId,
-                targetColumn = targetColumn,
-                holdoutDatasetId = holdoutDatasetId,
-                idColumn = idColumn,
-                dropList = dropList,
-                profile = profile,
-                metric = metric,
-                foldColumn = foldColumn,
-                normalModels = normalModels,
-                liteModels = liteModels,
-                simpleModels = simpleModels,
-                withBlend = withBlend,
-                weightColumn = weightColumn,
-                featuresEngineeringSelectedList = featuresEngineeringSelectedList,
-                featuresSelectionCount = featuresSelectionCount,
-                featuresSelectionTime = featuresSelectionTime,
-                datasetFolderId = datasetFolderId,
-                filenameColumn = filenameColumn,
-                topColumn = topColumn,
-                bottomColumn = bottomColumn,
-                leftColumn = leftColumn,
-                rightColumn = rightColumn,
-                timeColumn = timeColumn,
-                startDW = startDW,
-                endDW = endDW,
-                startFW = startFW,
-                endFW = endFW,
-                groupList = groupList,
-                aprioriList = aprioriList,
-                experimentalTimeseries = experimentalTimeseries)
+  # GET PARAMS AND REMOVE NULL ONES
+  ucParams = list(name = name,
+                  datasetId = datasetId,
+                  targetColumn = targetColumn,
+                  holdoutDatasetId = holdoutDatasetId,
+                  idColumn = idColumn,
+                  dropList = dropList,
+                  profile = profile,
+                  metric = metric,
+                  foldColumn = foldColumn,
+                  normalModels = normalModels,
+                  liteModels = liteModels,
+                  simpleModels = simpleModels,
+                  withBlend = withBlend,
+                  weightColumn = weightColumn,
+                  featuresEngineeringSelectedList = featuresEngineeringSelectedList,
+                  featuresSelectionCount = featuresSelectionCount,
+                  featuresSelectionTime = featuresSelectionTime,
+                  datasetFolderId = datasetFolderId,
+                  filenameColumn = filenameColumn,
+                  topColumn = topColumn,
+                  bottomColumn = bottomColumn,
+                  leftColumn = leftColumn,
+                  rightColumn = rightColumn,
+                  timeColumn = timeColumn,
+                  startDW = startDW,
+                  endDW = endDW,
+                  startFW = startFW,
+                  endFW = endFW,
+                  groupList = groupList,
+                  aprioriList = aprioriList,
+                  experimentalTimeseries = experimentalTimeseries)
 
-ucParams <- ucParams[!sapply(ucParams, is.null)]
+  ucParams <- ucParams[!sapply(ucParams, is.null)]
 
-resp <- previsionioRequest(paste0('/usecases/', dataType, '/', trainingType), POST, ucParams)
-respParsed <- content(resp, 'parsed')
+  resp <- previsionioRequest(paste0('/usecases/', dataType, '/', trainingType), POST, ucParams)
+  respParsed <- content(resp, 'parsed')
 
-if(resp$status_code == 202) {
-  message("Usecase started - ", resp$status_code, ":", respParsed$message)
-} else {
-  stop("Usecase starting failed - ", resp$status_code, ":", respParsed$message)
-}
-getUsecaseInfos(respParsed$`_id`)
+  if(resp$status_code == 202) {
+    message("Usecase started - ", resp$status_code, ":", respParsed$message)
+  } else {
+    stop("Usecase starting failed - ", resp$status_code, ":", respParsed$message)
+  }
+  getUsecaseInfos(respParsed$`_id`)
 }
 
 updateUsecaseDescription <- function(usecaseId, description = "", versionNumber = 1) {
