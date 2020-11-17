@@ -530,7 +530,7 @@ getSharedUsecaseUsers <- function(usecaseId) {
   }
 }
 
-startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn = NULL, holdoutDatasetId = NULL, idColumn = NULL, dropList = NULL, profile = NULL, metric = NULL, foldColumn = NULL, normalModels = NULL, liteModels = c('XGB'), simpleModels = NULL, withBlend = NULL, weightColumn = NULL, featuresEngineeringSelectedList = NULL, featuresSelectionCount = NULL, featuresSelectionTime = NULL, datasetFolderId = NULL, filenameColumn = NULL, topColumn = NULL, bottomColumn = NULL, leftColumn = NULL, rightColumn = NULL, timeColumn = NULL, startDW = NULL, endDW = NULL, startFW = NULL, endFW = NULL, groupList = NULL, aprioriList = NULL, experimentalTimeseries = FALSE) {
+startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn = NULL, holdoutDatasetId = NULL, idColumn = NULL, dropList = NULL, profile = NULL, metric = NULL, foldColumn = NULL, normalModels = NULL, liteModels = c('XGB'), simpleModels = NULL, withBlend = NULL, weightColumn = NULL, featuresEngineeringSelectedList = NULL, featuresSelectionCount = NULL, featuresSelectionTime = NULL, datasetFolderId = NULL, filenameColumn = NULL, topColumn = NULL, bottomColumn = NULL, leftColumn = NULL, rightColumn = NULL, timeColumn = NULL, startDW = NULL, endDW = NULL, startFW = NULL, endFW = NULL, groupList = NULL, aprioriList = NULL) {
   #' Start a new usecase on the platform.
   #'
   #' @param name name of the usecase.
@@ -565,7 +565,6 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
   #' @param endFW value of the end of forecast window (time series), should be a strict positive integer greater than startFW
   #' @param groupList list of name of feature that describes groups (time series)
   #' @param aprioriList list of name of feature that are a priori (time series)
-  #' @param experimentalTimeseries boolean that indicated if we use experimental time series (not recommanded)
   #'
   #' @import httr
   #'
@@ -636,8 +635,7 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
                   startFW = startFW,
                   endFW = endFW,
                   groupList = groupList,
-                  aprioriList = aprioriList,
-                  experimentalTimeseries = experimentalTimeseries)
+                  aprioriList = aprioriList)
 
   ucParams <- ucParams[!sapply(ucParams, is.null)]
 
