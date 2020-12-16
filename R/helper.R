@@ -147,7 +147,7 @@ plotClassifAnalysis <- function(actual, predicted, top) {
 }
 
 optimalPrediction <- function(usecaseId, modelId, df, actionable, nbSample, maximize, zip = F) {
-  #' Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested
+  #' [BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested
   #'
   #' @param usecaseId the id of the usecase to be predicted on
   #' @param modelId the id of the model to be predicted on
@@ -221,4 +221,60 @@ optimalPrediction <- function(usecaseId, modelId, df, actionable, nbSample, maxi
   }
 
   return(res)
+}
+
+driftAnalysis <- function(dataset_1, dataset_2, p_value = 0.05, features = NULL) {
+  #' [BETA] Return a data.frame that contains features, a boolean indicating if the feature may have a different distribution between the submitted datasets (if p-value < threshold), their exact p-value and the test used to compute it.
+  #'
+  #' @param dataset_1 the first data set
+  #' @param dataset_2 the second data set
+  #' @param p_value a p-value that will be the decision criteria for deciding if a feature is suspicious 5% by default
+  #' @param features a vector of features names that should be tested. If NULL, only the intersection of the names() will be kept
+  #'
+  #' @return a vector of suspicious features
+  #'
+  #' @import data.table
+  #'
+  #' @export
+
+  if(is.null(features)) {
+    features = intersect(names(dataset_1), names(dataset_2))
+  }
+
+  # INITIALISATION OF RESULTS DATAFRAME
+  suspicious = data.frame(matrix(ncol = 4, nrow = length(features)))
+  names(suspicious) = c("feature", "is_suspicious", "p_value", "test")
+
+  # INITIALISATION OF PROGRESS BAR
+  pb = txtProgressBar(1, 100, style = 3)
+
+  # TESTING FEATURES
+  for(f in features) {
+    ## UPDATE PROGRESS BAR
+    setTxtProgressBar(pb, 100*match(f, features)/length(features))
+
+    ## KS TEST FOR NUMERICAL FEATURE WITH HIGH CARDINALITY [> 20 UNIQUE]
+    if(is.numeric(dataset_1[[f]]) && length(unique(dataset_1[[f]])) > 20) {
+      res = suppressWarnings(ks.test(dataset_1[[f]], dataset_2[[f]])) # REMOVE WARNINGS BECAUSE OF EVENTUAL TIES
+      suspicious[match(f, features),] = c(f, ifelse(res$p.value < p_value, 1, 0), res$p.value, "ks.test")
+    }
+
+    ## KHI SQUARED FOR CATEGORICAL FEATURES OR NUMERIC FEATURES WITH LOW CARDINALITY [<= 20 UNIQUE]
+    else {
+      ### KEEP ONLY MATCHING VALUES TO AVOID REPLICA THAT WILL LEAD TO INCORRECT COMPUTATION
+      val = intersect(dataset_1[[f]], dataset_2[[f]])
+
+      ### COMPUTE CONTAGENCY TABLE AND MAKE TEST ON IT ONLY IF AT LEAST 2 MODALITIES
+      if(length(val) > 1) {
+        mat = cbind(table(dataset_1[[f]][dataset_1[[f]] %in% val]), table(dataset_2[[f]][dataset_2[[f]] %in% val]))
+        res = chisq.test(mat, simulate.p.value = T, B = 5000)
+        suspicious[match(f, features),] = c(f, ifelse(res$p.value < p_value, 1, 0), res$p.value, "chisq.test")
+      }
+    }
+  }
+
+  # RETURN ORDERED DATA.FRAME BY p_value WITH GOOD TYPE
+  suspicious$is_suspicious = as.numeric(suspicious$is_suspicious)
+  suspicious$p_value = as.numeric(suspicious$p_value)
+  return(suspicious[order(suspicious$p_value),])
 }

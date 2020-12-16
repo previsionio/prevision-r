@@ -1,7 +1,7 @@
 Package: previsionio
 Type: Package
 Title: Set of functions to use the Prevision.io API
-Version: 10.15.0
+Version: 10.16.0
 Author: Prevision.io
 Maintainer: <support@prevision.io>
 Description: Set of functions to use the Prevision.io API directly from R environnement.

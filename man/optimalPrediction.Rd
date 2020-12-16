@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{optimalPrediction}
 \alias{optimalPrediction}
-\title{Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested}
+\title{[BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested}
 \usage{
 optimalPrediction(
   usecaseId,
@@ -33,5 +33,5 @@ optimalPrediction(
 row data.frame with the optimal vector and the prediction associated with for each rows in the original data frame
 }
 \description{
-Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested
+[BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested
 }

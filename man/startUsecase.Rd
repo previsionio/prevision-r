@@ -36,8 +36,7 @@ startUsecase(
   startFW = NULL,
   endFW = NULL,
   groupList = NULL,
-  aprioriList = NULL,
-  experimentalTimeseries = FALSE
+  aprioriList = NULL
 )
 }
 \arguments{
@@ -104,8 +103,6 @@ startUsecase(
 \item{groupList}{list of name of feature that describes groups (time series)}
 
 \item{aprioriList}{list of name of feature that are a priori (time series)}
-
-\item{experimentalTimeseries}{boolean that indicated if we use experimental time series (not recommanded)}
 }
 \value{
 usecase infos
