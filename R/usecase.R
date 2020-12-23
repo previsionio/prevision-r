@@ -814,6 +814,31 @@ getUsecaseEvents <- function(usecaseId = NULL, versionNumber = 1) {
   }
 }
 
-### HELPER
-# ADD A GET BEST MODEL ID
-# ADD A GET BEST SINGLE MODEL ID
+getBestModelId <- function(usecaseId, versionNumber = 1, includeBlend = TRUE) {
+  #' Get the modelId that provide the best predictive performance given usecaseId and versionNumber. If includeBlend is false, it will return the modelId from the best "non blended" model.
+  #'
+  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
+  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param includeBlend boolean, indicating if you want to retrieve the best model among blended models too.
+  #'
+  #' @return modelId
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  # GET MODELS FROM A USE CASE
+  models = getUsecaseModels(usecaseId, versionNumber = 1)
+
+  # LOOP OVER THEM AND RETRIEVE THE ONE MATCHING SELECTED CRITERIA
+  for(model in models) {
+    if(includeBlend && !is.null(model$tags$best)) {
+      return(model$`_id`)
+    }
+    if(!includeBlend && !is.null(model$tags$recommended)) {
+      return(model$`_id`)
+    }
+  }
+
+  stop("No model found")
+}

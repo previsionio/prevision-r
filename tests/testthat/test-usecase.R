@@ -117,6 +117,10 @@ test_that("getUsecaseCV", {
   expect_is(getUsecaseCV(getUsecaseIdFromName("USECASE_TIMESERIES_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_TIMESERIES_TESTU"))[[1]]$`_id`), "data.frame", "getUsecaseCV() doesn't retrieve a data.frame for USECASE_TIMESERIES_TESTU")
 })
 
+test_that("getBestModelId", {
+  expect_is(getBestModelId(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), 1, TRUE), "character", "getBestModelId() doesn't retrieve a character")
+})
+
 # test_that("getUsecaseEvents", {
 #   expect_is(getUsecaseEvents(), "list", "getUsecaseEvents() doesn't retrieve a list for all use cases")
 #   expect_is(getUsecaseEvents(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getUsecaseEvents() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
