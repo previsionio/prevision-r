@@ -4,7 +4,7 @@
 \alias{getModelFeatureImportance}
 \title{Get feature importance corresponding to usecaseId and modelId and its version number}
 \usage{
-getModelFeatureImportance(usecaseId, modelId, versionNumber = 1)
+getModelFeatureImportance(usecaseId, modelId, versionNumber = 1, mode = "raw")
 }
 \arguments{
 \item{usecaseId}{id of the usecase, can be obtained with getUsecases().}
@@ -12,6 +12,8 @@ getModelFeatureImportance(usecaseId, modelId, versionNumber = 1)
 \item{modelId}{id of the model, can be obtained with usecaseModels(usecaseId).}
 
 \item{versionNumber}{number of the version of the usecase. 1 by default.}
+
+\item{mode}{character indicating the type of feature importance among "raw" (default) or "engineered"}
 }
 \value{
 dataset of the model's feature importance
