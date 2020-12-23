@@ -60,7 +60,8 @@ test_that("getModelHyperparameters", {
 })
 
 test_that("getModelFeatureImportance", {
-  expect_is(getModelFeatureImportance(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "data.frame", "getModelHyperparameters() doesn't retrieve a data.frame")
+  expect_is(getModelFeatureImportance(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`, "raw"), "data.frame", "getModelFeatureImportance() doesn't retrieve a data.frame")
+  expect_is(getModelFeatureImportance(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`, "engineering"), "data.frame", "getModelFeatureImportance() doesn't retrieve a data.frame")
 })
 
 test_that("startPrediction", {

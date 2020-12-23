@@ -239,12 +239,13 @@ getModelHyperparameters <- function(usecaseId, modelId, versionNumber = 1) {
   }
 }
 
-getModelFeatureImportance <- function(usecaseId, modelId, versionNumber = 1) {
+getModelFeatureImportance <- function(usecaseId, modelId, versionNumber = 1, mode = "raw") {
   #' Get feature importance corresponding to usecaseId and modelId and its version number
   #'
   #' @param usecaseId id of the usecase, can be obtained with getUsecases().
   #' @param modelId id of the model, can be obtained with usecaseModels(usecaseId).
   #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param mode character indicating the type of feature importance among "raw" (default) or "engineered"
   #'
   #' @return dataset of the model's feature importance
   #'
@@ -253,8 +254,19 @@ getModelFeatureImportance <- function(usecaseId, modelId, versionNumber = 1) {
   #'
   #' @export
 
+  if(!mode %in% c("raw", "engineered")) {
+    stop(mode, "should be equal to \"raw\" or \"engineered\"")
+  }
+
   temp <- tempfile()
-  resp <- previsionDownload(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/models/', modelId, '/download/features-importance'), temp)
+
+  if(mode == "raw") {
+    resp <- previsionDownload(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/models/', modelId, '/download/features-importance'), temp)
+  }
+
+  if(mode == "engineered") {
+    resp <- previsionDownload(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/models/', modelId, '/download/features-engineering-importance'), temp)
+  }
 
   if(resp$status_code == 200) {
     data <- fread(unzip(temp))
@@ -262,7 +274,7 @@ getModelFeatureImportance <- function(usecaseId, modelId, versionNumber = 1) {
     data
   }
   else {
-    stop("Can't retrieve feature importance of model ", modelId, " from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve feature importance of model ", modelId, " from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code)
   }
 }
 
