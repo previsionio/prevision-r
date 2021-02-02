@@ -4,7 +4,7 @@
 \alias{plotClassifAnalysis}
 \title{Plot RECALL, PRECISION & F1 SCORE versus top n predictions for a binary classification use case}
 \usage{
-plotClassifAnalysis(actual, predicted, top)
+plotClassifAnalysis(actual, predicted, top, compute_every_n = 1)
 }
 \arguments{
 \item{actual}{true value (0 or 1 only)}
@@ -12,6 +12,8 @@ plotClassifAnalysis(actual, predicted, top)
 \item{predicted}{prediction vector (probability)}
 
 \item{top}{top individual to analyse}
+
+\item{compute_every_n}{compute indicators every n individuals (1 by default)}
 }
 \value{
 data.frame with metrics computed on the CV

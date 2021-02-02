@@ -85,12 +85,13 @@ cvClassifAnalysis <- function(actual, predicted, fold, thresh = NULL, step = 100
   return(res)
 }
 
-plotClassifAnalysis <- function(actual, predicted, top) {
+plotClassifAnalysis <- function(actual, predicted, top, compute_every_n = 1) {
   #' Plot RECALL, PRECISION & F1 SCORE versus top n predictions for a binary classification use case
   #'
   #' @param actual true value (0 or 1 only)
   #' @param predicted prediction vector (probability)
   #' @param top top individual to analyse
+  #' @param compute_every_n compute indicators every n individuals (1 by default)
   #'
   #' @return data.frame with metrics computed on the CV
   #'
@@ -99,8 +100,21 @@ plotClassifAnalysis <- function(actual, predicted, top) {
   #'
   #' @export
 
+  # PRELIMINARY CHECKS
   if(length(actual) != length(predicted)) {
     stop("actual and predicted don't have the same length")
+  }
+
+  if(compute_every_n < 1) {
+    stop("compute_every_n should be an integer >= 1")
+  }
+
+  if(compute_every_n >= top) {
+    stop("compute_every_n should be strictly lesser than top")
+  }
+
+  if(compute_every_n > 1) {
+    message("indicators may be approximated due to compute_every_n beeing greater than 1")
   }
 
   rec   = NULL
@@ -112,16 +126,23 @@ plotClassifAnalysis <- function(actual, predicted, top) {
   actual    = actual[idx]
   predicted = predicted[idx]
 
+  # INITIALISATION OF PROGRESS BAR
+  pb = txtProgressBar(1, 100, style = 3)
+
   # COMPUTE INDICATORS
-  for (i in 1:top) {
+  for (i in seq(1, top, compute_every_n)) {
+    ## UPDATE PROGRESS BAR
+    setTxtProgressBar(pb, 100*i/max(seq(1, top, compute_every_n)))
+
+    ## COMPUTE KPIS
     predicted_1_0 = ifelse(predicted >= predicted[i], 1, 0)
-    rec   = c(rec, recall(actual, predicted_1_0))
-    prec  = c(prec, precision(actual, predicted_1_0))
-    f1    = c(f1, fbeta_score(actual, predicted_1_0))
+    rec   = rbind(rec, c(i, recall(actual, predicted_1_0)))
+    prec  = rbind(prec, c(i, precision(actual, predicted_1_0)))
+    f1    = rbind(f1, c(i, fbeta_score(actual, predicted_1_0)))
   }
 
   # SELECT THE ITERATION NUMBER THAT MAXIMISES F1
-  top = which.max(f1)
+  top = f1[which.max(f1[,2]),1]
 
   # PLOT RESULTS
   par(mfrow=c(3,1))
@@ -135,10 +156,10 @@ plotClassifAnalysis <- function(actual, predicted, top) {
   plot(f1, type="l", ylab = "F1", xlab = "TOP INDIVIDUS", main = "F1 Score en fonction du top n individus", ylim = c(0,1), col = I("#27818D"))
   abline(v=top, col = "red", lty = 2)
 
-  res = cbind(round(f1[top], 4),
-              round(prec[top], 4),
-              round(rec[top], 4),
-              round(top, 4))
+  res = cbind(round(f1[round(top/compute_every_n), 2], 4),
+              round(prec[round(top/compute_every_n), 2], 4),
+              round(rec[round(top/compute_every_n), 2], 4),
+              top)
 
   res = data.frame(res)
   names(res) = c("F1", "PRECISION", "RECALL", "TOP")
