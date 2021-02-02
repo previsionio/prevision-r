@@ -33,13 +33,20 @@ cvClassifAnalysis <- function(actual, predicted, fold, thresh = NULL, step = 100
   threshold       = NULL
 
   for(i in sort(fold_unique)) {
-    message("Computing for fold #", i)
+    message("\nComputing for fold #", i)
 
     # COMPUTE AUC PER FOLD
     auc = c(auc, auc(actual[fold==i], predicted[fold==i]))
 
+    # INITIALISATION OF PROGRESS BAR
+    pb = txtProgressBar(1, 100, style = 3)
+
     # FIND OPTIMAL THRESHOLD FOR F1 SCORE PER FOLD
     for (j in 1:step) {
+      ## UPDATE PROGRESS BAR
+      setTxtProgressBar(pb, 100*j/step)
+
+      ## COMPUTE F1 SCORE AT EACH STEP
       f1 = rbind(f1, cbind(j, fbeta_score(actual[fold==i], ifelse(predicted[fold==i] < j/step, 0, 1))))
     }
 
@@ -61,16 +68,17 @@ cvClassifAnalysis <- function(actual, predicted, fold, thresh = NULL, step = 100
   }
 
   print("F1 by fold")
-  print(f1_fold)
+  print(round(f1_fold, 4))
   print("=======================================")
   print("Precision by fold")
-  print(precision_fold)
+  print(round(precision_fold, 4))
   print("=======================================")
   print("Recall by fold")
-  print(recall_fold)
+  print(round(recall_fold,4))
   print("=======================================")
   print("Threshold by fold")
   print(threshold)
+  print("=======================================")
   print("=======================================")
 
   res = cbind(round(mean(auc), 4),
