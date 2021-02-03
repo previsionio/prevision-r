@@ -14,6 +14,7 @@ startUsecase(
   idColumn = NULL,
   dropList = NULL,
   profile = NULL,
+  usecaseDescription = NULL,
   metric = NULL,
   foldColumn = NULL,
   normalModels = NULL,
@@ -26,37 +27,47 @@ startUsecase(
   featuresSelectionTime = NULL,
   datasetFolderId = NULL,
   filenameColumn = NULL,
-  topColumn = NULL,
-  bottomColumn = NULL,
-  leftColumn = NULL,
-  rightColumn = NULL,
+  ymin = NULL,
+  ymax = NULL,
+  xmin = NULL,
+  xmax = NULL,
   timeColumn = NULL,
   startDW = NULL,
   endDW = NULL,
   startFW = NULL,
   endFW = NULL,
   groupList = NULL,
-  aprioriList = NULL
+  aprioriList = NULL,
+  contentColumn = NULL,
+  queriesDatasetId = NULL,
+  queriesDatasetContentColumn = NULL,
+  queriesDatasetIdColumn = NULL,
+  queriesDatasetMatchingIdDescriptionColumn = NULL,
+  topK = NULL,
+  lang = NULL,
+  modelsParameters = NULL
 )
 }
 \arguments{
-\item{name}{name of the usecase.}
+\item{name}{name of the usecase}
 
-\item{dataType}{type of data ("tabular" or "images" or "timeseries").}
+\item{dataType}{type of data ("tabular" or "images" or "timeseries")}
 
-\item{trainingType}{type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection").}
+\item{trainingType}{type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection", "text-similarity")}
 
-\item{datasetId}{id of the dataset used for the training phase.}
+\item{datasetId}{id of the dataset used for the training phase}
 
 \item{targetColumn}{name of the TARGET column}
 
-\item{holdoutDatasetId}{id of the houldout dataset}
+\item{holdoutDatasetId}{id of the holdout dataset}
 
 \item{idColumn}{name of the id column}
 
 \item{dropList}{list of names of features to drop}
 
 \item{profile}{chosen profil among "quick", "normal", "advanced"}
+
+\item{usecaseDescription}{usecase description}
 
 \item{metric}{name of the metric to optimise}
 
@@ -82,15 +93,15 @@ startUsecase(
 
 \item{filenameColumn}{name of the file name path (images)}
 
-\item{topColumn}{name of the top column (object detection)}
+\item{ymin}{name of the column matching the lower y value of the image (object detection)}
 
-\item{bottomColumn}{name of the bottom column (object detection)}
+\item{ymax}{name of the column matching the higher y value of the image (object detection)}
 
-\item{leftColumn}{name of the left column (object detection)}
+\item{xmin}{name of the column matching the lower x value of the image (object detection)}
 
-\item{rightColumn}{name of the right column (object detection)}
+\item{xmax}{name of the column matching the higher x value of the image (object detection)}
 
-\item{timeColumn}{name of the time column (time series)}
+\item{timeColumn}{name of column containing the timestamp (time series)}
 
 \item{startDW}{value of the start of derivative window (time series), should be a strict negative integer}
 
@@ -103,6 +114,22 @@ startUsecase(
 \item{groupList}{list of name of feature that describes groups (time series)}
 
 \item{aprioriList}{list of name of feature that are a priori (time series)}
+
+\item{contentColumn}{content column name (text-similarity)}
+
+\item{queriesDatasetId}{id of the dataset containing queries (text-similarity)}
+
+\item{queriesDatasetContentColumn}{name of the column containing queries in the query dataset (text-similarity)}
+
+\item{queriesDatasetIdColumn}{name of the ID column in the query dataset (text-similarity)}
+
+\item{queriesDatasetMatchingIdDescriptionColumn}{name of the column matching id in the description dataset (text-similarity)}
+
+\item{topK}{top k individual to find (text-similarity)}
+
+\item{lang}{lang of the text (text-similarity)}
+
+\item{modelsParameters}{parameters of the model (text-similarity)}
 }
 \value{
 usecase infos

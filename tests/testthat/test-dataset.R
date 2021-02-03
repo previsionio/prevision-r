@@ -11,6 +11,8 @@ n_features  = 10
 test_that("createDatasetFromDataframe", {
   expect_is(createDatasetFromDataframe("DATASET_TESTU", tabularDataset(typeProblem = "regression", n_row = n_row, n_features = n_features), F), "list", "createDatasetFromDataframe() doesn't retrieve a list for DATASET_TESTU if not zipped")
   expect_is(createDatasetFromDataframe("DATASET_TESTU", tabularDataset(typeProblem = "regression", n_row = n_row, n_features = n_features), T), "list", "createDatasetFromDataframe() doesn't retrieve a list for DATASET_TESTU if zipped")
+  expect_is(createDatasetFromDataframe("DATASET_TEXT_SIM_ITEM_TESTU", fread("data/txt_sim_items.csv"), T), "list", "createDatasetFromDataframe() doesn't retrieve a list for DATASET_TEXT_SIM_ITEM_TESTU")
+  expect_is(createDatasetFromDataframe("DATASET_TEXT_SIM_QUERY_TESTU", fread("data/txt_sim_queries.csv"), T), "list", "createDatasetFromDataframe() doesn't retrieve a list for DATASET_TEXT_SIM_QUERY_TESTU")
 })
 
 test_that("createDatasetFromDatasource", {

@@ -13,6 +13,18 @@ test_that("startUsecase", {
   expect_is(startUsecase("USECASE_CLASSIFICATION_TESTU", "tabular", "classification", createDatasetFromDataframe("DS_CLASSIFCICATION_TESTU", tabularDataset("classification"))$`_id`, "TARGET", normalModels = c("LGB", "XGB")), "list", "getUsecases() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
   expect_is(startUsecase("USECASE_MULTICLASSIFICATION_TESTU", "tabular", "multiclassification", createDatasetFromDataframe("USECASE_MULTICLASSIFICATION_TESTU", tabularDataset("multiclassification"))$`_id`, "TARGET"), "list", "getUsecases() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
   expect_is(startUsecase("USECASE_TIMESERIES_TESTU", "timeseries", "regression", createDatasetFromDataframe("USECASE_TIMESERIES_TESTU", timeseriesDataset())$`_id`, "TARGET", timeColumn = "TS", startDW = -2, endDW = -1, startFW = 1, endFW = 2), "list", "getUsecases() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
+  expect_is(startUsecase("USECASE_TEXT_SIM_TESTU", "tabular", "text-similarity",  datasetId = getDatasetIdFromName("DATASET_TEXT_SIM_ITEM_TESTU"),
+                         idColumn = "item_id",
+                         contentColumn = "item_desc",
+                         queriesDatasetId = getDatasetIdFromName("DATASET_TEXT_SIM_QUERY_TESTU"),
+                         queriesDatasetContentColumn = "query",
+                         queriesDatasetMatchingIdDescriptionColumn = "true_item_id",
+                         modelsParameters = list(
+                           list("modelEmbedding" = "tf_idf", "preprocessing" = list("word_stemming" = "yes", "ignore_stop_word" = "auto", "ignore_punctuation" = "no"), "models" = c("brute_force", "cluster_pruning")),
+                           list("modelEmbedding" = "transformer", "preprocessing" = NA, "models" = c("brute_force", "lsh", "hkm")),
+                           list("modelEmbedding" = "transformer_fine_tuned", "preprocessing" = NA, models = c("brute_force", "lsh", "hkm"))
+                         )), "list", "getUsecases() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU"
+            )
 })
 
 Sys.sleep(120)

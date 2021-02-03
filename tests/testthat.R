@@ -1,4 +1,5 @@
 library(testthat)
+library(data.table)
 library(previsionio)
 
 #test_check("previsionio")

@@ -13,4 +13,6 @@ test_that("deleteDataset", {
   expect(deleteDataset(getDatasetIdFromName("DATASET_S3_DATASOURCE_RAW_TESTU")) == 200, "deleteDataset() doesn't retrieve a 200 status code for DATASET_S3_DATASOURCE_RAW_TESTU")
   expect(deleteDataset(getDatasetIdFromName("DATASET_SFTP_DATASOURCE_RAW_TESTU")) == 200, "deleteDataset() doesn't retrieve a 200 status code for DATASET_SFTP_DATASOURCE_RAW_TESTU")
   expect(deleteDataset(getDatasetIdFromName("DATASET_FTP_DATASOURCE_RAW_TESTU")) == 200, "deleteDataset() doesn't retrieve a 200 status code for DATASET_FTP_DATASOURCE_RAW_TESTU")
+  expect(deleteDataset(getDatasetIdFromName("DATASET_TEXT_SIM_ITEM_TESTU")) == 200, "deleteDataset() doesn't retrieve a 200 status code for DATASET_TEXT_SIM_ITEM_TESTU")
+  expect(deleteDataset(getDatasetIdFromName("DATASET_TEXT_SIM_QUERY_TESTU")) == 200, "deleteDataset() doesn't retrieve a 200 status code for DATASET_TEXT_SIM_QUERY_TESTU")
 })

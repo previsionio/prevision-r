@@ -542,18 +542,19 @@ getSharedUsecaseUsers <- function(usecaseId) {
   }
 }
 
-startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn = NULL, holdoutDatasetId = NULL, idColumn = NULL, dropList = NULL, profile = NULL, metric = NULL, foldColumn = NULL, normalModels = NULL, liteModels = c('XGB'), simpleModels = NULL, withBlend = NULL, weightColumn = NULL, featuresEngineeringSelectedList = NULL, featuresSelectionCount = NULL, featuresSelectionTime = NULL, datasetFolderId = NULL, filenameColumn = NULL, topColumn = NULL, bottomColumn = NULL, leftColumn = NULL, rightColumn = NULL, timeColumn = NULL, startDW = NULL, endDW = NULL, startFW = NULL, endFW = NULL, groupList = NULL, aprioriList = NULL) {
+startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn = NULL, holdoutDatasetId = NULL, idColumn = NULL, dropList = NULL, profile = NULL, usecaseDescription = NULL, metric = NULL, foldColumn = NULL, normalModels = NULL, liteModels = c('XGB'), simpleModels = NULL, withBlend = NULL, weightColumn = NULL, featuresEngineeringSelectedList = NULL, featuresSelectionCount = NULL, featuresSelectionTime = NULL, datasetFolderId = NULL, filenameColumn = NULL, ymin = NULL, ymax = NULL, xmin = NULL, xmax = NULL, timeColumn = NULL, startDW = NULL, endDW = NULL, startFW = NULL, endFW = NULL, groupList = NULL, aprioriList = NULL, contentColumn = NULL, queriesDatasetId = NULL, queriesDatasetContentColumn = NULL, queriesDatasetIdColumn = NULL, queriesDatasetMatchingIdDescriptionColumn = NULL, topK = NULL, lang = NULL, modelsParameters = NULL) {
   #' Start a new usecase on the platform.
   #'
-  #' @param name name of the usecase.
-  #' @param dataType type of data ("tabular" or "images" or "timeseries").
-  #' @param trainingType type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection").
-  #' @param datasetId id of the dataset used for the training phase.
+  #' @param name name of the usecase
+  #' @param dataType type of data ("tabular" or "images" or "timeseries")
+  #' @param trainingType type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection", "text-similarity")
+  #' @param datasetId id of the dataset used for the training phase
   #' @param targetColumn name of the TARGET column
-  #' @param holdoutDatasetId id of the houldout dataset
+  #' @param holdoutDatasetId id of the holdout dataset
   #' @param idColumn name of the id column
   #' @param dropList list of names of features to drop
   #' @param profile chosen profil among "quick", "normal", "advanced"
+  #' @param usecaseDescription usecase description
   #' @param metric name of the metric to optimise
   #' @param foldColumn name of the fold column
   #' @param normalModels list of (normal) models to select with full FE & hyperparameters search
@@ -566,17 +567,25 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
   #' @param featuresSelectionTime time budget in minutes of the feature selection process
   #' @param datasetFolderId id of the dataset fold (images)
   #' @param filenameColumn name of the file name path (images)
-  #' @param topColumn name of the top column (object detection)
-  #' @param bottomColumn name of the bottom column (object detection)
-  #' @param leftColumn name of the left column (object detection)
-  #' @param rightColumn name of the right column (object detection)
-  #' @param timeColumn name of the time column (time series)
+  #' @param ymin name of the column matching the lower y value of the image (object detection)
+  #' @param ymax name of the column matching the higher y value of the image (object detection)
+  #' @param xmin name of the column matching the lower x value of the image (object detection)
+  #' @param xmax name of the column matching the higher x value of the image (object detection)
+  #' @param timeColumn name of column containing the timestamp (time series)
   #' @param startDW value of the start of derivative window (time series), should be a strict negative integer
   #' @param endDW value of the end of derivative window (time series), should be a negative integer greater than startDW
   #' @param startFW value of the start of forecast window (time series), should be a strict positive integer
   #' @param endFW value of the end of forecast window (time series), should be a strict positive integer greater than startFW
   #' @param groupList list of name of feature that describes groups (time series)
   #' @param aprioriList list of name of feature that are a priori (time series)
+  #' @param contentColumn content column name (text-similarity)
+  #' @param queriesDatasetId id of the dataset containing queries (text-similarity)
+  #' @param queriesDatasetContentColumn name of the column containing queries in the query dataset (text-similarity)
+  #' @param queriesDatasetIdColumn name of the ID column in the query dataset (text-similarity)
+  #' @param queriesDatasetMatchingIdDescriptionColumn name of the column matching id in the description dataset (text-similarity)
+  #' @param topK top k individual to find (text-similarity)
+  #' @param lang lang of the text (text-similarity)
+  #' @param modelsParameters parameters of the model (text-similarity)
   #'
   #' @import httr
   #'
@@ -590,8 +599,8 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
   }
 
   # CHECKING trainingType
-  if(!trainingType %in% c("regression", "classification", "multiclassification", "object-detection")) {
-    stop("trainingType must be either \"regression\", \"classification\", \"multiclassification\" or \"object-detection\"")
+  if(!trainingType %in% c("regression", "classification", "multiclassification", "object-detection", "text-similarity")) {
+    stop("trainingType must be either \"regression\", \"classification\", \"multiclassification\" or \"object-detection\" or \"text-similarity\"")
   }
 
   # CHECKING datasetId EXISTS
@@ -616,7 +625,6 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
     stop("NBC liteModel is only available for classification or multiclassification")
   }
 
-
   # GET PARAMS AND REMOVE NULL ONES
   ucParams = list(name = name,
                   datasetId = datasetId,
@@ -637,17 +645,25 @@ startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn =
                   featuresSelectionTime = featuresSelectionTime,
                   datasetFolderId = datasetFolderId,
                   filenameColumn = filenameColumn,
-                  topColumn = topColumn,
-                  bottomColumn = bottomColumn,
-                  leftColumn = leftColumn,
-                  rightColumn = rightColumn,
+                  ymin = ymin,
+                  ymax = ymax,
+                  xmin = xmin,
+                  xmax = xmax,
                   timeColumn = timeColumn,
                   startDW = startDW,
                   endDW = endDW,
                   startFW = startFW,
                   endFW = endFW,
                   groupList = groupList,
-                  aprioriList = aprioriList)
+                  aprioriList = aprioriList,
+                  contentColumn = contentColumn,
+                  queriesDatasetId = queriesDatasetId,
+                  queriesDatasetContentColumn = queriesDatasetContentColumn,
+                  queriesDatasetIdColumn = queriesDatasetIdColumn,
+                  queriesDatasetMatchingIdDescriptionColumn = queriesDatasetMatchingIdDescriptionColumn,
+                  topK = topK,
+                  lang = lang,
+                  modelsParameters = modelsParameters)
 
   ucParams <- ucParams[!sapply(ucParams, is.null)]
 
