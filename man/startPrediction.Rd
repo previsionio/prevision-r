@@ -2,16 +2,21 @@
 % Please edit documentation in R/usecase.R
 \name{startPrediction}
 \alias{startPrediction}
-\title{Start a prediction on a existing usecase with a given datasetId and a given version number}
+\title{Start a prediction on a existing usecase}
 \usage{
 startPrediction(
   usecaseId,
-  datasetId,
+  datasetId = NULL,
   datasetFolderId = NULL,
   confidence = F,
   bestSingle = F,
   modelId = NULL,
-  versionNumber = 1
+  versionNumber = 1,
+  queriesDatasetId = NULL,
+  queriesDatasetContentColumn = NULL,
+  queriesDatasetIdColumn = NULL,
+  queriesDatasetMatchingIdDescriptionColumn = NULL,
+  topK = NULL
 )
 }
 \arguments{
@@ -27,11 +32,21 @@ startPrediction(
 
 \item{modelId}{id of the model to start the prediction on. If provided, it will overwrite the "best single" params}
 
-\item{versionNumber}{number of the version of the usecase. 1 by default.}
+\item{versionNumber}{number of the version of the usecase. 1 by default}
+
+\item{queriesDatasetId}{id of the datasat containing queries (text-similarity)}
+
+\item{queriesDatasetContentColumn}{name of the content column in the queries dataset (text-similarity)}
+
+\item{queriesDatasetIdColumn}{name of the id columln in the queries dataset (text-similarity)}
+
+\item{queriesDatasetMatchingIdDescriptionColumn}{name of the column matching the id (text-similarity)}
+
+\item{topK}{number of class to retrieve (text-similarity)}
 }
 \value{
 parsed prediction list
 }
 \description{
-Start a prediction on a existing usecase with a given datasetId and a given version number
+Start a prediction on a existing usecase
 }

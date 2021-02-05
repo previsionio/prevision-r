@@ -320,8 +320,8 @@ getUsecasePredictions <- function(usecaseId, generatingType = "user", versionNum
   predictions
 }
 
-startPrediction <- function(usecaseId, datasetId, datasetFolderId = NULL, confidence = F, bestSingle = F, modelId = NULL, versionNumber = 1) {
-  #' Start a prediction on a existing usecase with a given datasetId and a given version number
+startPrediction <- function(usecaseId, datasetId = NULL, datasetFolderId = NULL, confidence = F, bestSingle = F, modelId = NULL, versionNumber = 1, queriesDatasetId = NULL, queriesDatasetContentColumn = NULL, queriesDatasetIdColumn = NULL, queriesDatasetMatchingIdDescriptionColumn = NULL, topK = NULL) {
+  #' Start a prediction on a existing usecase
   #'
   #' @param usecaseId id of the usecase, can be obtained with getUsecases().
   #' @param datasetId id of the dataset to start the prediction on, can be obtained with getUsecases()
@@ -329,7 +329,12 @@ startPrediction <- function(usecaseId, datasetId, datasetFolderId = NULL, confid
   #' @param confidence boolean. If enable, confidence intervalle will be added to predictions
   #' @param bestSingle boolean. If enable, best single model (non blend) will be used for making predictions other wise, best model will be used unless if modelId is fed
   #' @param modelId id of the model to start the prediction on. If provided, it will overwrite the "best single" params
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param versionNumber number of the version of the usecase. 1 by default
+  #' @param queriesDatasetId id of the datasat containing queries (text-similarity)
+  #' @param queriesDatasetContentColumn name of the content column in the queries dataset (text-similarity)
+  #' @param queriesDatasetIdColumn name of the id columln in the queries dataset (text-similarity)
+  #' @param queriesDatasetMatchingIdDescriptionColumn name of the column matching the id (text-similarity)
+  #' @param topK number of class to retrieve (text-similarity)
   #'
   #' @return parsed prediction list
   #'
@@ -341,9 +346,19 @@ startPrediction <- function(usecaseId, datasetId, datasetFolderId = NULL, confid
                 datasetFolderId = datasetFolderId,
                 confidence = confidence,
                 bestSingle = bestSingle,
-                modelId = modelId)
+                modelId = modelId,
+                versionNumber = versionNumber,
+                queriesDatasetId = queriesDatasetId,
+                queriesDatasetContentColumn = queriesDatasetContentColumn,
+                queriesDatasetIdColumn = queriesDatasetIdColumn,
+                queriesDatasetMatchingIdDescriptionColumn = queriesDatasetMatchingIdDescriptionColumn,
+                topK = topK)
 
   params <- params[!sapply(params, is.null)]
+
+  if(is.null(datasetId) & is.null(queriesDatasetId)) {
+    stop("either datasetId or queriesDatasetId should be set")
+  }
 
   if(!is.null(modelId)){
     message("modelId is set, the bestSingle param won't be taken into account")

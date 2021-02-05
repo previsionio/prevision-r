@@ -77,7 +77,8 @@ test_that("getModelFeatureImportance", {
 })
 
 test_that("startPrediction", {
-  expect_is(startPrediction(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getDatasets()[[1]]$`_id`), "list", "startPrediction() doesn't retrieve a list")
+  expect_is(startPrediction(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getDatasets()[[1]]$`_id`), "list", "startPrediction() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+  expect_is(startPrediction(getUsecaseIdFromName("USECASE_TEXT_SIM_TESTU"), modelId = getBestModelId(getUsecaseIdFromName("USECASE_TEXT_SIM_TESTU")), queriesDatasetId = getDatasetIdFromName("DATASET_TEXT_SIM_QUERY_TESTU"), queriesDatasetContentColumn = "query", topK = 10), "list", "startPrediction() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
 })
 
 Sys.sleep(30)
