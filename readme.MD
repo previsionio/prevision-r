@@ -3,7 +3,7 @@
 ```
 git clone https://bitbucket.org/previsionio/previsionio-r
 R CMD build previsionio-r
-R CMD INSTALL previsionio_10.21.0.tar.gz
+R CMD INSTALL previsionio_10.22.0.tar.gz
 ```
 
 # Using package

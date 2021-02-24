@@ -1,5 +1,5 @@
-getDatasets <- function() {
-  #' Get informations of all tabular datasets availables.
+get_datasets <- function() {
+  #' Get information of all tabular datasets availables.
   #'
   #' @return parsed content of all datasets.
   #'
@@ -12,30 +12,30 @@ getDatasets <- function() {
 
   # Looping over page to get all information
   while(T) {
-    resp <- previsionioRequest(paste0('/datasets/files?page=', page), GET)
-    respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+    resp <- pio_request(paste0('/datasets/files?page=', page), GET)
+    resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
       # Stop when no new entry appears
-      if(length(respParsed[["items"]])==0) {
+      if(length(resp_parsed[["items"]])==0) {
         break
       }
 
       # Store items and continue
-      datasets = c(datasets, respParsed[["items"]])
+      datasets = c(datasets, resp_parsed[["items"]])
       page = page + 1
     }
     else {
-      stop("Can't retrieve datasets list - ", resp$status_code, ":", respParsed)
+      stop("Can't retrieve datasets list - ", resp$status_code, ":", resp_parsed)
     }
   }
   datasets
 }
 
-getDatasetIdFromName <- function(datasetName) {
-  #' Get a datasetId from a datasetName If duplicated name, the first datasetId that match it is retrieved
+get_dataset_id_from_name <- function(dataset_name) {
+  #' Get a dataset_id from a dataset_name. If duplicated name, the first dataset_id that match it is retrieved.
   #'
-  #' @param datasetName name of the dataset we are searching its id from. Can be obtained with getDatasets().
+  #' @param dataset_name name of the dataset we are searching its id from. Can be obtained with get_datasets().
   #'
   #' @return id of the dataset if found.
   #'
@@ -43,19 +43,19 @@ getDatasetIdFromName <- function(datasetName) {
   #'
   #' @export
 
-  datasetList = getDatasets()
-  for (dataset in datasetList) {
-    if(dataset$name == datasetName) {
+  dataset_list = get_datasets()
+  for (dataset in dataset_list) {
+    if(dataset$name == dataset_name) {
       return(dataset$`_id`)
     }
   }
-  stop("There is no datasetId matching the datasetName ", datasetName)
+  stop("There is no dataset_id matching the dataset_name ", dataset_name)
 }
 
-getDatasetInfos <- function(datasetId) {
+get_dataset_info <- function(dataset_id) {
   #' Get a dataset from its id.
   #'
-  #' @param datasetId id of the dataset, can be obtained with getDatasets().
+  #' @param dataset_id id of the dataset, can be obtained with get_datasets().
   #'
   #' @return parsed content of the dataset.
   #'
@@ -64,11 +64,12 @@ getDatasetInfos <- function(datasetId) {
   #' @export
 
   while (T) {
-    resp <- previsionioRequest(paste0('/datasets/files/', datasetId), GET)
+    resp <- pio_request(paste0('/datasets/files/', dataset_id), GET)
+
     ## IF STATUS == 200 BREAK IF DATASET IS "DONE"
     if(resp$status_code == 200) {
-      respParsed <- content(resp, 'parsed')
-      if(respParsed$ready == "done") {
+      resp_parsed <- content(resp, 'parsed')
+      if(resp_parsed$ready == "done") {
         break
       }
     }
@@ -77,13 +78,13 @@ getDatasetInfos <- function(datasetId) {
     message('Waiting for dataset')
     Sys.sleep(5)
   }
-  respParsed
+  resp_parsed
 }
 
-getDatasetHead <- function(datasetId) {
+get_dataset_head <- function(dataset_id) {
   #' Show the head of a dataset from its id.
   #'
-  #' @param datasetId id of the dataset, can be obtained with getDatasets().
+  #' @param dataset_id id of the dataset, can be obtained with get_datasets().
   #'
   #' @return head of the dataset as a data.frame object.
   #'
@@ -91,51 +92,50 @@ getDatasetHead <- function(datasetId) {
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/datasets/files/', datasetId, '/head'), GET)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/datasets/files/', dataset_id, '/head'), GET)
+  resp_parsed <- content(resp, 'parsed')
 
-  if(length(respParsed$columns) < 1) {
-    stop(paste("Dataset error:", respParsed$message))
+  if(length(resp_parsed$columns) < 1) {
+    stop(paste("Dataset error:", resp_parsed$message))
   } else {
-    df <- data.frame(matrix(ncol=length(respParsed$columns), nrow=length(respParsed$rows)))
-    for (i in 1:length(respParsed$columns)) {
-      names(df)[i] = respParsed$columns[[i]]$name
+    df <- data.frame(matrix(ncol=length(resp_parsed$columns), nrow=length(resp_parsed$rows)))
+    for (i in 1:length(resp_parsed$columns)) {
+      names(df)[i] = resp_parsed$columns[[i]]$name
     }
-    for (i in 1:length(respParsed$rows)) {
-      for (j in 1:length(respParsed$columns)) {
-        df[i,j] = ifelse(is.null(respParsed$rows[[i]][[j]]), NA, respParsed$rows[[i]][[j]])
+    for (i in 1:length(resp_parsed$rows)) {
+      for (j in 1:length(resp_parsed$columns)) {
+        df[i,j] = ifelse(is.null(resp_parsed$rows[[i]][[j]]), NA, resp_parsed$rows[[i]][[j]])
       }
     }
   }
   df
 }
 
-deleteDataset <- function(datasetId) {
-  #' Delete a dataset on the platform.
+delete_dataset <- function(dataset_id) {
+  #' Delete an existing dataset.
   #'
-  #' @param datasetId id of the dataset, can be obtained with getDatasets().
+  #' @param dataset_id id of the dataset, can be obtained with get_datasets().
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/datasets/files/', datasetId), DELETE)
-  respParsed <- content(resp, 'parsed')
-  flog.debug(respParsed)
+  resp <- pio_request(paste0('/datasets/files/', dataset_id), DELETE)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Delete OK - ", resp$status_code, ":", respParsed$message)
+    message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
     resp$status_code
   } else {
-    stop("Delete KO - ", resp$status_code, ":", respParsed$message)
+    stop("Delete KO - ", resp$status_code, ":", resp_parsed$message)
   }
 }
 
-createDatasetFromFilename <- function(datasetName, local_path) {
+create_dataset_from_file <- function(dataset_name, file) {
   #' Upload dataset from file name.
   #'
-  #' @param datasetName given name of the dataset on the platform.
-  #' @param local_path path to the dataset.
+  #' @param dataset_name given name of the dataset on the platform.
+  #' @param file path to the dataset.
   #'
   #' @return parsed content of the dataset.
   #'
@@ -143,26 +143,26 @@ createDatasetFromFilename <- function(datasetName, local_path) {
   #'
   #' @export
 
-  params <- list(name = datasetName, file = upload_file(local_path))
+  params <- list(name = dataset_name, file = upload_file(file))
 
-  resp <- previsionioRequest('/datasets/files', POST, params, upload = TRUE)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request('/datasets/files', POST, params, upload = TRUE)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    getDatasetInfos(respParsed$`_id`)
+    get_dataset_info(resp_parsed$`_id`)
   } else {
-    stop("Dataset upload failure - ", respParsed$status, ":", respParsed$message)
+    stop("Dataset upload failure - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
-createDatasetFromDataframe <- function(datasetName, dataframe, zip = F) {
+create_dataset_from_dataframe <- function(dataset_name, dataframe, zip = F) {
   #' Upload dataset from data frame.
   #'
-  #' @param datasetName given name of the dataset on the platform.
+  #' @param dataset_name given name of the dataset on the platform.
   #' @param dataframe data.frame to upload.
-  #' @param zip is the temp file zipped before sending it to Prevision.io?
+  #' @param zip is the temp file zipped before sending it to Prevision.io (default = F).
   #'
-  #' @return parsed content of the dataset object
+  #' @return parsed content of the dataset.
   #'
   #' @importFrom data.table fwrite
   #'
@@ -173,48 +173,48 @@ createDatasetFromDataframe <- function(datasetName, dataframe, zip = F) {
   if(zip) {
     message("Compressing file ", tf)
     zip(zipfile = paste0(tf, ".zip"), files = tf)
-    res <- createDatasetFromFilename(datasetName = datasetName,
-                                     local_path = paste0(tf, ".zip"))
+    res <- create_dataset_from_file(dataset_name = dataset_name,
+                                    file = paste0(tf, ".zip"))
     file.remove(tf)
     file.remove(paste0(tf, ".zip"))
   }
   else {
-    res <- createDatasetFromFilename(datasetName = datasetName, local_path = tf)
+    res <- create_dataset_from_file(dataset_name = dataset_name, file = tf)
     file.remove(tf)
   }
   res
 }
 
-createDatasetFromDatasource <- function(datasetName, datasourceId) {
+create_dataset_from_datasource <- function(dataset_name, datasource_id) {
   #' Create a dataset from an existing datasource.
   #'
-  #' @param datasetName given name of the dataset on the platform.
-  #' @param datasourceId datasource id.
+  #' @param dataset_name given name of the dataset on the platform.
+  #' @param datasource_id datasource id.
   #'
   #' @import httr
   #'
-  #' @return parsed content of the dataset object
+  #' @return parsed content of the dataset.
   #'
   #' @export
 
-  params <- list(name = datasetName, datasourceId = datasourceId)
+  params <- list(name = dataset_name, datasourceId = datasource_id)
 
-  resp <- previsionioRequest('/datasets/files', POST, params)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request('/datasets/files', POST, params)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    getDatasetInfos(respParsed$`_id`)
+    get_dataset_info(resp_parsed$`_id`)
   } else {
-    stop("Dataset creation failure - ", respParsed$status, ":", respParsed$message)
+    stop("Dataset creation failure - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
-createDataframeFromDataset <- function(datasetId) {
-  #' Create a dataframe from a datasetId.
+create_dataframe_from_dataset <- function(dataset_id) {
+  #' Create a dataframe from a dataset_id.
   #'
-  #' @param datasetId dataset id.
+  #' @param dataset_id dataset id.
   #'
-  #' @return a R dataframe
+  #' @return a R dataframe.
   #'
   #' @import httr
   #'
@@ -222,20 +222,20 @@ createDataframeFromDataset <- function(datasetId) {
   #'
   #' @export
 
-  path <- downloadDataset(datasetId)
-  unzip(path, overwrite = T, exdir = datasetId)
+  path <- download_dataset(dataset_id)
+  unzip(path, overwrite = T, exdir = dataset_id)
   unlink(path)
-  data <- fread(paste0(datasetId, "/", list.files(datasetId)))
-  unlink(paste0(datasetId), recursive = T)
+  data <- fread(paste0(dataset_id, "/", list.files(dataset_id)))
+  unlink(paste0(dataset_id), recursive = T)
   data
 }
 
-downloadDataset <- function(datasetId, path = getwd(), isFolder = FALSE) {
-  #' Download a dataset from a datasetId and write it in a folder.
+download_dataset <- function(dataset_id, path = getwd(), is_folder = FALSE) {
+  #' Download a dataset from a dataset_id and write it in a folder.
   #'
-  #' @param datasetId dataset id.
-  #' @param path path (without / at the end) were to write the dataset
-  #' @param isFolder boolean. TRUE if it's a folder dataset, FALSE (by default) otherwise.
+  #' @param dataset_id dataset id.
+  #' @param path path (without / at the end) were to write the dataset.
+  #' @param is_folder TRUE if it's a folder dataset, FALSE (by default) otherwise.
   #'
   #' @return the complete path to the file written
   #'
@@ -243,50 +243,50 @@ downloadDataset <- function(datasetId, path = getwd(), isFolder = FALSE) {
   #'
   #' @export
 
-  datasetName <- getDatasetInfos(datasetId)$name
-  fileName <- paste0(datasetName, ".zip")
-  completePath <- paste0(path, "/", fileName)
+  dataset_name <- get_dataset_info(dataset_id)$name
+  file_name <- paste0(dataset_name, ".zip")
+  complete_path <- paste0(path, "/", file_name)
 
-  if(isFolder) {
-    resp <- previsionDownload(paste0('/datasets/folders/', datasetId, "/download"), completePath)
+  if(is_folder) {
+    resp <- pio_download(paste0('/datasets/folders/', dataset_id, "/download"), complete_path)
   }
   else {
-    resp <- previsionDownload(paste0('/datasets/files/', datasetId, "/download"), completePath)
+    resp <- pio_download(paste0('/datasets/files/', dataset_id, "/download"), complete_path)
   }
 
   if(resp$status_code == 200) {
-    message("Download of dataset ", datasetId, " done - ", completePath)
-    completePath
+    message("Download of dataset ", dataset_id, " done - ", complete_path)
+    complete_path
   }
   else {
-    stop("Download of dataset ", datasetId, " failed - ", completePath)
+    stop("Download of dataset ", dataset_id, " failed - ", complete_path)
   }
 }
 
-startDatasetEmbedding <- function(datasetId) {
-  #' Start a dataset embedding from a datasetId.
+create_dataset_embedding <- function(dataset_id) {
+  #' Create a dataset embedding from a dataset_id.
   #'
-  #' @param datasetId dataset id.
+  #' @param dataset_id dataset id.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/datasets/files/', datasetId, "/start-embedding"), POST)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/datasets/files/', dataset_id, "/start-embedding"), POST)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Embedding started - ", resp$status_code, ":", respParsed$message)
+    message("Embedding started - ", resp$status_code, ":", resp_parsed$message)
     resp$status_code
   } else {
-    stop("Dataset embedding start failure - ", respParsed$status, ":", respParsed$message)
+    stop("Dataset embedding start failure - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
-getDatasetEmbedding <- function(datasetId) {
-  #' Get a dataset embedding from a datasetId.
+get_dataset_embedding <- function(dataset_id) {
+  #' Get a dataset embedding from a dataset_id.
   #'
-  #' @param datasetId dataset id.
+  #' @param dataset_id dataset id.
   #'
   #' @import httr
   #'
@@ -294,21 +294,22 @@ getDatasetEmbedding <- function(datasetId) {
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/datasets/files/', datasetId, "/explorer"), GET)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/datasets/files/', dataset_id, "/explorer"), GET)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
     message("Retrieving embedding")
 
-    tensorShape = respParsed[["embeddings"]][[1]][["tensorShape"]]
+    tensor_shape = resp_parsed[["embeddings"]][[1]][["tensorShape"]]
 
-    # respLabels  = previsionioRequest(paste0('/datasets/files/', datasetId, "/explorer/labels.bytes"), GET)
-    respTensors = previsionioRequest(paste0('/datasets/files/', datasetId, "/explorer/tensors.bytes"), GET)
+    # respLabels  = pio_request(paste0('/datasets/files/', dataset_id, "/explorer/labels.bytes"), GET)
+    resp_tensors = pio_request(paste0('/datasets/files/', dataset_id, "/explorer/tensors.bytes"), GET)
 
     # labels  = fread(content(respLabels, 'parsed', as = "text"), sep = "\t")
-    tensors = data.table(matrix(readBin(respTensors$content, "numeric", n = tensorShape[[1]] * tensorShape[[2]], size = 4), nrow = tensorShape[[1]], ncol = tensorShape[[2]], byrow = T))
+    tensors = data.table(matrix(readBin(resp_tensors$content, "numeric", n = tensor_shape[[1]] * tensor_shape[[2]], size = 4), nrow = tensor_shape[[1]], ncol = tensor_shape[[2]], byrow = T))
     tensors
-  } else {
-    stop("Can't retrieve dataset embedding - ", respParsed$status, ":", respParsed$message)
+  }
+  else {
+    stop("Can't retrieve dataset embedding - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }

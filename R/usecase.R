@@ -1,5 +1,5 @@
-getUsecases <- function() {
-  #' Retrieves all usecases
+get_usecases <- function() {
+  #' Retrieves all usecases.
   #'
   #' @return a usecase list.
   #'
@@ -10,244 +10,244 @@ getUsecases <- function() {
   page = 1
   useCases = c()
 
-  # Looping over page to get all informations
+  # Looping over page to get all information
   while(T) {
-    resp <- previsionioRequest(paste0('/usecases?page=', page), GET)
-    respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+    resp <- pio_request(paste0('/usecases?page=', page), GET)
+    resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
       # Stop when no new entry appears
-      if(length(respParsed[["items"]])==0) {
+      if(length(resp_parsed[["items"]])==0) {
         break
       }
 
       # Store items and continue
-      useCases = c(useCases, respParsed[["items"]])
+      useCases = c(useCases, resp_parsed[["items"]])
       page = page + 1
     }
     else {
-      stop("Can't retrieve usecases list - ", resp$status_code, ":", respParsed)
+      stop("Can't retrieve usecases list - ", resp$status_code, ":", resp_parsed)
     }
   }
   useCases
 }
 
-getUsecaseIdFromName <- function(usecaseName) {
-  #' Get a usecaseId from a usecaseName If duplicated name, the first usecaseId that match it is retrieved
+get_usecase_id_from_name <- function(usecase_name) {
+  #' Get a usecase_id from a usecase_name If duplicated name, the first usecase_id that match it is retrieved.
   #'
-  #' @param usecaseName name of the usecase we are searching its id from. Can be obtained with getUsecases().
+  #' @param usecase_name name of the usecase we are searching its id from. Can be obtained with get_usecases().
   #'
-  #' @return usecaseId of the usecaseName if found.
+  #' @return usecase_id of the usecase_name if found.
   #'
   #' @import httr
   #'
   #' @export
 
-  usecaseList = getUsecases()
+  usecaseList = get_usecases()
   for (uc in usecaseList) {
-    if(uc$name == usecaseName) {
-      return(uc$usecaseId)
+    if(uc$name == usecase_name) {
+      return(uc$usecase_id)
     }
   }
-  stop("There is no usecaseId matching the usecaseName ", usecaseName)
+  stop("There is no usecase_id matching the usecase_name ", usecase_name)
 }
 
-getUsecaseInfos <- function(usecaseId, versionNumber = 1) {
-  #' Get a usecase from its usecaseId and its version number
+get_usecase_info <- function(usecase_id, version_number = 1) {
+  #' Get a usecase from its usecase_id and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return parsed content of the usecase
+  #' @return parsed content of the usecase.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed
+    resp_parsed
   }
   else {
-    stop("Can't retrieve informations from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve information from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getUsecaseTasks <- function(usecaseId, versionNumber = 1) {
-  #' Get all tasks related to a usecaseId and its version number
+get_usecase_tasks <- function(usecase_id, version_number = 1) {
+  #' Get all tasks related to a usecase_id and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return parsed content of the usecase tasks
+  #' @return parsed content of the usecase tasks.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/tasks'), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/tasks'), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed
+    resp_parsed
   }
   else {
-    stop("Can't retrieve tasks from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve tasks from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getUsecaseSchema <- function(usecaseId, versionNumber = 1) {
-  #' Get schema related to a usecaseId and its version number
+get_usecase_schema <- function(usecase_id, version_number = 1) {
+  #' Get schema related to a usecase_id and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return parsed content of the usecase schema
+  #' @return parsed content of the usecase schema.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/schema'), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/schema'), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed
+    resp_parsed
   }
   else {
-    stop("Can't retrieve schema from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve schema from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getUsecaseFeatures <- function(usecaseId, versionNumber = 1) {
-  #' Get features informations related to a usecaseId and its version number
+get_usecase_features <- function(usecase_id, version_number = 1) {
+  #' Get features information related to a usecase_id and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return parsed content of the usecase features informations
+  #' @return parsed content of the usecase features information.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/features'), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/features'), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed
+    resp_parsed
   }
   else {
-    stop("Can't retrieve features information from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve features information from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getFeaturesInfos <- function(usecaseId, featureName, versionNumber = 1) {
-  #' Get information of a given feature related to a usecaseId and its version number
+get_features_infos <- function(usecase_id, feature_name, version_number = 1) {
+  #' Get information of a given feature related to a usecase_id and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param featureName name of the feature to retrive information
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param feature_name name of the feature to retrive information.
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return parsed content of the specific feature
+  #' @return parsed content of the specific feature.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/features/', featureName), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/features/', feature_name), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed
+    resp_parsed
   }
   else {
-    stop("Can't retrieve information from feature ", featureName, " from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve information from feature ", feature_name, " from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getUsecaseModels <- function(usecaseId, versionNumber = 1) {
-  #' Get a model list related to a usecaseId and its version number
+get_usecase_models <- function(usecase_id, version_number = 1) {
+  #' Get a model list related to a usecase_id and its version number
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return parsed content of models attached to usecaseId
+  #' @return parsed content of models attached to usecase_id.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/models'), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models'), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed[["items"]]
+    resp_parsed[["items"]]
   }
   else {
-    stop("Can't retrieve models from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve models from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getModelInfos <- function(usecaseId, modelId, versionNumber = 1) {
-  #' Get model informations corresponding to usecaseId and modelId and its version number
+get_model_infos <- function(usecase_id, model_id, version_number = 1) {
+  #' Get model information corresponding to usecase_id and model_id and its version number
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param modelId id of the model, can be obtained with usecaseModels(usecaseId).
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param model_id id of the model, can be obtained with usecaseModels(usecase_id).
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return parsed content of the model
+  #' @return parsed content of the model.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/models/', modelId), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed
+    resp_parsed
   }
   else {
-    stop("Can't retrieve model ", modelId, " from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve model ", model_id, " from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getModelHyperparameters <- function(usecaseId, modelId, versionNumber = 1) {
-  #' Get hyperparameters corresponding to usecaseId and modelId and its version number
+get_model_hyperparameters <- function(usecase_id, model_id, version_number = 1) {
+  #' Get hyperparameters corresponding to usecase_id and model_id and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param modelId id of the model, can be obtained with usecaseModels(usecaseId).
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param model_id id of the model, can be obtained with usecaseModels(usecase_id).
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return parsed content of the model's hyperparameters
+  #' @return parsed content of the model's hyperparameters.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/models/', modelId, '/download/hyperparameters'), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/hyperparameters'), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed
+    resp_parsed
   }
   else {
-    stop("Can't retrieve hyperparameters of model ", modelId, " from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve hyperparameters of model ", model_id, " from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getModelFeatureImportance <- function(usecaseId, modelId, versionNumber = 1, mode = "raw") {
-  #' Get feature importance corresponding to usecaseId and modelId and its version number
+get_model_feature_importance <- function(usecase_id, model_id, version_number = 1, mode = "raw") {
+  #' Get feature importance corresponding to usecase_id and model_id and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param modelId id of the model, can be obtained with usecaseModels(usecaseId).
-  #' @param versionNumber number of the version of the usecase. 1 by default.
-  #' @param mode character indicating the type of feature importance among "raw" (default) or "engineered"
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param model_id id of the model, can be obtained with usecaseModels(usecase_id).
+  #' @param version_number number of the version of the usecase. 1 by default.
+  #' @param mode character indicating the type of feature importance among "raw" (default) or "engineered".
   #'
-  #' @return dataset of the model's feature importance
+  #' @return dataset of the model's feature importance.
   #'
   #' @import httr
   #' @importFrom data.table fread
@@ -261,11 +261,11 @@ getModelFeatureImportance <- function(usecaseId, modelId, versionNumber = 1, mod
   temp <- tempfile()
 
   if(mode == "raw") {
-    resp <- previsionDownload(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/models/', modelId, '/download/features-importance'), temp)
+    resp <- previsionDownload(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/features-importance'), temp)
   }
 
   if(mode == "engineered") {
-    resp <- previsionDownload(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/models/', modelId, '/download/features-engineering-importance'), temp)
+    resp <- previsionDownload(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/features-engineering-importance'), temp)
   }
 
   if(resp$status_code == 200) {
@@ -274,140 +274,140 @@ getModelFeatureImportance <- function(usecaseId, modelId, versionNumber = 1, mod
     data
   }
   else {
-    stop("Can't retrieve feature importance of model ", modelId, " from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code)
+    stop("Can't retrieve feature importance of model ", model_id, " from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code)
   }
 }
 
-getUsecasePredictions <- function(usecaseId, generatingType = "user", versionNumber = 1) {
-  #' Get a usecase from its usecaseId and its version number
+get_usecase_predictions <- function(usecase_id, generating_type = "user", version_number = 1) {
+  #' Get a usecase from its usecase_id and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param generatingType can be "user" (= user predictions) or "auto" (= hold out predictions)
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param generating_type can be "user" (= user predictions) or "auto" (= hold out predictions).
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return parsed prediction list items
+  #' @return parsed prediction list items.
   #'
   #' @import httr
   #'
   #' @export
 
-  if(!generatingType %in% c("user", "auto")) {
-    stop("generatingType should be equal to \"user\" or \"auto\"")
+  if(!generating_type %in% c("user", "auto")) {
+    stop("generating_type should be equal to \"user\" or \"auto\"")
   }
 
   page = 1
   predictions = c()
 
-  # Looping over page to get all informations
+  # Looping over page to get all information
   while(T) {
-    resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/predictions?page=', page, '?generatingType=', generatingType, '/'), GET)
-    respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+    resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/predictions?page=', page, '?generating_type=', generating_type, '/'), GET)
+    resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
       # Stop when no new entry appears
-      if(length(respParsed[["items"]])==0) {
+      if(length(resp_parsed[["items"]])==0) {
         break
       }
 
       # Store items and continue
-      predictions = c(predictions, respParsed[["items"]])
+      predictions = c(predictions, resp_parsed[["items"]])
       page = page + 1
     }
     else {
-      stop("Can't retrieve predictions from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+      stop("Can't retrieve predictions from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
     }
   }
   predictions
 }
 
-startPrediction <- function(usecaseId, datasetId = NULL, datasetFolderId = NULL, confidence = F, bestSingle = F, modelId = NULL, versionNumber = 1, queriesDatasetId = NULL, queriesDatasetContentColumn = NULL, queriesDatasetIdColumn = NULL, queriesDatasetMatchingIdDescriptionColumn = NULL, topK = NULL) {
-  #' Start a prediction on a existing usecase
+create_prediction <- function(usecase_id, dataset_id = NULL, dataset_folder_id = NULL, confidence = F, best_single = F, model_id = NULL, version_number = 1, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL) {
+  #' Create a prediction on a existing usecase
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param datasetId id of the dataset to start the prediction on, can be obtained with getUsecases()
-  #' @param datasetFolderId id of the folder dataset to start prediction on, can be obtained with getUsecases(). Only usefull for images use cases
-  #' @param confidence boolean. If enable, confidence intervalle will be added to predictions
-  #' @param bestSingle boolean. If enable, best single model (non blend) will be used for making predictions other wise, best model will be used unless if modelId is fed
-  #' @param modelId id of the model to start the prediction on. If provided, it will overwrite the "best single" params
-  #' @param versionNumber number of the version of the usecase. 1 by default
-  #' @param queriesDatasetId id of the datasat containing queries (text-similarity)
-  #' @param queriesDatasetContentColumn name of the content column in the queries dataset (text-similarity)
-  #' @param queriesDatasetIdColumn name of the id columln in the queries dataset (text-similarity)
-  #' @param queriesDatasetMatchingIdDescriptionColumn name of the column matching the id (text-similarity)
-  #' @param topK number of class to retrieve (text-similarity)
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param dataset_id id of the dataset to start the prediction on, can be obtained with get_usecases().
+  #' @param dataset_folder_id id of the folder dataset to start prediction on, can be obtained with get_usecases(). Only usefull for images use cases.
+  #' @param confidence boolean. If enable, confidence intervalle will be added to predictions.
+  #' @param best_single boolean. If enable, best single model (non blend) will be used for making predictions other wise, best model will be used unless if model_id is fed.
+  #' @param model_id id of the model to start the prediction on. If provided, it will overwrite the "best single" params.
+  #' @param version_number number of the version of the usecase. 1 by default.
+  #' @param queries_dataset_id id of the datasat containing queries (text-similarity).
+  #' @param queries_dataset_content_column name of the content column in the queries dataset (text-similarity).
+  #' @param queries_dataset_id_column name of the id columln in the queries dataset (text-similarity).
+  #' @param queries_dataset_matching_id_description_column name of the column matching the id (text-similarity).
+  #' @param top_k number of class to retrieve (text-similarity).
   #'
-  #' @return parsed prediction list
+  #' @return parsed prediction list.
   #'
   #' @import httr
   #'
   #' @export
 
-  params = list(datasetId = datasetId,
-                datasetFolderId = datasetFolderId,
+  params = list(dataset_id = dataset_id,
+                dataset_folder_id = dataset_folder_id,
                 confidence = confidence,
-                bestSingle = bestSingle,
-                modelId = modelId,
-                versionNumber = versionNumber,
-                queriesDatasetId = queriesDatasetId,
-                queriesDatasetContentColumn = queriesDatasetContentColumn,
-                queriesDatasetIdColumn = queriesDatasetIdColumn,
-                queriesDatasetMatchingIdDescriptionColumn = queriesDatasetMatchingIdDescriptionColumn,
-                topK = topK)
+                best_single = best_single,
+                model_id = model_id,
+                version_number = version_number,
+                queries_dataset_id = queries_dataset_id,
+                queries_dataset_content_column = queries_dataset_content_column,
+                queries_dataset_id_column = queries_dataset_id_column,
+                queries_dataset_matching_id_description_column = queries_dataset_matching_id_description_column,
+                top_k = top_k)
 
   params <- params[!sapply(params, is.null)]
 
-  if(is.null(datasetId) & is.null(queriesDatasetId)) {
-    stop("either datasetId or queriesDatasetId should be set")
+  if(is.null(dataset_id) & is.null(queries_dataset_id)) {
+    stop("either dataset_id or queries_dataset_id should be set")
   }
 
-  if(!is.null(modelId)){
-    message("modelId is set, the bestSingle param won't be taken into account")
+  if(!is.null(model_id)){
+    message("model_id is set, the best_single param won't be taken into account")
   }
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/predictions'), POST, params)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/predictions'), POST, params)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 202) {
-    respParsed
+    resp_parsed
   }
   else {
-    stop("Can't start prediction for usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't start prediction for usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getPredictionInfos <- function(usecaseId, predictionId, versionNumber = 1) {
-  #' Get a informations about a prediction from a specific usecase / version number
+get_prediction_infos <- function(usecase_id, prediction_id, version_number = 1) {
+  #' Get a information about a prediction from a specific usecase / version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param predictionId id of the prediction to be retrieved, can be obtained with usecasePredictions()
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param prediction_id id of the prediction to be retrieved, can be obtained with usecasePredictions().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return list of prediction informations
+  #' @return list of prediction information.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/predictions/', predictionId), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/predictions/', prediction_id), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed
+    resp_parsed
   } else {
-    stop("Can't retrieve prediction infos of prediction ", predictionId, " for usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve prediction infos of prediction ", prediction_id, " for usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getPrediction <- function(usecaseId, predictionId, versionNumber = 1, timeOut = 3600, waitTime = 10) {
-  #' Get a specific prediction from a specific usecase / version number. Wait up until timeOut is reached and wait waitTime between each retry.
+get_prediction <- function(usecase_id, prediction_id, version_number = 1, time_out = 3600, wait_time = 10) {
+  #' Get a specific prediction from a specific usecase / version number. Wait up until time_out is reached and wait wait_time between each retry.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param predictionId id of the prediction to be retrieved, can be obtained with usecasePredictions().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
-  #' @param timeOut maximum number of seconds to wait for the prediction. 3 600 by default.
-  #' @param waitTime number of seconds to wait between each retry. 10 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param prediction_id id of the prediction to be retrieved, can be obtained with usecasePredictions().
+  #' @param version_number number of the version of the usecase. 1 by default.
+  #' @param time_out maximum number of seconds to wait for the prediction. 3 600 by default.
+  #' @param wait_time number of seconds to wait between each retry. 10 by default.
   #'
-  #' @return a data.frame with the predictions
+  #' @return a data.frame with the predictions.
   #'
   #' @import httr
   #' @importFrom data.table fread
@@ -415,9 +415,9 @@ getPrediction <- function(usecaseId, predictionId, versionNumber = 1, timeOut = 
   #' @export
 
   attempt = 0
-  while(attempt < timeOut/waitTime) {
+  while(attempt < time_out/wait_time) {
     temp <- tempfile()
-    resp <- previsionDownload(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/predictions/', predictionId, '/download'), temp)
+    resp <- previsionDownload(paste0('/usecases/', usecase_id, '/versions/', version_number, '/predictions/', prediction_id, '/download'), temp)
 
     # IF STATUS 200 RETURN PREDICTION
     if(resp$status_code == 200) {
@@ -430,275 +430,252 @@ getPrediction <- function(usecaseId, predictionId, versionNumber = 1, timeOut = 
     # IF STATUS 404 SLEEP AND RETRY
     if(resp$status_code == 404) {
       message("Prediction is beeing computed...")
-      Sys.sleep(waitTime)
+      Sys.sleep(wait_time)
       attempt = attempt + 1
     }
   }
-  stop("Can't retrieve prediction prediction ", predictionId, " for usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
+  stop("Can't retrieve prediction prediction ", prediction_id, " for usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
 }
 
-deletePrediction <- function(usecaseId, predictionId, versionNumber = 1) {
-  #' Delete a prediction of a given model and its version number
+delete_prediction <- function(usecase_id, prediction_id, version_number = 1) {
+  #' Delete a prediction of a given model and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param predictionId id of the prediction to be retrieved, can be obtained with usecasePredictions()
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param prediction_id id of the prediction to be retrieved, can be obtained with usecasePredictions().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
   #' @import httr
   #'
-  #' @return list of predictions of usecaseId
+  #' @return list of predictions of usecase_id.
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/predictions/', predictionId), DELETE)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/predictions/', prediction_id), DELETE)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Delete OK - ", resp$status_code, ":", respParsed$message)
+    message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
   } else {
-    message("Delete KO - ", resp$status_code, ":", respParsed$message)
+    message("Delete KO - ", resp$status_code, ":", resp_parsed$message)
   }
-  getUsecasePredictions(usecaseId)
+  get_usecase_predictions(usecase_id)
 }
 
-getPredictionEvents <- function(usacaseId, versionNumber = 1) {
-  #' Get events for prediction of usecaseId and its version number
-  #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
-  #'
-  #' @return parsed event list
-  #'
-  #' @import httr
-  #'
-  #' @export
-
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/predictions/events'), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
-
-  if(resp$status_code == 200) {
-    respParsed
-  }
-  else {
-    stop("Can't retrieve prediction events from usecase ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed)
-  }
-}
-
-shareUsecase <- function(usecaseId, email) {
+share_usecase <- function(usecase_id, email) {
   #' Share a usecase to a specific user
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
   #' @param email email adress of the user you want to share the usecase with. Should be a platform user.
   #'
   #' @import httr
   #'
-  #' @return list of shared users
+  #' @return list of shared users.
   #'
   #' @export
 
   params = list(email = email)
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/sharing'), POST, params)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/sharing'), POST, params)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Usecase ", usecaseId, " shared to the user ", email)
+    message("Usecase ", usecase_id, " shared to the user ", email)
   } else {
-    message("Sharing of the usecase ", usecaseId, " for user ", email, " failed - ", resp$status_code, ":", respParsed$message)
+    message("Sharing of the usecase ", usecase_id, " for user ", email, " failed - ", resp$status_code, ":", resp_parsed$message)
   }
-  getSharedUsecaseUsers(usecaseId)
+  get_shared_usecase_users(usecase_id)
 }
 
-unshareUsecase <- function(usecaseId, email = NULL) {
-  #' Unshare a use case for the specified email adress. If missing, the usecase will be unshared from all users
+unshare_usecase <- function(usecase_id, email = NULL) {
+  #' Unshare a use case for the specified email adress. If missing, the usecase will be unshared from all users.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
   #' @param email email adress of the user you want to unshare the usecase with. Should be an instance user.
   #'
   #' @import httr
   #'
-  #' @return list of shared users
+  #' @return list of shared users.
   #'
   #' @export
 
   if(is.null(email)) {
-    resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/sharing'), DELETE)
+    resp <- pio_request(paste0('/usecases/', usecase_id, '/sharing'), DELETE)
   }
   else {
-    resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/sharing/', email), DELETE)
+    resp <- pio_request(paste0('/usecases/', usecase_id, '/sharing/', email), DELETE)
   }
 
-  respParsed <- content(resp, 'parsed')
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Usecase ", usecaseId, " unshared")
+    message("Usecase ", usecase_id, " unshared")
   } else {
-    message("Unsharing of the usecase ", usecaseId, " failed - ", resp$status_code, ":", respParsed$message)
+    message("Unsharing of the usecase ", usecase_id, " failed - ", resp$status_code, ":", resp_parsed$message)
   }
-  getSharedUsecaseUsers(usecaseId)
+  get_shared_usecase_users(usecase_id)
 }
 
-getSharedUsecaseUsers <- function(usecaseId) {
-  #' Get the list of users that can access the usecase
+get_shared_usecase_users <- function(usecase_id) {
+  #' Get the list of users that can access the usecase.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/1'), GET)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/1'), GET)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    respParsed[["shareList"]]
+    resp_parsed[["shareList"]]
   } else {
-    stop("Can't get the list of the users that can access the usecase ", usecaseId, " failed - ", resp$status_code, ":", respParsed$message)
+    stop("Can't get the list of the users that can access the usecase ", usecase_id, " failed - ", resp$status_code, ":", resp_parsed$message)
   }
 }
 
-startUsecase <- function(name, dataType, trainingType, datasetId, targetColumn = NULL, holdoutDatasetId = NULL, idColumn = NULL, dropList = NULL, profile = NULL, usecaseDescription = NULL, metric = NULL, foldColumn = NULL, normalModels = NULL, liteModels = c('XGB'), simpleModels = NULL, withBlend = NULL, weightColumn = NULL, featuresEngineeringSelectedList = NULL, featuresSelectionCount = NULL, featuresSelectionTime = NULL, datasetFolderId = NULL, filenameColumn = NULL, ymin = NULL, ymax = NULL, xmin = NULL, xmax = NULL, timeColumn = NULL, startDW = NULL, endDW = NULL, startFW = NULL, endFW = NULL, groupList = NULL, aprioriList = NULL, contentColumn = NULL, queriesDatasetId = NULL, queriesDatasetContentColumn = NULL, queriesDatasetIdColumn = NULL, queriesDatasetMatchingIdDescriptionColumn = NULL, topK = NULL, lang = NULL, modelsParameters = NULL) {
-  #' Start a new usecase on the platform.
+create_usecase <- function(name, data_type, training_type, dataset_id, target_column = NULL, holdout_dataset_id = NULL, id_column = NULL, drop_list = NULL, profile = NULL, usecase_description = NULL, metric = NULL, fold_column = NULL, normal_models = NULL, lite_models = c('XGB'), simple_models = NULL, with_blend = NULL, weight_column = NULL, features_engineering_selected_list = NULL, features_selection_count = NULL, features_selection_time = NULL, dataset_folder_id = NULL, filename_column = NULL, y_min = NULL, y_max = NULL, x_min = NULL, x_max = NULL, time_column = NULL, start_dw = NULL, end_dw = NULL, start_fw = NULL, end_fw = NULL, group_list = NULL, apriori_list = NULL, content_column = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL, lang = NULL, models_parameters = NULL) {
+  #' Create a new usecase on the platform.
   #'
-  #' @param name name of the usecase
-  #' @param dataType type of data ("tabular" or "images" or "timeseries")
-  #' @param trainingType type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection", "text-similarity")
-  #' @param datasetId id of the dataset used for the training phase
-  #' @param targetColumn name of the TARGET column
-  #' @param holdoutDatasetId id of the holdout dataset
-  #' @param idColumn name of the id column
-  #' @param dropList list of names of features to drop
-  #' @param profile chosen profil among "quick", "normal", "advanced"
-  #' @param usecaseDescription usecase description
-  #' @param metric name of the metric to optimise
-  #' @param foldColumn name of the fold column
-  #' @param normalModels list of (normal) models to select with full FE & hyperparameters search
-  #' @param liteModels list of (lite) models to select with lite FE & default hyperparameters
-  #' @param simpleModels list of simple models to select
-  #' @param withBlend do we allow to include blend in the modelisation
-  #' @param weightColumn name of the weight columns
-  #' @param featuresEngineeringSelectedList list of feature engineering to select among "Counter", "Date", "freq", "text_tfidf", "text_word2vec", "text_embedding", "tenc", "poly", "pca", "kmean"
-  #' @param featuresSelectionCount number of features to keep after the feature selection process
-  #' @param featuresSelectionTime time budget in minutes of the feature selection process
-  #' @param datasetFolderId id of the dataset fold (images)
-  #' @param filenameColumn name of the file name path (images)
-  #' @param ymin name of the column matching the lower y value of the image (object detection)
-  #' @param ymax name of the column matching the higher y value of the image (object detection)
-  #' @param xmin name of the column matching the lower x value of the image (object detection)
-  #' @param xmax name of the column matching the higher x value of the image (object detection)
-  #' @param timeColumn name of column containing the timestamp (time series)
-  #' @param startDW value of the start of derivative window (time series), should be a strict negative integer
-  #' @param endDW value of the end of derivative window (time series), should be a negative integer greater than startDW
-  #' @param startFW value of the start of forecast window (time series), should be a strict positive integer
-  #' @param endFW value of the end of forecast window (time series), should be a strict positive integer greater than startFW
-  #' @param groupList list of name of feature that describes groups (time series)
-  #' @param aprioriList list of name of feature that are a priori (time series)
-  #' @param contentColumn content column name (text-similarity)
-  #' @param queriesDatasetId id of the dataset containing queries (text-similarity)
-  #' @param queriesDatasetContentColumn name of the column containing queries in the query dataset (text-similarity)
-  #' @param queriesDatasetIdColumn name of the ID column in the query dataset (text-similarity)
-  #' @param queriesDatasetMatchingIdDescriptionColumn name of the column matching id in the description dataset (text-similarity)
-  #' @param topK top k individual to find (text-similarity)
-  #' @param lang lang of the text (text-similarity)
-  #' @param modelsParameters parameters of the model (text-similarity)
+  #' @param name name of the usecase.
+  #' @param data_type type of data ("tabular" or "images" or "timeseries").
+  #' @param training_type type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection", "text-similarity").
+  #' @param dataset_id id of the dataset used for the training phase.
+  #' @param target_column name of the TARGET column.
+  #' @param holdout_dataset_id id of the holdout dataset.
+  #' @param id_column name of the id column.
+  #' @param drop_list list of names of features to drop.
+  #' @param profile chosen profil among "quick", "normal", "advanced".
+  #' @param usecase_description usecase description.
+  #' @param metric name of the metric to optimise.
+  #' @param fold_column name of the fold column.
+  #' @param normal_models list of (normal) models to select with full FE & hyperparameters search.
+  #' @param lite_models list of (lite) models to select with lite FE & default hyperparameters.
+  #' @param simple_models list of simple models to select.
+  #' @param with_blend do we allow to include blend in the modelisation.
+  #' @param weight_column name of the weight columns.
+  #' @param features_engineering_selected_list list of feature engineering to select among "Counter", "Date", "freq", "text_tfidf", "text_word2vec", "text_embedding", "tenc", "poly", "pca", "kmean".
+  #' @param features_selection_count number of features to keep after the feature selection process.
+  #' @param features_selection_time time budget in minutes of the feature selection process.
+  #' @param dataset_folder_id id of the dataset fold (images).
+  #' @param filename_column name of the file name path (images).
+  #' @param y_min name of the column matching the lower y value of the image (object detection).
+  #' @param y_max name of the column matching the higher y value of the image (object detection).
+  #' @param x_min name of the column matching the lower x value of the image (object detection).
+  #' @param x_max name of the column matching the higher x value of the image (object detection).
+  #' @param time_column name of column containing the timestamp (time series).
+  #' @param start_dw value of the start of derivative window (time series), should be a strict negative integer.
+  #' @param end_dw value of the end of derivative window (time series), should be a negative integer greater than start_dw.
+  #' @param start_fw value of the start of forecast window (time series), should be a strict positive integer.
+  #' @param end_fw value of the end of forecast window (time series), should be a strict positive integer greater than start_fw.
+  #' @param group_list list of name of feature that describes groups (time series).
+  #' @param apriori_list list of name of feature that are a priori (time series).
+  #' @param content_column content column name (text-similarity).
+  #' @param queries_dataset_id id of the dataset containing queries (text-similarity).
+  #' @param queries_dataset_content_column name of the column containing queries in the query dataset (text-similarity).
+  #' @param queries_dataset_id_column name of the ID column in the query dataset (text-similarity).
+  #' @param queries_dataset_matching_id_description_column name of the column matching id in the description dataset (text-similarity).
+  #' @param top_k top k individual to find (text-similarity).
+  #' @param lang lang of the text (text-similarity).
+  #' @param models_parameters parameters of the model (text-similarity).
   #'
   #' @import httr
   #'
-  #' @return usecase infos
+  #' @return usecase information.
   #'
   #' @export
 
-  # CHECKING dataType
-  if(!dataType %in% c("tabular", "images", "timeseries")) {
-    stop("dataType must be either \"tabular\", \"images\" or \"timeseries\"")
+  # CHECKING data_type
+  if(!data_type %in% c("tabular", "images", "timeseries")) {
+    stop("data_type must be either \"tabular\", \"images\" or \"timeseries\"")
   }
 
-  # CHECKING trainingType
-  if(!trainingType %in% c("regression", "classification", "multiclassification", "object-detection", "text-similarity")) {
-    stop("trainingType must be either \"regression\", \"classification\", \"multiclassification\" or \"object-detection\" or \"text-similarity\"")
+  # CHECKING training_type
+  if(!training_type %in% c("regression", "classification", "multiclassification", "object-detection", "text-similarity")) {
+    stop("training_type must be either \"regression\", \"classification\", \"multiclassification\" or \"object-detection\" or \"text-similarity\"")
   }
 
-  # CHECKING datasetId EXISTS
-  if(!datasetId %in% unlist(getDatasets())) {
-    stop("datasetId doesn't exist")
+  # CHECKING dataset_id EXISTS
+  if(!dataset_id %in% unlist(get_datasets())) {
+    stop("dataset_id doesn't exist")
   }
 
-  # CHECKING CONDITIONS FOR normalModels, liteModels and simpleModels
-  if (length(normalModels) + length(liteModels) + length(simpleModels) < 1) {
+  # CHECKING CONDITIONS FOR normal_models, lite_models and simple_models
+  if (length(normal_models) + length(lite_models) + length(simple_models) < 1) {
     stop("must give at least one model")
   }
-  if(!all(normalModels %in% c("LR", "RF", "ET", "XGB", "LGB", "NN"))) {
-    stop("normalModels must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\" or \"NN\"")
+  if(!all(normal_models %in% c("LR", "RF", "ET", "XGB", "LGB", "NN"))) {
+    stop("normal_models must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\" or \"NN\"")
   }
-  if(!all(liteModels %in% c("LR", "RF", "ET", "XGB", "LGB", "NN", "NBC"))) {
-    stop("liteModels must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\", \"NN\" or \"NBC\"")
+  if(!all(lite_models %in% c("LR", "RF", "ET", "XGB", "LGB", "NN", "NBC"))) {
+    stop("lite_models must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\", \"NN\" or \"NBC\"")
   }
-  if(!all(simpleModels %in% c("DT", "LR"))) {
+  if(!all(simple_models %in% c("DT", "LR"))) {
     stop("simple models must be either \"DT\" or \"LR\"")
   }
-  if(!trainingType %in% c("classification", "multiclassification") & "NBC" %in% liteModels) {
+  if(!training_type %in% c("classification", "multiclassification") & "NBC" %in% lite_models) {
     stop("NBC liteModel is only available for classification or multiclassification")
   }
 
   # GET PARAMS AND REMOVE NULL ONES
   ucParams = list(name = name,
-                  datasetId = datasetId,
-                  targetColumn = targetColumn,
-                  holdoutDatasetId = holdoutDatasetId,
-                  idColumn = idColumn,
-                  dropList = dropList,
+                  dataset_id = dataset_id,
+                  target_column = target_column,
+                  holdout_dataset_id = holdout_dataset_id,
+                  id_column = id_column,
+                  drop_list = drop_list,
                   profile = profile,
                   metric = metric,
-                  foldColumn = foldColumn,
-                  normalModels = normalModels,
-                  liteModels = liteModels,
-                  simpleModels = simpleModels,
-                  withBlend = withBlend,
-                  weightColumn = weightColumn,
-                  featuresEngineeringSelectedList = featuresEngineeringSelectedList,
-                  featuresSelectionCount = featuresSelectionCount,
-                  featuresSelectionTime = featuresSelectionTime,
-                  datasetFolderId = datasetFolderId,
-                  filenameColumn = filenameColumn,
-                  ymin = ymin,
-                  ymax = ymax,
-                  xmin = xmin,
-                  xmax = xmax,
-                  timeColumn = timeColumn,
-                  startDW = startDW,
-                  endDW = endDW,
-                  startFW = startFW,
-                  endFW = endFW,
-                  groupList = groupList,
-                  aprioriList = aprioriList,
-                  contentColumn = contentColumn,
-                  queriesDatasetId = queriesDatasetId,
-                  queriesDatasetContentColumn = queriesDatasetContentColumn,
-                  queriesDatasetIdColumn = queriesDatasetIdColumn,
-                  queriesDatasetMatchingIdDescriptionColumn = queriesDatasetMatchingIdDescriptionColumn,
-                  topK = topK,
+                  fold_column = fold_column,
+                  normal_models = normal_models,
+                  lite_models = lite_models,
+                  simple_models = simple_models,
+                  with_blend = with_blend,
+                  weight_column = weight_column,
+                  features_engineering_selected_list = features_engineering_selected_list,
+                  features_selection_count = features_selection_count,
+                  features_selection_time = features_selection_time,
+                  dataset_folder_id = dataset_folder_id,
+                  filename_column = filename_column,
+                  y_min = y_min,
+                  y_max = y_max,
+                  x_min = x_min,
+                  x_max = x_max,
+                  time_column = time_column,
+                  start_dw = start_dw,
+                  end_dw = end_dw,
+                  start_fw = start_fw,
+                  end_fw = end_fw,
+                  group_list = group_list,
+                  apriori_list = apriori_list,
+                  content_column = content_column,
+                  queries_dataset_id = queries_dataset_id,
+                  queries_dataset_content_column = queries_dataset_content_column,
+                  queries_dataset_id_column = queries_dataset_id_column,
+                  queries_dataset_matching_id_description_column = queries_dataset_matching_id_description_column,
+                  top_k = top_k,
                   lang = lang,
-                  modelsParameters = modelsParameters)
+                  models_parameters = models_parameters)
 
   ucParams <- ucParams[!sapply(ucParams, is.null)]
 
-  resp <- previsionioRequest(paste0('/usecases/', dataType, '/', trainingType), POST, ucParams)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/usecases/', data_type, '/', training_type), POST, ucParams)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 202) {
-    message("Usecase started - ", resp$status_code, ":", respParsed$message)
+    message("Usecase started - ", resp$status_code, ":", resp_parsed$message)
   } else {
-    stop("Usecase starting failed - ", resp$status_code, ":", respParsed$message)
+    stop("Usecase starting failed - ", resp$status_code, ":", resp_parsed$message)
   }
-  getUsecaseInfos(respParsed$`_id`)
+  get_usecase_info(resp_parsed$`_id`)
 }
 
-updateUsecaseDescription <- function(usecaseId, description = "", versionNumber = 1) {
-  #' Update the description of a given usecase and its version number
+updateusecase_description <- function(usecase_id, description = "", version_number = 1) {
+  #' Update the description of a given usecase and its version number.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
   #' @param description Description of the usecase.
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
   #' @import httr
   #'
@@ -706,109 +683,109 @@ updateUsecaseDescription <- function(usecaseId, description = "", versionNumber 
 
   params = list(description = description)
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber), PUT, params)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number), PUT, params)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Description of the usecase ", usecaseId, " version ", versionNumber, " updated - ", resp$status_code, ":", respParsed$message)
+    message("Description of the usecase ", usecase_id, " version ", version_number, " updated - ", resp$status_code, ":", resp_parsed$message)
   } else {
-    message("Update of the description of the usecase ", usecaseId, " version ", versionNumber, " failed - ", resp$status_code, ":", respParsed$message)
+    message("Update of the description of the usecase ", usecase_id, " version ", version_number, " failed - ", resp$status_code, ":", resp_parsed$message)
   }
-  getUsecaseInfos(usecaseId)
+  get_usecase_info(usecase_id)
 }
 
-deleteUsecase <- function(usecaseId, versionNumber = 1) {
-  #' Delete a version of a usecase on the platform
+delete_usecase <- function(usecase_id, version_number = 1) {
+  #' Delete a version of a usecase on the platform.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber), DELETE)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number), DELETE)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Delete OK - ", resp$status_code, ":", respParsed$message)
+    message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
   } else {
-    message("Delete KO - ", resp$status_code, ":", respParsed$message)
+    message("Delete KO - ", resp$status_code, ":", resp_parsed$message)
   }
   resp$status_code
 }
 
-pauseUsecase <- function(usecaseId, versionNumber = 1) {
-  #' Pause a version of a usecase on the platform
+pause_usecase <- function(usecase_id, version_number = 1) {
+  #' Pause a version of a usecase on the platform.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/pause'), PUT)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/pause'), PUT)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Pausing OK - ", resp$status_code, ":", respParsed$message)
+    message("Pausing OK - ", resp$status_code, ":", resp_parsed$message)
   } else {
-    message("Pausing KO - ", resp$status_code, ":", respParsed$message)
+    message("Pausing KO - ", resp$status_code, ":", resp_parsed$message)
   }
   resp$status_code
 }
 
-resumeUsecase <- function(usecaseId, versionNumber = 1) {
-  #' Resume a version of usecase on the platform
+resume_usecase <- function(usecase_id, version_number = 1) {
+  #' Resume a version of usecase on the platform.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/resume'), PUT)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/resume'), PUT)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Resuming OK - ", resp$status_code, ":", respParsed$message)
+    message("Resuming OK - ", resp$status_code, ":", resp_parsed$message)
   } else {
-    message("Resuming KO - ", resp$status_code, ":", respParsed$message)
+    message("Resuming KO - ", resp$status_code, ":", resp_parsed$message)
   }
   resp$status_code
 }
 
-stopUsecase <- function(usecaseId, versionNumber = 1) {
-  #' Stop a version of a usecase on the platform
+stop_usecase <- function(usecase_id, version_number = 1) {
+  #' Stop a version of a usecase on the platform.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/stop'), PUT)
-  respParsed <- content(resp, 'parsed')
+  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/stop'), PUT)
+  resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Stop OK - ", resp$status_code, ":", respParsed$message)
+    message("Stop OK - ", resp$status_code, ":", resp_parsed$message)
   } else {
-    message("Stop KO - ", resp$status_code, ":", respParsed$message)
+    message("Stop KO - ", resp$status_code, ":", resp_parsed$message)
   }
   resp$status_code
 }
 
-getUsecaseCV <- function(usecaseId, modelId, versionNumber = 1) {
-  #' Get the cross validation file from a specific model of a given usecase / version
+get_usecase_cv <- function(usecase_id, model_id, version_number = 1) {
+  #' Get the cross validation file from a specific model of a given usecase / version.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param modelId id of the model to get the CV, can be obtained with usecaseModels(usecaseId).
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param model_id id of the model to get the CV, can be obtained with usecaseModels(usecase_id).
+  #' @param version_number number of the version of the usecase. 1 by default.
   #'
-  #' @return a dataframe
+  #' @return a dataframe containing cross validation data.
   #'
   #' @import httr
   #' @importFrom data.table fread
@@ -816,7 +793,7 @@ getUsecaseCV <- function(usecaseId, modelId, versionNumber = 1) {
   #' @export
 
   temp <- tempfile()
-  resp <- previsionDownload(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/models/', modelId, '/download/cv/'), temp)
+  resp <- previsionDownload(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/cv/'), temp)
 
   if(resp$status_code == 200) {
     data <- fread(unzip(temp))
@@ -824,64 +801,35 @@ getUsecaseCV <- function(usecaseId, modelId, versionNumber = 1) {
     file.remove(temp)
     data
   } else {
-    stop("Can't retrieve CV file for model ", modelId, " of use case ", usecaseId, " version ", versionNumber, " - ", resp$status_code, ":", respParsed$message)
+    stop("Can't retrieve CV file for model ", model_id, " of use case ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed$message)
   }
 }
 
-getUsecaseEvents <- function(usecaseId = NULL, versionNumber = 1) {
-  #' Get events of a version of ausecase. If no usecaseId provided, get events from all usecases
+get_best_model_id <- function(usecase_id, version_number = 1, include_blend = TRUE) {
+  #' Get the model_id that provide the best predictive performance given usecase_id and version_number. If include_blend is false, it will return the model_id from the best "non blended" model.
   #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
+  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
+  #' @param version_number number of the version of the usecase. 1 by default.
+  #' @param include_blend boolean, indicating if you want to retrieve the best model among blended models too.
   #'
-  #' @return parsed event list
-  #'
-  #' @import httr
-  #'
-  #' @export
-
-  if(is.null(usecaseId)) {
-    resp <- previsionioRequest('/usecases/events', GET)
-  }
-  else {
-    resp <- previsionioRequest(paste0('/usecases/', usecaseId, '/versions/', versionNumber, '/events'), GET)
-  }
-
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
-
-  if(resp$status_code == 200) {
-    respParsed
-  }
-  else {
-    stop("Can't retrieve events - ", resp$status_code, ":", respParsed)
-  }
-}
-
-getBestModelId <- function(usecaseId, versionNumber = 1, includeBlend = TRUE) {
-  #' Get the modelId that provide the best predictive performance given usecaseId and versionNumber. If includeBlend is false, it will return the modelId from the best "non blended" model.
-  #'
-  #' @param usecaseId id of the usecase, can be obtained with getUsecases().
-  #' @param versionNumber number of the version of the usecase. 1 by default.
-  #' @param includeBlend boolean, indicating if you want to retrieve the best model among blended models too.
-  #'
-  #' @return modelId
+  #' @return model_id.
   #'
   #' @import httr
   #'
   #' @export
 
   # GET MODELS FROM A USE CASE
-  models = getUsecaseModels(usecaseId, versionNumber = 1)
+  models = get_usecase_models(usecase_id, version_number = 1)
 
   # LOOP OVER THEM AND RETRIEVE THE ONE MATCHING SELECTED CRITERIA
   for(model in models) {
-    if(includeBlend && !is.null(model$tags$best)) {
+    if(include_blend && !is.null(model$tags$best)) {
       return(model$`_id`)
     }
-    if(!includeBlend && !is.null(model$tags$recommended)) {
+    if(!include_blend && !is.null(model$tags$recommended)) {
       return(model$`_id`)
     }
   }
 
-  stop("No model found")
+  stop("No model found for usecase ", usecase_id, " version ", version_number)
 }

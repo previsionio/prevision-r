@@ -1,63 +1,63 @@
-getDatasources <- function() {
-  #' Get informations of all data sources available.
+get_datasources <- function() {
+  #' Get information of all data sources available.
   #'
-  #' @return parsed content of all datasources
+  #' @return parsed content of all data_sources
   #'
   #' @import httr
   #'
   #' @export
 
   page = 1
-  dataSources = c()
+  data_sources = c()
 
-  # Looping over page to get all informations
+  # Looping over page to get all information
   while(T) {
-    resp <- previsionioRequest(paste0('/datasources?page=', page), GET)
-    respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+    resp <- pio_request(paste0('/datasources?page=', page), GET)
+    resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
       # Stop when no new entry appears
-      if(length(respParsed[["items"]])==0) {
+      if(length(resp_parsed[["items"]])==0) {
         break
       }
 
       # Store items and continue
-      dataSources = c(dataSources, respParsed[["items"]])
+      data_sources = c(data_sources, resp_parsed[["items"]])
       page = page + 1
     }
     else {
-      stop("Can't retrieve datasources list - ", resp$status_code, ":", respParsed)
+      stop("Can't retrieve data_sources list - ", resp$status_code, ":", resp_parsed)
     }
   }
-  dataSources
+  data_sources
 }
 
-getDatasourceInfos <- function(datasourceId) {
+get_datasource_info <- function(datasource_id) {
   #' Get a datasource from its id.
   #'
-  #' @param datasourceId id of the datasources to be retrieved, can be obtained with getDatasources().
+  #' @param datasource_id id of the data_sources to be retrieved, can be obtained with get_datasources().
   #'
-  #' @return parsed content of the datasources
+  #' @return parsed content of the data_sources
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/datasources/', datasourceId), GET)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/datasources/', datasource_id), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    respParsed
+    resp_parsed
   }
   else {
-    stop("Can't retrieve datasource ", datasourceId, " - ", resp$status_code, ":", respParsed)
+    stop("Can't retrieve datasource ", datasource_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-getDatasourceIdFromName <- function(datasourceName) {
-  #' Get a datasourceId from a datasourceName If duplicated name, the first datasourceId that match it is retrieved
+get_datasource_id_from_name <- function(datasource_name) {
+  #' Get a datasource_id from a datasource_name If duplicated name, the first datasource_id that match it is retrieved
   #'
-  #' @param datasourceName name of the connector we are searching its id from. Can be obtained with getDatasources().
+  #' @param datasource_name name of the connector we are searching its id from. Can be obtained with get_datasources().
   #'
   #' @return id of the datasource if found.
   #'
@@ -65,19 +65,19 @@ getDatasourceIdFromName <- function(datasourceName) {
   #'
   #' @export
 
-  datasourceList = getDatasources()
-  for (datasource in datasourceList) {
-    if(datasource$name == datasourceName) {
+  datasource_list = get_datasources()
+  for (datasource in datasource_list) {
+    if(datasource$name == datasource_name) {
       return(datasource$`_id`)
     }
   }
-  stop("There is no datasourceId matching the datasourceName ", datasourceName)
+  stop("There is no datasource_id matching the datasource_name ", datasource_name)
 }
 
-createDatasource <- function(connectorId, name, path= "", database= "", table = "", bucket = "", request = "") {
+create_datasource <- function(connector_id, name, path= "", database= "", table = "", bucket = "", request = "") {
   #' Create a new datasource
   #'
-  #' @param connectorId connectorId linked to the datasource.
+  #' @param connector_id connector_id linked to the datasource.
   #' @param name datasource name.
   #' @param path datasource path (for SFTP & FTP connector).
   #' @param database datasource database (for SQL & HIVE & HBASE connector).
@@ -92,17 +92,17 @@ createDatasource <- function(connectorId, name, path= "", database= "", table = 
   #' @export
 
   # CHECKING THAT CONNECTORID IS VALID
-  connectorsId = getConnectors()
-  validId = NULL
-  for (i in 1:length(connectorsId)) {
-    validId = c(validId, connectorsId[[i]]$`_id`)
+  connectors_id = get_connectors()
+  valid_id = NULL
+  for (i in 1:length(connectors_id)) {
+    valid_id = c(valid_id, connectors_id[[i]]$`_id`)
   }
 
-  if(!connectorId %in% validId) {
-    stop("ConnectorId ", connectorId, " is invalid")
+  if(!connector_id %in% valid_id) {
+    stop("connector_id ", connector_id, " is invalid")
   }
 
-  params <- list(connectorId = connectorId,
+  params <- list(connectorId = connector_id,
                  name = name,
                  path = path,
                  database = database,
@@ -110,53 +110,53 @@ createDatasource <- function(connectorId, name, path= "", database= "", table = 
                  bucket = bucket,
                  request = request)
 
-  resp <- previsionioRequest('/datasources', POST, params)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request('/datasources', POST, params)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Creation of datasource ", name, " OK - ", resp$status_code, ":", respParsed)
-    respParsed
+    message("Creation of datasource ", name, " OK - ", resp$status_code, ":", resp_parsed)
+    resp_parsed
   } else {
-    stop("Creation of datasource ", name, " KO - ", resp$status_code, ":", respParsed)
+    stop("Creation of datasource ", name, " KO - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-deleteDatasource <- function(datasourceId) {
+delete_datasource <- function(datasource_id) {
   #' Delete a datasource
   #'
-  #' @param datasourceId id of the connector to be deleted, can be obtained with listConnectors().
+  #' @param datasource_id id of the connector to be deleted, can be obtained with listConnectors().
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/datasources/', datasourceId), DELETE)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/datasources/', datasource_id), DELETE)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Deletation of datasource ", datasourceId, " OK - ", resp$status_code, ":", respParsed)
+    message("Deletation of datasource ", datasource_id, " OK - ", resp$status_code, ":", resp_parsed)
     resp$status_code
   } else {
-    stop("Deletion of datasource ", datasourceId, " KO - ", resp$status_code, ":", respParsed)
+    stop("Deletion of datasource ", datasource_id, " KO - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-testDatasource <- function(datasourceId) {
+test_datasource <- function(datasource_id) {
   #' Test a datasource
   #'
-  #' @param datasourceId id of the datasource to be tested, can be obtained with getDatasources().
+  #' @param datasource_id id of the datasource to be tested, can be obtained with get_datasources().
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- previsionioRequest(paste0('/datasources/', datasourceId, "/test"), POST)
-  respParsed <- content(resp, 'parsed', encoding = "UTF-8")
+  resp <- pio_request(paste0('/datasources/', datasource_id, "/test"), POST)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Test of datasource ", datasourceId, " OK - ", resp$status_code, ":", respParsed)
+    message("Test of datasource ", datasource_id, " OK - ", resp$status_code, ":", resp_parsed)
     resp$status_code
   } else {
-    stop("Test of datasource ", datasourceId, " KO - ", resp$status_code, ":", respParsed)
+    stop("Test of datasource ", datasource_id, " KO - ", resp$status_code, ":", resp_parsed)
   }
 }

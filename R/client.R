@@ -1,35 +1,31 @@
-previsionioClient <- new.env(parent = emptyenv())
-previsionioClient$apiVersion <- '/ext/v1'
+pio_client <- new.env(parent = emptyenv())
+pio_client$apiVersion <- '/ext/v1'
 
-initPrevisionioClient <- function(token, url) {
-  #' Initialization of the Client on the platform.
+pio_init <- function(token, url) {
+  #' Initialization of the connection to your instance Prevision.io.
   #'
-  #' Thanks to the token and the url, you can create a Prevision.io Client.
+  #' @param token your master token, can be found on your instance on the "API KEY" page.
+  #' @param url the url of your instance.
   #'
-  #' @param token String, your master token available on the platform.
-  #' @param url String, the url of your access page to the platform.
-  #'
-  #' @examples \dontrun{initPrevisionioClient(token, 'https://xxx.prevision.io')}
+  #' @examples \dontrun{pio_init('eyJhbGciOiJIUz', 'https://xxx.prevision.io')}
   #'
   #' @export
 
-  old <- list(old_url = previsionioClient$url, old_token = previsionioClient$token)
-  previsionioClient$url <- url
-  previsionioClient$token <- token
+  old <- list(old_url = pio_client$url, old_token = pio_client$token)
+  pio_client$url <- url
+  pio_client$token <- token
   invisible(old)
 }
 
-previsionioRequest <- function(endpoint, method, data = NULL, upload = FALSE) {
-  #' Request the platform
+pio_request <- function(endpoint, method, data = NULL, upload = FALSE) {
+  #' Request the platform. Thanks to an endpoint, the url and the API, you can create request.
   #'
-  #' Thanks to an endpoint, the url and the API, you can create request.
+  #' @param endpoint end of the url of the API call.
+  #' @param method the method needed according the API (Available: POST, GET, DELETE).
+  #' @param data object to upload when using method POST.
+  #' @param upload used parameter when uploading dataset (for encoding in API call), don't use it.
   #'
-  #' @param endpoint string, end of the url of the API call.
-  #' @param method string, the method needed according the API (Available: POST, GET, DELETE).
-  #' @param data, oject to upload when using method POST.
-  #' @param upload, used parameter when uploading dataset (for encoding in API call), don't use it.
-  #'
-  #' @examples \dontrun{previsionioRequest(paste0('/jobs/', usecase$jobId), DELETE)}
+  #' @examples \dontrun{pio_request(paste0('/jobs/', usecase$jobId), DELETE)}
   #'
   #' @import httr
   #' @import futile.logger
@@ -37,38 +33,38 @@ previsionioRequest <- function(endpoint, method, data = NULL, upload = FALSE) {
   #'
   #' @export
 
-  if (is.null(previsionioClient$url) || is.null(previsionioClient$token)) {
+  if (is.null(pio_client$url) || is.null(pio_client$token)) {
     stop('token or url not set')
   }
 
-  requestUrl <- paste(previsionioClient$url, previsionioClient$apiVersion, endpoint, sep = '')
-  flog.debug(paste('requesting:', requestUrl))
+  request_url <- paste(pio_client$url, pio_client$apiVersion, endpoint, sep = '')
+  flog.debug(paste('requesting:', request_url))
   flog.debug(paste('request body:', data))
   flog.debug(paste("request complete body", toJSON(data, auto_unbox=TRUE)))
 
   if (upload) {
     resp <- method(
-      requestUrl,
-      add_headers(Authorization = previsionioClient$token),
+      request_url,
+      add_headers(Authorization = pio_client$token),
       body = data,
       config = config(followlocation = 0L)
     )
   } else {
     resp <- method(
-      requestUrl,
-      add_headers("Authorization" = previsionioClient$token, "Content-Type" = "application/json"),
-      body = toJSON(data, auto_unbox=TRUE),
+      request_url,
+      add_headers("Authorization" = pio_client$token, "Content-Type" = "application/json"),
+      body = toJSON(data, auto_unbox = TRUE),
       config = config(followlocation = 0L)
     )
   }
   resp
 }
 
-previsionDownload <- function(endpoint, tempFile) {
-  #'  Download according specific parameters
+pio_download <- function(endpoint, tempFile) {
+  #' Download resources according specific parameters.
   #'
-  #' @param endpoint string, end of the url of the API call.
-  #' @param tempFile file, tempory file to be download.
+  #' @param endpoint end of the url of the API call.
+  #' @param tempFile temporary file to download.
   #'
   #' @return write on disk the content of the temporary file.
   #'
@@ -76,9 +72,9 @@ previsionDownload <- function(endpoint, tempFile) {
   #'
   #' @export
 
-  requestUrl <- paste(previsionioClient$url, previsionioClient$apiVersion, endpoint, sep = '')
-  GET(requestUrl,
+  request_url <- paste(pio_client$url, pio_client$apiVersion, endpoint, sep = '')
+  GET(request_url,
       write_disk(tempFile, overwrite = TRUE),
-      add_headers(Authorization = previsionioClient$token),
+      add_headers(Authorization = pio_client$token),
       config = config(followlocation = 0L))
 }

@@ -3,151 +3,236 @@ context("Usecases")
 source("helper-credentials.R")
 
 # INIT GLOBAL VARIABLE
-nb_usecases = length(getUsecases())
+nb_usecases = length(get_usecases())
 
 ##################################
 ### CREATE SOME USE CASES HERE ###
 ##################################
-test_that("startUsecase", {
-  expect_is(startUsecase("USECASE_REGRESSION_TESTU", "tabular", "regression", createDatasetFromDataframe("DS_REGRESSION_TESTU", tabularDataset("regression"))$`_id`, "TARGET", normalModels = c("LR", "RF"), liteModels = c("LR"), simpleModels = c("LR", "DT"), withBlend = F), "list", "getUsecases() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
-  expect_is(startUsecase("USECASE_CLASSIFICATION_TESTU", "tabular", "classification", createDatasetFromDataframe("DS_CLASSIFCICATION_TESTU", tabularDataset("classification"))$`_id`, "TARGET", normalModels = c("LGB", "XGB")), "list", "getUsecases() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
-  expect_is(startUsecase("USECASE_MULTICLASSIFICATION_TESTU", "tabular", "multiclassification", createDatasetFromDataframe("USECASE_MULTICLASSIFICATION_TESTU", tabularDataset("multiclassification"))$`_id`, "TARGET"), "list", "getUsecases() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
-  expect_is(startUsecase("USECASE_TIMESERIES_TESTU", "timeseries", "regression", createDatasetFromDataframe("USECASE_TIMESERIES_TESTU", timeseriesDataset())$`_id`, "TARGET", timeColumn = "TS", startDW = -2, endDW = -1, startFW = 1, endFW = 2), "list", "getUsecases() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
-  expect_is(startUsecase("USECASE_TEXT_SIM_TESTU", "tabular", "text-similarity",  datasetId = getDatasetIdFromName("DATASET_TEXT_SIM_ITEM_TESTU"),
-                         idColumn = "item_id",
-                         contentColumn = "item_desc",
-                         queriesDatasetId = getDatasetIdFromName("DATASET_TEXT_SIM_QUERY_TESTU"),
-                         queriesDatasetContentColumn = "query",
-                         queriesDatasetMatchingIdDescriptionColumn = "true_item_id",
-                         modelsParameters = list(
-                           list("modelEmbedding" = "tf_idf", "preprocessing" = list("word_stemming" = "yes", "ignore_stop_word" = "auto", "ignore_punctuation" = "no"), "models" = c("brute_force", "cluster_pruning")),
-                           list("modelEmbedding" = "transformer", "preprocessing" = NA, "models" = c("brute_force", "lsh", "hkm")),
-                           list("modelEmbedding" = "transformer_fine_tuned", "preprocessing" = NA, models = c("brute_force", "lsh", "hkm"))
-                         )), "list", "getUsecases() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU"
-            )
+test_that("create_usecase", {
+  expect_is(create_usecase(name = "USECASE_REGRESSION_TESTU",
+                           data_type = "tabular",
+                           training_type = "regression",
+                           dataset_id = create_dataset_from_dataframe("DATASET_REGRESSION_TESTU", tabular_dataset("regression"))$`_id`,
+                           target_column = "TARGET",
+                           normal_models = c("LR", "RF"),
+                           lite_models = c("LR"),
+                           simple_models = c("LR", "DT"),
+                           with_blend = F), "list", "get_usecases() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+
+  expect_is(create_usecase(name = "USECASE_CLASSIFICATION_TESTU",
+                           data_type = "tabular",
+                           training_type = "classification",
+                           dataset_id = create_dataset_from_dataframe("DATASET_CLASSIFCICATION_TESTU", tabular_dataset("classification"))$`_id`,
+                           target_column = "TARGET",
+                           normal_models = c("LGB", "XGB")), "list", "get_usecases() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
+
+  expect_is(create_usecase(name = "USECASE_MULTICLASSIFICATION_TESTU",
+                           data_type = "tabular",
+                           training_type = "multiclassification",
+                           dataset_id = create_dataset_from_dataframe("DATASET_MULTICLASSIFICATION_TESTU", tabular_dataset("multiclassification"))$`_id`,
+                           target_column = "TARGET"), "list", "get_usecases() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
+
+  expect_is(create_usecase(name = "USECASE_TIMESERIES_TESTU",
+                           data_type = "timeseries",
+                           training_type = "regression",
+                           dataset_id = create_dataset_from_dataframe("DATASET_TIMESERIES_TESTU", timeseries_dataset())$`_id`,
+                           target_column = "TARGET",
+                           time_column = "TS",
+                           start_dw = -2,
+                           end_dw = -1,
+                           start_fw = 1,
+                           end_fw = 2), "list", "get_usecases() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
+
+  expect_is(create_usecase(name = "USECASE_TEXT_SIM_TESTU",
+                           data_type = "tabular",
+                           training_type = "text-similarity",
+                           dataset_id = create_dataset_from_dataframe("DATASET_TEXT_SIM_ITEM_TESTU", fread(paste0(wd, "/data/txt_sim_items.csv")), T),
+                           id_column = "item_id",
+                           content_olumn = "item_desc",
+                           queries_dataset_id = create_dataset_from_dataframe("DATASET_TEXT_SIM_QUERY_TESTU", fread(paste0(wd, "/data/txt_sim_queries.csv")), T),
+                           queries_dataset_content_column = "query",
+                           queries_dataset_matching_id_description_column = "true_item_id",
+                           models_parameters = list(
+                             list("model_embedding" = "tf_idf", "preprocessing" = list("word_stemming" = "yes", "ignore_stop_word" = "auto", "ignore_punctuation" = "no"), "models" = c("brute_force", "cluster_pruning")),
+                             list("model_embedding" = "transformer", "preprocessing" = NA, "models" = c("brute_force", "lsh", "hkm")),
+                             list("model_embedding" = "transformer_fine_tuned", "preprocessing" = NA, models = c("brute_force", "lsh", "hkm"))
+                           )), "list", "get_usecases() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
+
+  expect_is(create_usecase(name = "USECASE_OBJECT_DETECTOR_TESTU",
+                           data_type = "images",
+                           training_type = "object-detection",
+                           dataset_id = create_dataset_from_dataframe("DATASET_IMG_TESTU", fread(paste0(wd, "/data/img.csv")), T),
+                           dataset_folder_id = get_folder_id_from_name("FOLDER_TESTU"),
+                           target_column = "TARGET",
+                           filename_column = "PATH",
+                           x_min = "x1",
+                           x_max = "x2",
+                           y_min = "y2",
+                           y_max = "y1"), "list", "get_usecases() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
+
+  expect_is(create_usecase(name = "USECASE_IMAGE_CLASSIFICATION_TESTU",
+                           data_type = "images",
+                           training_type = "classification",
+                           dataset_id = create_dataset_from_dataframe("DATASET_IMG_TESTU", fread(paste0(wd, "/data/img.csv")), T),
+                           dataset_folder_id = get_folder_id_from_name("FOLDER_TESTU"),
+                           target_column = "TARGET",
+                           filename_column = "PATH",
+                           normal_models = c("XGB")), "list", "get_usecases() doesn't retrieve a list for USECASE_IMAGE_CLASSIFICATION_TESTU")
 })
 
 Sys.sleep(120)
 
-test_that("getUsecases", {
-  expect_is(getUsecases(), "list", "getUsecases() doesn't retrieve a list")
-  expect(length(getUsecases()) >= 1, "getUsecases() doesn't have at least one element")
-  expect(length(getUsecases()) >= nb_usecases+1, "The number of usecases has not increased after dataset creation")
+test_that("get_usecases", {
+  expect_is(get_usecases(), "list", "get_usecases() doesn't retrieve a list")
+  expect(length(get_usecases()) >= 1, "get_usecases() doesn't have at least one element")
+  expect(length(get_usecases()) >= nb_usecases+1, "The number of usecases has not increased after dataset creation")
 })
 
-test_that("getUsecaseIdFromName", {
-  expect_is(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), "character", "getUsecaseIdFromName() doesn't retrieve a character")
+test_that("get_usecase_id_from_name", {
+  expect_is(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), "character", "get_usecase_id_from_name() doesn't retrieve a character")
 })
 
-test_that("getUsecaseInfos", {
-  expect_is(getUsecaseInfos(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getUsecaseInfos() doesn't retrieve a list")
+test_that("get_usecase_info", {
+  expect_is(get_usecase_info(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")), "list", "get_usecase_info() doesn't retrieve a list")
 })
 
-test_that("getUsecaseTasks", {
-  expect_is(getUsecaseTasks(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getUsecaseTasks() doesn't retrieve a list")
+test_that("get_usecase_tasks", {
+  expect_is(get_usecase_tasks(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")), "list", "get_usecase_tasks() doesn't retrieve a list")
 })
 
-test_that("getUsecaseSchema", {
-  expect_is(getUsecaseSchema(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getUsecaseSchema() doesn't retrieve a list")
+test_that("get_usecase_schema", {
+  expect_is(get_usecase_schema(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")), "list", "get_usecase_schema() doesn't retrieve a list")
 })
 
-test_that("getUsecaseFeatures", {
-  expect_is(getUsecaseFeatures(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getUsecaseFeatures() doesn't retrieve a list")
+test_that("get_usecase_features", {
+  expect_is(get_usecase_features(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")), "list", "get_usecase_features() doesn't retrieve a list")
 })
 
-test_that("getFeaturesInfos", {
-  expect_is(getFeaturesInfos(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecaseFeatures(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")[[1]])$featureList[[1]]$name), "list", "getFeaturesInfos() doesn't retrieve a list")
+test_that("get_features_info", {
+  expect_is(get_features_info(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), get_usecase_features(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")[[1]])$featureList[[1]]$name), "list", "get_features_info() doesn't retrieve a list")
 })
 
-test_that("getUsecaseModels", {
-  expect_is(getUsecaseModels(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getUsecaseModels() doesn't retrieve a list")
+test_that("get_usecase_models", {
+  expect_is(get_usecase_models(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")), "list", "get_usecase_models() doesn't retrieve a list")
 })
 
-test_that("getModelInfos", {
-  expect_is(getModelInfos(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "list", "getModelInfos() doesn't retrieve a list")
+test_that("get_model_info", {
+  expect_is(get_model_info(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), get_usecase_models(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "list", "get_model_info() doesn't retrieve a list")
 })
 
-test_that("getModelHyperparameters", {
-  expect_is(getModelHyperparameters(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "list", "getModelHyperparameters() doesn't retrieve a list")
+test_that("get_model_hyperparameters", {
+  expect_is(get_model_hyperparameters(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), get_usecase_models(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "list", "get_model_hyperparameters() doesn't retrieve a list")
 })
 
-test_that("getModelFeatureImportance", {
-  expect_is(getModelFeatureImportance(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`, "raw"), "data.frame", "getModelFeatureImportance() doesn't retrieve a data.frame")
-  expect_is(getModelFeatureImportance(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`, "engineering"), "data.frame", "getModelFeatureImportance() doesn't retrieve a data.frame")
+test_that("get_model_feature_importance", {
+  expect_is(get_model_feature_importance(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), get_usecase_models(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))[[1]]$`_id`, "raw"), "data.frame", "get_model_feature_importance() doesn't retrieve a data.frame on raw level")
+  expect_is(get_model_feature_importance(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), get_usecase_models(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))[[1]]$`_id`, "engineering"), "data.frame", "get_model_feature_importance() doesn't retrieve a data.frame on engineering level")
 })
 
-test_that("startPrediction", {
-  expect_is(startPrediction(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getDatasets()[[1]]$`_id`), "list", "startPrediction() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
-  expect_is(startPrediction(getUsecaseIdFromName("USECASE_TEXT_SIM_TESTU"), modelId = getBestModelId(getUsecaseIdFromName("USECASE_TEXT_SIM_TESTU")), queriesDatasetId = getDatasetIdFromName("DATASET_TEXT_SIM_QUERY_TESTU"), queriesDatasetContentColumn = "query", topK = 10), "list", "startPrediction() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
+test_that("create_prediction", {
+  expect_is(create_prediction(usecase_id = get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), dataset_id = get_dataset_id_from_name("DATASET_REGRESSION_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+  expect_is(create_prediction(usecase_id = get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"), dataset_id = get_dataset_id_from_name("DATASET_CLASSIFICATION_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
+  expect_is(create_prediction(usecase_id = get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"), dataset_id = get_dataset_id_from_name("DATASET_MULTICLASSIFICATION_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
+  expect_is(create_prediction(usecase_id = get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"), dataset_id = get_dataset_id_from_name("USECASE_TIMESERIES_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
+  expect_is(create_prediction(usecase_id = get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU"), model_id = get_best_model_id(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU")), queries_dataset_id = get_dataset_id_from_name("DATASET_TEXT_SIM_QUERY_TESTU"), queries_dataset_content_column = "query", top_k = 10), "list", "create_prediction() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
+  expect_is(create_prediction(usecase_id = get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU"), dataset_id = get_dataset_id_from_name("DATASET_IMG_TESTU"), dataset_folder_id = get_folder_id_from_name("FOLDER_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
+  expect_is(create_prediction(usecase_id = get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU"), dataset_id = get_dataset_id_from_name("DATASET_IMG_TESTU"), dataset_folder_id = get_folder_id_from_name("FOLDER_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_IMAGE_CLASSIFICATION_TESTU")
 })
 
 Sys.sleep(30)
 
-test_that("getUsecasePredictions", {
-  expect_is(getUsecasePredictions(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getUsecasePredictions() doesn't retrieve a list")
+test_that("get_usecase_predictions", {
+  expect_is(get_usecase_predictions(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")), "list", "get_usecase_predictions() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+  expect_is(get_usecase_predictions(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU")), "list", "get_usecase_predictions() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
+  expect_is(get_usecase_predictions(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU")), "list", "get_usecase_predictions() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
+  expect_is(get_usecase_predictions(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU")), "list", "get_usecase_predictions() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
+  expect_is(get_usecase_predictions(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU")), "list", "get_usecase_predictions() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
+  expect_is(get_usecase_predictions(get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU")), "list", "get_usecase_predictions() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
+  expect_is(get_usecase_predictions(get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU")), "list", "get_usecase_predictions() doesn't retrieve a list for USECASE_IMAGE_CLASSIFICATION_TESTU")
 })
 
-test_that("getPredictionInfos", {
-  expect_is(getPredictionInfos(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecasePredictions(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "list", "getPredictionInfos() doesn't retrieve a list")
+test_that("get_prediction_info", {
+  expect_is(get_prediction_info(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "list", "get_prediction_info() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+  expect_is(get_prediction_info(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"))[[1]]$`_id`), "list", "get_prediction_info() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
+  expect_is(get_prediction_info(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"))[[1]]$`_id`), "list", "get_prediction_info() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
+  expect_is(get_prediction_info(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"))[[1]]$`_id`), "list", "get_prediction_info() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
+  expect_is(get_prediction_info(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU"))[[1]]$`_id`), "list", "get_prediction_info() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
+  expect_is(get_prediction_info(get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU"))[[1]]$`_id`), "list", "get_prediction_info() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
+  expect_is(get_prediction_info(get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU"))[[1]]$`_id`), "list", "get_prediction_info() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
 })
 
-test_that("getPrediction", {
-  expect_is(getPrediction(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecasePredictions(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "data.frame", "getPrediction() doesn't retrieve a data.frame")
+test_that("get_prediction", {
+  expect_is(get_prediction(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_REGRESSION_TESTU")
+  expect_is(get_prediction(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_CLASSIFICATION_TESTU")
+  expect_is(get_prediction(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_MULTICLASSIFICATION_TESTU")
+  expect_is(get_prediction(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_TIMESERIES_TESTU")
+  expect_is(get_prediction(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU"))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_TEXT_SIM_TESTU")
+  expect_is(get_prediction(get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU"))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_OBJECT_DETECTOR_TESTU")
+  expect_is(get_prediction(get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU"))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_IMAGE_CLASSIFICATION_TESTU")
 })
 
-# test_that("deletePrediction", {
-#   expect_is(deletePrediction(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecasePredictions(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "list", "deletePrediction() doesn't retrieve a list")
-# })
-#
-# test_that("getPredictionEvents", {
-#   expect_is(getPredictionEvents(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getPredictionEvents() doesn't retrieve a list")
-# })
-
-test_that("shareUsecase", {
-  expect_is(shareUsecase(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), "pierre.nowak@prevision.io"), "list", "shareUsecase() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+test_that("delete_prediction", {
+  expect_is(delete_prediction(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "list", "delete_prediction() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+  expect_is(delete_prediction(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"))[[1]]$`_id`), "list", "delete_prediction() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
+  expect_is(delete_prediction(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"))[[1]]$`_id`), "list", "delete_prediction() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
+  expect_is(delete_prediction(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"))[[1]]$`_id`), "list", "delete_prediction() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
+  expect_is(delete_prediction(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU"))[[1]]$`_id`), "list", "delete_prediction() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
+  expect_is(delete_prediction(get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU"))[[1]]$`_id`), "list", "delete_prediction() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
+  expect_is(delete_prediction(get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU"), get_usecase_predictions(get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU"))[[1]]$`_id`), "list", "delete_prediction() doesn't retrieve a list for USECASE_IMAGE_CLASSIFICATION_TESTU")
 })
 
-test_that("getSharedUsecaseUsers", {
-  expect_is(getSharedUsecaseUsers(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getSharedUsecaseUsers() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
-  expect(length(getSharedUsecaseUsers(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))) == 1, "getSharedUsecaseUsers() hasn't 1 element for USECASE_REGRESSION_TESTU after sharing")
+test_that("share_usecase", {
+  expect_is(share_usecase(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), "pierre.nowak@prevision.io"), "list", "share_usecase() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+  expect_is(share_usecase(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"), "pierre.nowak@prevision.io"), "list", "share_usecase() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
+  expect_is(share_usecase(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"), "pierre.nowak@prevision.io"), "list", "share_usecase() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
+  expect_is(share_usecase(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"), "pierre.nowak@prevision.io"), "list", "share_usecase() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
+  expect_is(share_usecase(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU"), "pierre.nowak@prevision.io"), "list", "share_usecase() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
+  expect_is(share_usecase(get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU"), "pierre.nowak@prevision.io"), "list", "share_usecase() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
+  expect_is(share_usecase(get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU"), "pierre.nowak@prevision.io"), "list", "share_usecase() doesn't retrieve a list for USECASE_IMAGE_CLASSIFICATION_TESTU")
 })
 
-test_that("unshareUsecase", {
-  expect_is(unshareUsecase(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "unshareUsecase() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+test_that("get_shared_usecase_users", {
+  expect_is(get_shared_usecase_users(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")), "list", "get_shared_usecase_users() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+  expect(length(get_shared_usecase_users(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))) == 1, "get_shared_usecase_users() hasn't 1 element for USECASE_REGRESSION_TESTU after sharing")
 })
 
-test_that("getSharedUsecaseUsers", {
-  expect(length(getSharedUsecaseUsers(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))) == 0, "getSharedUsecaseUsers() hasn't 0 element for USECASE_REGRESSION_TESTU after unsharing")
+test_that("unshare_usecase", {
+  expect_is(unshare_usecase(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")), "list", "unshare_usecase() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
 })
 
-test_that("updateUsecaseDescription", {
-  expect_is(updateUsecaseDescription(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), "DESCRIPTION"), "list", "updateUsecaseDescription() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
+test_that("get_shared_usecase_users", {
+  expect(length(get_shared_usecase_users(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))) == 0, "get_shared_usecase_users() hasn't 0 element for USECASE_REGRESSION_TESTU after unsharing")
 })
 
-test_that("getUsecaseCV", {
-  expect_is(getUsecaseCV(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "data.frame", "getUsecaseCV() doesn't retrieve a data.frame for USECASE_REGRESSION_TESTU")
-  expect_is(getUsecaseCV(getUsecaseIdFromName("USECASE_CLASSIFICATION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_CLASSIFICATION_TESTU"))[[1]]$`_id`), "data.frame", "getUsecaseCV() doesn't retrieve a data.frame for USECASE_CLASSIFICATION_TESTU")
-  expect_is(getUsecaseCV(getUsecaseIdFromName("USECASE_MULTICLASSIFICATION_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_MULTICLASSIFICATION_TESTU"))[[1]]$`_id`), "data.frame", "getUsecaseCV() doesn't retrieve a data.frame for USECASE_MULTICLASSIFICATION_TESTU")
-  expect_is(getUsecaseCV(getUsecaseIdFromName("USECASE_TIMESERIES_TESTU"), getUsecaseModels(getUsecaseIdFromName("USECASE_TIMESERIES_TESTU"))[[1]]$`_id`), "data.frame", "getUsecaseCV() doesn't retrieve a data.frame for USECASE_TIMESERIES_TESTU")
+test_that("update_usecase_description", {
+  expect_is(update_usecase_description(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), "DESCRIPTION"), "list", "update_usecase_description() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
 })
 
-test_that("getBestModelId", {
-  expect_is(getBestModelId(getUsecaseIdFromName("USECASE_REGRESSION_TESTU"), 1, TRUE), "character", "getBestModelId() doesn't retrieve a character")
+test_that("get_usecase_cv", {
+  expect_is(get_usecase_cv(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), get_usecase_models(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"))[[1]]$`_id`), "data.frame", "get_usecase_cv() doesn't retrieve a data.frame for USECASE_REGRESSION_TESTU")
+  expect_is(get_usecase_cv(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"), get_usecase_models(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"))[[1]]$`_id`), "data.frame", "get_usecase_cv() doesn't retrieve a data.frame for USECASE_CLASSIFICATION_TESTU")
+  expect_is(get_usecase_cv(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"), get_usecase_models(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"))[[1]]$`_id`), "data.frame", "get_usecase_cv() doesn't retrieve a data.frame for USECASE_MULTICLASSIFICATION_TESTU")
+  expect_is(get_usecase_cv(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"), get_usecase_models(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"))[[1]]$`_id`), "data.frame", "get_usecase_cv() doesn't retrieve a data.frame for USECASE_TIMESERIES_TESTU")
 })
 
-# test_that("getUsecaseEvents", {
-#   expect_is(getUsecaseEvents(), "list", "getUsecaseEvents() doesn't retrieve a list for all use cases")
-#   expect_is(getUsecaseEvents(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")), "list", "getUsecaseEvents() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
-# })
-
-test_that("pauseUsecase", {
-  expect(pauseUsecase(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")) == 200, "pauseUsecase() doesn't retrieve a 200 status code")
+test_that("get_best_model_id", {
+  expect_is(get_best_model_id(get_usecase_id_from_name("USECASE_REGRESSION_TESTU"), 1, TRUE), "character", "get_best_model_id() doesn't retrieve a character for USECASE_REGRESSION_TESTU")
+  expect_is(get_best_model_id(get_usecase_id_from_name("USECASE_CLASSIFICATION_TESTU"), 1, TRUE), "character", "get_best_model_id() doesn't retrieve a character for USECASE_CLASSIFICATION_TESTU")
+  expect_is(get_best_model_id(get_usecase_id_from_name("USECASE_MULTICLASSIFICATION_TESTU"), 1, TRUE), "character", "get_best_model_id() doesn't retrieve a character for USECASE_MULTICLASSIFICATION_TESTU")
+  expect_is(get_best_model_id(get_usecase_id_from_name("USECASE_TIMESERIES_TESTU"), 1, TRUE), "character", "get_best_model_id() doesn't retrieve a character for USECASE_TIMESERIES_TESTU")
+  expect_is(get_best_model_id(get_usecase_id_from_name("USECASE_TEXT_SIM_TESTU"), 1, TRUE), "character", "get_best_model_id() doesn't retrieve a character for USECASE_TEXT_SIM_TESTU")
+  expect_is(get_best_model_id(get_usecase_id_from_name("USECASE_OBJECT_DETECTOR_TESTU"), 1, TRUE), "character", "get_best_model_id() doesn't retrieve a character for USECASE_OBJECT_DETECTOR_TESTU")
+  expect_is(get_best_model_id(get_usecase_id_from_name("USECASE_IMAGE_CLASSIFICATION_TESTU"), 1, TRUE), "character", "get_best_model_id() doesn't retrieve a character for USECASE_IMAGE_CLASSIFICATION_TESTU")
 })
 
-test_that("resumeUsecase", {
-  expect(resumeUsecase(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")) == 200, "resumeUsecase() doesn't retrieve a 200 status code")
+test_that("pause_usecase", {
+  expect(pause_usecase(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")) == 200, "pause_usecase() doesn't retrieve a 200 status code")
 })
 
-test_that("stopUsecase", {
-  expect(stopUsecase(getUsecaseIdFromName("USECASE_REGRESSION_TESTU")) == 200, "stopUsecase() doesn't a 200 status code")
+test_that("resume_usecase", {
+  expect(resume_usecase(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")) == 200, "resume_usecase() doesn't retrieve a 200 status code")
+})
+
+test_that("stop_usecase", {
+  expect(stop_usecase(get_usecase_id_from_name("USECASE_REGRESSION_TESTU")) == 200, "stop_usecase() doesn't a 200 status code")
 })

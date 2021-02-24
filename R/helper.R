@@ -1,6 +1,6 @@
 ### FUNCTIONS THAT SIMPLIFIES WORKING WITH RESSOURCES FROM PREVISION.IO BUT NOT LINKED TO API DIRECTLY ###
 
-cvClassifAnalysis <- function(actual, predicted, fold, thresh = NULL, step = 1000) {
+helper_cv_classif_analysis <- function(actual, predicted, fold, thresh = NULL, step = 1000) {
   #' Get metrics on a CV file retrieved by Prevision.io for a binary classification use case
   #'
   #' @param actual target comming from the cross Validation dataframe retrieved by Prevision.io
@@ -93,7 +93,7 @@ cvClassifAnalysis <- function(actual, predicted, fold, thresh = NULL, step = 100
   return(res)
 }
 
-plotClassifAnalysis <- function(actual, predicted, top, compute_every_n = 1) {
+helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n = 1) {
   #' Plot RECALL, PRECISION & F1 SCORE versus top n predictions for a binary classification use case
   #'
   #' @param actual true value (0 or 1 only)
@@ -175,14 +175,14 @@ plotClassifAnalysis <- function(actual, predicted, top, compute_every_n = 1) {
   return(res)
 }
 
-optimalPrediction <- function(usecaseId, modelId, df, actionable, nbSample, maximize, zip = F) {
+helper_optimal_prediction <- function(usecase_id, model_id, df, actionable_features, nb_sample, maximize, zip = F) {
   #' [BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested
   #'
-  #' @param usecaseId the id of the usecase to be predicted on
-  #' @param modelId the id of the model to be predicted on
+  #' @param usecase_id the id of the usecase to be predicted on
+  #' @param model_id the id of the model to be predicted on
   #' @param df a data frame to be predicted on
-  #' @param actionable a list of actionables features contained in the names of the data frame
-  #' @param nbSample a vector of number of sample for each actionable features
+  #' @param actionable_features a list of actionable_featuress features contained in the names of the data frame
+  #' @param nb_sample a vector of number of sample for each actionable_features features
   #' @param maximize a boolean indicating if we maximize or minimize the predicted target
   #' @param zip a boolean indicating if the data frame to predict should be zipped prior sending to the instance
   #'
@@ -194,30 +194,30 @@ optimalPrediction <- function(usecaseId, modelId, df, actionable, nbSample, maxi
   #' @export
 
   # PRELIMINARY CHECKS
-  if(all(!actionable %in% names(df))) {
-    stop("actionable features should be included in the data frame column names")
+  if(all(!actionable_features %in% names(df))) {
+    stop("actionable_features features should be included in the data frame column names")
   }
 
-  if(length(actionable) != length(nbSample)) {
-    stop("the number of actionable features should match the length of number of sample")
+  if(length(actionable_features) != length(nb_sample)) {
+    stop("the number of actionable_features features should match the length of number of sample")
   }
 
   # GET THE TRAIN SET USED FOR MODELLING
-  datasetId = getUsecaseInfos(usecaseId)$datasetId
-  train     = createDataframeFromDataset(datasetId)
+  dataset_id = get_usecase_info(usecase_id)$dataset_id
+  train      = create_dataframe_from_dataset(dataset_id)
 
-  # SELECT RANDOM SAMPLES FROM THE TRAIN SET GIVEN ACTIONNABLES FEATURES & NBSAMPLES
+  # SELECT RANDOM SAMPLES FROM THE TRAIN SET GIVEN ACTIONNABLES FEATURES & nb_sampleS
   temp = list()
-  for(i in 1:length(actionable)) {
-    temp[[i]] = sample(x = train[[actionable[i]]], size =  nbSample[i], replace = T)
+  for(i in 1:length(actionable_features)) {
+    temp[[i]] = sample(x = train[[actionable_features[i]]], size =  nb_sample[i], replace = T)
   }
 
   # EXPEND THE ORIGINAL DATASET WITH CARTESIAN PRODUCT OF ACTIONNABLE FEATURES
   cartesian = merge(temp[[1]], temp[[2]])
-  names(cartesian) = actionable
+  names(cartesian) = actionable_features
 
   # REMOVED ACTIONNABLE FEATURES FROM THE SUBMITTED DATASET
-  df[, actionable] = NULL
+  df[, actionable_features] = NULL
 
   # MERGE DATASET WITH EXPENDED FEATURES
   df = as.data.frame(df)
@@ -226,21 +226,21 @@ optimalPrediction <- function(usecaseId, modelId, df, actionable, nbSample, maxi
   # START PREDICTION
   message("the optimisation process will make ", nrow(df)," predictions")
 
-  df_prevision = createDatasetFromDataframe("expensed_df", df, zip = zip)
-  pred         = startPrediction(usecaseId = usecaseId,
-                                 modelId = modelId,
-                                 datasetId = df_prevision$`_id`,
-                                 confidence = F)
+  df_prevision = create_dataset_from_dataframe("expensed_df", df, zip = zip)
+  pred         = create_prediction(usecase_id = usecase_id,
+                                   model_id = model_id,
+                                   dataset_id = df_prevision$`_id`,
+                                   confidence = F)
 
   # GET PREDICTION
   Sys.sleep(30) ## SUBOPTIMAL, SHOULD BE A "WAIT UNTIL PREDICTION DONE"
-  res = getPrediction(usecaseId, pred$`_id`)
+  res = get_prediction(usecase_id, pred$`_id`)
   res = res[, ncol(res), with = F]
   res = cbind(df, res)
 
   # RETURN MAX OR MIN OF PREDICTION GROUPED BY EVERY NON ACTIONNABLE FEATURE
   res = data.table(res)
-  by  = names(res)[!names(res) %in% c(actionable, names(res)[ncol(res)])]
+  by  = names(res)[!names(res) %in% c(actionable_features, names(res)[ncol(res)])]
 
   if(maximize) {
     res = res[, .(optimal_pred = max(get(names(res)[ncol(res)]))), by = by]
@@ -252,7 +252,7 @@ optimalPrediction <- function(usecaseId, modelId, df, actionable, nbSample, maxi
   return(res)
 }
 
-driftAnalysis <- function(dataset_1, dataset_2, p_value = 0.05, features = NULL) {
+helper_drift_analysis <- function(dataset_1, dataset_2, p_value = 0.05, features = NULL) {
   #' [BETA] Return a data.frame that contains features, a boolean indicating if the feature may have a different distribution between the submitted datasets (if p-value < threshold), their exact p-value and the test used to compute it.
   #'
   #' @param dataset_1 the first data set
