@@ -189,7 +189,6 @@ helper_optimal_prediction <- function(usecase_id, model_id, df, actionable_featu
   #' @return row data.frame with the optimal vector and the prediction associated with for each rows in the original data frame
   #'
   #' @import data.table
-  #' @import Metrics
   #'
   #' @export
 

@@ -209,37 +209,17 @@ create_dataset_from_datasource <- function(dataset_name, datasource_id) {
   }
 }
 
-create_dataframe_from_dataset <- function(dataset_id) {
+create_dataframe_from_dataset <- function(dataset_id, path = getwd(), is_folder = FALSE) {
   #' Create a dataframe from a dataset_id.
   #'
   #' @param dataset_id dataset id.
+  #' @param path path (without / at the end) were to write the downloaded dataset.
+  #' @param is_folder TRUE if it's a folder dataset, FALSE (by default) otherwise.
   #'
   #' @return a R dataframe.
   #'
   #' @import httr
-  #'
   #' @import data.table
-  #'
-  #' @export
-
-  path <- download_dataset(dataset_id)
-  unzip(path, overwrite = T, exdir = dataset_id)
-  unlink(path)
-  data <- fread(paste0(dataset_id, "/", list.files(dataset_id)))
-  unlink(paste0(dataset_id), recursive = T)
-  data
-}
-
-download_dataset <- function(dataset_id, path = getwd(), is_folder = FALSE) {
-  #' Download a dataset from a dataset_id and write it in a folder.
-  #'
-  #' @param dataset_id dataset id.
-  #' @param path path (without / at the end) were to write the dataset.
-  #' @param is_folder TRUE if it's a folder dataset, FALSE (by default) otherwise.
-  #'
-  #' @return the complete path to the file written
-  #'
-  #' @import httr
   #'
   #' @export
 
@@ -256,11 +236,17 @@ download_dataset <- function(dataset_id, path = getwd(), is_folder = FALSE) {
 
   if(resp$status_code == 200) {
     message("Download of dataset ", dataset_id, " done - ", complete_path)
-    complete_path
+    path <- complete_path
   }
   else {
     stop("Download of dataset ", dataset_id, " failed - ", complete_path)
   }
+
+  unzip(path, overwrite = T, exdir = dataset_id)
+  unlink(path)
+  data <- fread(paste0(dataset_id, "/", list.files(dataset_id)))
+  unlink(paste0(dataset_id), recursive = T)
+  data
 }
 
 create_dataset_embedding <- function(dataset_id) {
