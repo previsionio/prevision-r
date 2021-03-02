@@ -15,7 +15,7 @@ helper_cv_classif_analysis(actual, predicted, fold, thresh = NULL, step = 1000)
 
 \item{thresh}{threshold to use. If not provided optimal threshold given F1 score will be computed}
 
-\item{step}{number of iteration done to find optimal thresh (1000 by default = 0.1% resolution per fold)}
+\item{step}{number of iteration done to find optimal thresh (1000 by default = 0.1\% resolution per fold)}
 }
 \value{
 data.frame with metrics computed on the CV

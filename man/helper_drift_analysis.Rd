@@ -11,7 +11,7 @@ helper_drift_analysis(dataset_1, dataset_2, p_value = 0.05, features = NULL)
 
 \item{dataset_2}{the second data set}
 
-\item{p_value}{a p-value that will be the decision criteria for deciding if a feature is suspicious 5% by default}
+\item{p_value}{a p-value that will be the decision criteria for deciding if a feature is suspicious 5\% by default}
 
 \item{features}{a vector of features names that should be tested. If NULL, only the intersection of the names() will be kept}
 }

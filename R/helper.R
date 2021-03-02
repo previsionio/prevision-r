@@ -7,7 +7,7 @@ helper_cv_classif_analysis <- function(actual, predicted, fold, thresh = NULL, s
   #' @param predicted prediction comming from the cross Validation dataframe retrieved by Prevision.io
   #' @param fold fold number comming from the cross Validation dataframe retrieved by Prevision.io
   #' @param thresh threshold to use. If not provided optimal threshold given F1 score will be computed
-  #' @param step number of iteration done to find optimal thresh (1000 by default = 0.1% resolution per fold)
+  #' @param step number of iteration done to find optimal thresh (1000 by default = 0.1\% resolution per fold)
   #'
   #' @return data.frame with metrics computed on the CV
   #'
@@ -257,7 +257,7 @@ helper_drift_analysis <- function(dataset_1, dataset_2, p_value = 0.05, features
   #'
   #' @param dataset_1 the first data set
   #' @param dataset_2 the second data set
-  #' @param p_value a p-value that will be the decision criteria for deciding if a feature is suspicious 5% by default
+  #' @param p_value a p-value that will be the decision criteria for deciding if a feature is suspicious 5\% by default
   #' @param features a vector of features names that should be tested. If NULL, only the intersection of the names() will be kept
   #'
   #' @return a vector of suspicious features
