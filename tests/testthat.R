@@ -12,7 +12,7 @@ test_file("tests/testthat/test-folder.R")
 test_file("tests/testthat/test-dataset.R")
 test_file("tests/testthat/test-usecase.R")
 test_file("tests/testthat/test-user.R")
-test_file("tests/testthat/test-scheduler.R")
+# test_file("tests/testthat/test-scheduler.R")
 
 test_file("tests/testthat/test-usecase-delete.R")
 test_file("tests/testthat/test-dataset-delete.R")
