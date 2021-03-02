@@ -32,3 +32,8 @@ R CMD Rd2pdf --pdf --title='R package for Prevision.io' -o /tmp/previsionio.pdf 
 
 If you find trouble doing so on windows, make sure that MiKTeX is installed & updated
 See : https://tex.stackexchange.com/questions/125274/error-font-ts1-zi4r-at-540-not-found if you encounter a font issue
+
+3) In order to check if package is viable on CRAN, type :
+```
+R CMD check ./ --as-cran
+```

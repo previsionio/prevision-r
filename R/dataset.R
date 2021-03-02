@@ -164,7 +164,7 @@ create_dataset_from_dataframe <- function(dataset_name, dataframe, zip = F) {
   #'
   #' @return parsed content of the dataset.
   #'
-  #' @importFrom data.table fwrite
+  #' @import data.table
   #'
   #' @export
 

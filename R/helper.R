@@ -13,6 +13,7 @@ helper_cv_classif_analysis <- function(actual, predicted, fold, thresh = NULL, s
   #'
   #' @import data.table
   #' @import Metrics
+  #' @import utils
   #'
   #' @export
 
@@ -105,6 +106,8 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   #'
   #' @import data.table
   #' @import Metrics
+  #' @import utils
+  #' @import graphics
   #'
   #' @export
 
@@ -262,6 +265,8 @@ helper_drift_analysis <- function(dataset_1, dataset_2, p_value = 0.05, features
   #' @return a vector of suspicious features
   #'
   #' @import data.table
+  #' @import utils
+  #' @import stats
   #'
   #' @export
 

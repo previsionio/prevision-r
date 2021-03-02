@@ -250,7 +250,7 @@ get_model_feature_importance <- function(usecase_id, model_id, version_number = 
   #' @return dataset of the model's feature importance.
   #'
   #' @import httr
-  #' @importFrom data.table fread
+  #' @import data.table
   #'
   #' @export
 
@@ -410,7 +410,7 @@ get_prediction <- function(usecase_id, prediction_id, version_number = 1, time_o
   #' @return a data.frame with the predictions.
   #'
   #' @import httr
-  #' @importFrom data.table fread
+  #' @import data.table
   #'
   #' @export
 
@@ -788,7 +788,7 @@ get_usecase_cv <- function(usecase_id, model_id, version_number = 1) {
   #' @return a dataframe containing cross validation data.
   #'
   #' @import httr
-  #' @importFrom data.table fread
+  #' @import data.table
   #'
   #' @export
 

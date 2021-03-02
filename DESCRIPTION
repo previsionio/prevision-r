@@ -1,9 +1,9 @@
 Package: previsionio
 Type: Package
-Title: Set of functions to use the Prevision.io API
+Title: Functions to Use the Prevision.io API
 Version: 11.0.0
 Author: Prevision.io
-Maintainer: <support@prevision.io>
+Maintainer: Florian Laroumagne <support@prevision.io>
 Description: Set of functions to use the Prevision.io API directly from R environnement.
 License: file LICENSE
 Encoding: UTF-8
@@ -13,7 +13,11 @@ Imports:
     data.table,
     futile.logger,
     httr,
-    jsonlite
+    jsonlite,
+    Metrics,
+    graphics,
+    stats,
+    utils
 Suggests:
     testthat
 Depends:
