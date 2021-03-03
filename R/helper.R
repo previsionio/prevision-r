@@ -245,10 +245,10 @@ helper_optimal_prediction <- function(usecase_id, model_id, df, actionable_featu
   by  = names(res)[!names(res) %in% c(actionable_features, names(res)[ncol(res)])]
 
   if(maximize) {
-    res = res[, .(optimal_pred = max(get(names(res)[ncol(res)]))), by = by]
+    res = res[, list(optimal_pred = max(get(names(res)[ncol(res)]))), by = by]
   }
   else {
-    res = res[, .(optimal_pred = min(get(names(res)[ncol(res)]))), by = by]
+    res = res[, list(optimal_pred = min(get(names(res)[ncol(res)]))), by = by]
   }
 
   return(res)
