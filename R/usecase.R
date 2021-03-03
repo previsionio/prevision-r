@@ -261,11 +261,11 @@ get_model_feature_importance <- function(usecase_id, model_id, version_number = 
   temp <- tempfile()
 
   if(mode == "raw") {
-    resp <- previsionDownload(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/features-importance'), temp)
+    resp <- pio_download(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/features-importance'), temp)
   }
 
   if(mode == "engineered") {
-    resp <- previsionDownload(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/features-engineering-importance'), temp)
+    resp <- pio_download(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/features-engineering-importance'), temp)
   }
 
   if(resp$status_code == 200) {
@@ -417,7 +417,7 @@ get_prediction <- function(usecase_id, prediction_id, version_number = 1, time_o
   attempt = 0
   while(attempt < time_out/wait_time) {
     temp <- tempfile()
-    resp <- previsionDownload(paste0('/usecases/', usecase_id, '/versions/', version_number, '/predictions/', prediction_id, '/download'), temp)
+    resp <- pio_download(paste0('/usecases/', usecase_id, '/versions/', version_number, '/predictions/', prediction_id, '/download'), temp)
 
     # IF STATUS 200 RETURN PREDICTION
     if(resp$status_code == 200) {
@@ -434,7 +434,7 @@ get_prediction <- function(usecase_id, prediction_id, version_number = 1, time_o
       attempt = attempt + 1
     }
   }
-  stop("Can't retrieve prediction prediction ", prediction_id, " for usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
+  stop("Can't retrieve prediction prediction ", prediction_id, " for usecase ", usecase_id, " version ", version_number, " - ", resp$status_code)
 }
 
 delete_prediction <- function(usecase_id, prediction_id, version_number = 1) {
@@ -793,7 +793,7 @@ get_usecase_cv <- function(usecase_id, model_id, version_number = 1) {
   #' @export
 
   temp <- tempfile()
-  resp <- previsionDownload(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/cv/'), temp)
+  resp <- pio_download(paste0('/usecases/', usecase_id, '/versions/', version_number, '/models/', model_id, '/download/cv/'), temp)
 
   if(resp$status_code == 200) {
     data <- fread(unzip(temp))
@@ -801,7 +801,7 @@ get_usecase_cv <- function(usecase_id, model_id, version_number = 1) {
     file.remove(temp)
     data
   } else {
-    stop("Can't retrieve CV file for model ", model_id, " of use case ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed$message)
+    stop("Can't retrieve CV file for model ", model_id, " of use case ", usecase_id, " version ", version_number, " - ", resp$status_code)
   }
 }
 
