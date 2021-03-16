@@ -151,7 +151,7 @@ create_dataset_from_file <- function(dataset_name, file) {
   if(resp$status_code == 200) {
     get_dataset_info(resp_parsed$`_id`)
   } else {
-    stop("Dataset upload failure - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("Dataset upload failed - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
@@ -205,7 +205,7 @@ create_dataset_from_datasource <- function(dataset_name, datasource_id) {
   if(resp$status_code == 200) {
     get_dataset_info(resp_parsed$`_id`)
   } else {
-    stop("Dataset creation failure - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("Dataset creation failed - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
@@ -265,7 +265,7 @@ create_dataset_embedding <- function(dataset_id) {
     message("Embedding started - ", resp$status_code, ":", resp_parsed$message)
     resp$status_code
   } else {
-    stop("Dataset embedding start failure - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("Dataset embedding creation failed - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 

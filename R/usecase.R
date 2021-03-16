@@ -8,7 +8,7 @@ get_usecases <- function() {
   #' @export
 
   page = 1
-  useCases = c()
+  usecases = c()
 
   # Looping over page to get all information
   while(T) {
@@ -22,14 +22,14 @@ get_usecases <- function() {
       }
 
       # Store items and continue
-      useCases = c(useCases, resp_parsed[["items"]])
+      usecases = c(usecases, resp_parsed[["items"]])
       page = page + 1
     }
     else {
       stop("Can't retrieve usecases list - ", resp$status_code, ":", resp_parsed)
     }
   }
-  useCases
+  usecases
 }
 
 get_usecase_id_from_name <- function(usecase_name) {
@@ -43,10 +43,10 @@ get_usecase_id_from_name <- function(usecase_name) {
   #'
   #' @export
 
-  usecaseList = get_usecases()
-  for (uc in usecaseList) {
-    if(uc$name == usecase_name) {
-      return(uc$usecase_id)
+  usecase_list = get_usecases()
+  for (usecase in usecase_list) {
+    if(usecase$name == usecase_name) {
+      return(usecase$usecase_id)
     }
   }
   stop("There is no usecase_id matching the usecase_name ", usecase_name)

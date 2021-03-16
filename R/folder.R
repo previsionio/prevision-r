@@ -97,7 +97,7 @@ create_folder <- function(folder_name, file) {
   if(resp$status_code == 200) {
     get_folder(resp_parsed$`_id`)
   } else {
-    stop("Folder upload failure - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("Folder upload failed - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
