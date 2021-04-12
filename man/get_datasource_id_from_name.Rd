@@ -4,9 +4,11 @@
 \alias{get_datasource_id_from_name}
 \title{Get a datasource_id from a datasource_name If duplicated name, the first datasource_id that match it is retrieved}
 \usage{
-get_datasource_id_from_name(datasource_name)
+get_datasource_id_from_name(project_id, datasource_name)
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects(project_id).}
+
 \item{datasource_name}{name of the connector we are searching its id from. Can be obtained with get_datasources().}
 }
 \value{

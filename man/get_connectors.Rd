@@ -2,13 +2,16 @@
 % Please edit documentation in R/connector.R
 \name{get_connectors}
 \alias{get_connectors}
-\title{Get information of all connectors available.}
+\title{Get information of all connectors available for a given project_id.}
 \usage{
-get_connectors()
+get_connectors(project_id)
+}
+\arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-parsed content of all connectors.
+parsed content of all connectors for the suppled project_id.
 }
 \description{
-Get information of all connectors available.
+Get information of all connectors available for a given project_id.
 }

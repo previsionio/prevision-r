@@ -5,9 +5,6 @@ source("helper-credentials.R")
 # INIT GLOBAL VARIABLE
 nb_usecases = length(get_usecases())
 
-##################################
-### CREATE SOME USE CASES HERE ###
-##################################
 test_that("create_usecase", {
   expect_is(create_usecase(name = "USECASE_REGRESSION_TESTU",
                            data_type = "tabular",

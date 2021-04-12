@@ -5,6 +5,7 @@
 \title{Create a new connector of a supported type (among: "SQL", "HIVE", "FTP", "SFTP", "S3", "GCP").}
 \usage{
 create_connector(
+  project_id,
   type,
   name,
   host,

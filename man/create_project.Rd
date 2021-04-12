@@ -4,10 +4,14 @@
 \alias{create_project}
 \title{Create a new project.}
 \usage{
-create_project(project_name)
+create_project(name, description = NULL, color = NULL)
 }
 \arguments{
-\item{project_name}{name of the project.}
+\item{name}{name of the project.}
+
+\item{description}{description of the project.}
+
+\item{color}{color of the project.}
 }
 \description{
 Create a new project.

@@ -1,7 +1,9 @@
-get_connectors <- function() {
-  #' Get information of all connectors available.
+get_connectors <- function(project_id) {
+  #' Get information of all connectors available for a given project_id.
   #'
-  #' @return parsed content of all connectors.
+  #' @param project_id id of the project, can be obtained with get_projects().
+  #'
+  #' @return parsed content of all connectors for the suppled project_id.
   #'
   #' @import httr
   #'
@@ -12,7 +14,7 @@ get_connectors <- function() {
 
   # Looping over page to get all information
   while(T) {
-    resp <- pio_request(paste0('/connectors?page=', page), GET)
+    resp <- pio_request(paste0('/project/', project_id, '/connectors?page=', page), GET)
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
@@ -54,10 +56,11 @@ get_connector_info <- function(connector_id) {
   }
 }
 
-get_connector_id_from_name <- function(connector_name) {
-  #' Get a connector_id from a connector_name. If duplicated name, the first connector_id that match it is retrieved.
+get_connector_id_from_name <- function(project_id, connector_name) {
+  #' Get a connector_id from a connector_name for a given project_id. If duplicated name, the first connector_id that match it is retrieved.
   #'
-  #' @param connector_name name of the connector we are searching its id from. Can be obtained with get_connectors().
+  #' @param project_id id of the project, can be obtained with get_projects(project_id).
+  #' @param connector_name name of the connector we are searching its id from.
   #'
   #' @return id of the connector if found.
   #'
@@ -65,7 +68,7 @@ get_connector_id_from_name <- function(connector_name) {
   #'
   #' @export
 
-  connector_list = get_connectors()
+  connector_list = get_connectors(project_id)
   for (connector in connector_list) {
     if(connector$name == connector_name) {
       return(connector$`_id`)
@@ -74,7 +77,7 @@ get_connector_id_from_name <- function(connector_name) {
   stop("There is no connector_id matching the connector_name ", connector_name)
 }
 
-create_connector <- function(type, name, host, port, username, password, google_credentials = NULL) {
+create_connector <- function(project_id, type, name, host, port, username, password, google_credentials = NULL) {
   #' Create a new connector of a supported type (among: "SQL", "HIVE", "FTP", "SFTP", "S3", "GCP").
   #'
   #' @param type connector type.
@@ -105,7 +108,7 @@ create_connector <- function(type, name, host, port, username, password, google_
                  password = password,
                  googleCredentials = google_credentials)
 
-  resp <- pio_request('/connectors', POST, params)
+  resp <- pio_request(paste0('/project/', project_id, '/connectors'), POST, params)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
   if(resp$status_code == 200) {
     message("Creation of connector ", name, " done - ", resp$status_code, ":", resp_parsed)

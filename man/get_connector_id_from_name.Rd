@@ -2,16 +2,18 @@
 % Please edit documentation in R/connector.R
 \name{get_connector_id_from_name}
 \alias{get_connector_id_from_name}
-\title{Get a connector_id from a connector_name. If duplicated name, the first connector_id that match it is retrieved.}
+\title{Get a connector_id from a connector_name for a given project_id. If duplicated name, the first connector_id that match it is retrieved.}
 \usage{
-get_connector_id_from_name(connector_name)
+get_connector_id_from_name(project_id, connector_name)
 }
 \arguments{
-\item{connector_name}{name of the connector we are searching its id from. Can be obtained with get_connectors().}
+\item{project_id}{id of the project, can be obtained with get_projects(project_id).}
+
+\item{connector_name}{name of the connector we are searching its id from.}
 }
 \value{
 id of the connector if found.
 }
 \description{
-Get a connector_id from a connector_name. If duplicated name, the first connector_id that match it is retrieved.
+Get a connector_id from a connector_name for a given project_id. If duplicated name, the first connector_id that match it is retrieved.
 }

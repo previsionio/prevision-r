@@ -5,6 +5,7 @@
 \title{Create a new datasource}
 \usage{
 create_datasource(
+  project_id,
   connector_id,
   name,
   path = "",
@@ -15,6 +16,8 @@ create_datasource(
 )
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects(project_id).}
+
 \item{connector_id}{connector_id linked to the datasource.}
 
 \item{name}{datasource name.}

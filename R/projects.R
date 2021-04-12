@@ -16,14 +16,14 @@ get_projects <- function() {
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
-      # Stop when no new entry appears
-      if(length(resp_parsed[["items"]])==0) {
-        break
-      }
-
-      # Store items and continue
+      # Store information
       projects = c(projects, resp_parsed[["items"]])
       page = page + 1
+
+      # Stop if next page == FALSE
+      if(resp_parsed[["metaData"]]$nextPage==FALSE) {
+        break
+      }
     }
     else {
       stop("Can't retrieve project list - ", resp$status_code, ":", resp_parsed)
@@ -46,7 +46,7 @@ get_project_id_from_name <- function(project_name) {
   project_list = get_projects()
   for (project in project_list) {
     if(project$name == project_name) {
-      return(project$project_id)
+      return(project$`_id`)
     }
   }
   stop("There is no project_id matching the project_name ", project_name)
@@ -63,7 +63,7 @@ get_project_info <- function(project_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/project/', project_id), GET)
+  resp <- pio_request(paste0('/projects/', project_id), GET)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
@@ -74,16 +74,22 @@ get_project_info <- function(project_id) {
   }
 }
 
-create_project <- function(project_name) {
+create_project <- function(name, description = NULL, color = NULL) {
   #' Create a new project.
   #'
-  #' @param project_name name of the project.
+  #' @param name name of the project.
+  #' @param description description of the project.
+  #' @param color color of the project.
   #'
   #' @import httr
   #'
   #' @export
 
-  params <- list(name = project_name)
+  params <- list(name = name,
+                 description = description,
+                 color = color)
+
+  params <- params[!sapply(params, is.null)]
 
   resp <- pio_request('/projects/', POST, params)
   resp_parsed <- content(resp, 'parsed')
@@ -106,10 +112,10 @@ delete_project <- function(project_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/project/', dataset_id), DELETE)
+  resp <- pio_request(paste0('/projects/', project_id), DELETE)
   resp_parsed <- content(resp, 'parsed')
 
-  if(resp$status_code == 200) {
+  if(resp$status_code == 204) {
     message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
     resp$status_code
   } else {
@@ -128,29 +134,15 @@ get_project_users <- function(project_id) {
   #'
   #' @export
 
-  page = 1
-  project_users = c()
+  resp <- pio_request(paste0('/projects/', project_id, '/users'), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
-  # Looping over page to get all information
-  while(T) {
-    resp <- pio_request(paste0('/projects/', project_id, '/users?page=', page), GET)
-    resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
-
-    if(resp$status_code == 200) {
-      # Stop when no new entry appears
-      if(length(resp_parsed[["items"]])==0) {
-        break
-      }
-
-      # Store items and continue
-      project_users = c(project_users, resp_parsed[["items"]])
-      page = page + 1
-    }
-    else {
-      stop("Can't retrieve project users' list - ", resp$status_code, ":", resp_parsed)
-    }
+  if(resp$status_code == 200) {
+    resp_parsed
   }
-  project_users
+  else {
+    stop("Can't retrieve project users' list - ", resp$status_code, ":", resp_parsed)
+  }
 }
 
 create_project_user <- function(project_id, user_mail, user_role) {
@@ -166,11 +158,11 @@ create_project_user <- function(project_id, user_mail, user_role) {
   #'
   #' @export
 
-  if(user_role %in% c("admin", "contributor", "viewer")) {
+  if(!user_role %in% c("admin", "contributor", "viewer")) {
     stop("user_role must be either \"admin\", \"contributor\" or \"viewer\"")
   }
 
-  params <- list(name = project_name, projectRole = user_role)
+  params <- list(email = user_mail, projectRole = user_role)
 
   resp <- pio_request(paste0('/projects/', project_id, '/users'), POST, params)
   resp_parsed <- content(resp, 'parsed')
@@ -183,11 +175,11 @@ create_project_user <- function(project_id, user_mail, user_role) {
   }
 }
 
-update_project_user_role <- function(project_id, user_mail, user_role) {
+update_project_user_role <- function(project_id, user_id, user_role) {
   #' Update user role in and existing project.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
-  #' @param user_mail email of the user to be edit, can be obtained with get_users().
+  #' @param user_id user_id of the user to be delete, can be obtained with get_project_users().
   #' @param user_role role to grand to the user among "admin", "contributor" and "viewer"
   #'
   #' @return list of users in the project
@@ -196,7 +188,7 @@ update_project_user_role <- function(project_id, user_mail, user_role) {
   #'
   #' @export
 
-  if(user_role %in% c("admin", "contributor", "viewer")) {
+  if(!user_role %in% c("admin", "contributor", "viewer")) {
     stop("user_role must be either \"admin\", \"contributor\" or \"viewer\"")
   }
 
@@ -206,18 +198,18 @@ update_project_user_role <- function(project_id, user_mail, user_role) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("User ", user_mail, " updated with the role", user_role, " to the project ", project_id)
+    message("User updated with the role", user_role, " to the project ", project_id)
     get_project_users(resp_parsed$`_id`)
   } else {
     stop("User role hasn't been updated - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
-delete_project_user <- function(project_id, user_mail) {
+delete_project_user <- function(project_id, user_id) {
   #' Delete user in and existing project.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
-  #' @param user_mail email of the user to be delete, can be obtained with get_users().
+  #' @param user_id user_id of the user to be delete, can be obtained with get_project_users().
   #'
   #' @return 200 on success
   #'
@@ -234,40 +226,4 @@ delete_project_user <- function(project_id, user_mail) {
   } else {
     stop("Delete KO - ", resp$status_code, ":", resp_parsed$message)
   }
-}
-
-get_project_datasets <- function(project_id) {
-  #' Get datasets from a project.
-  #'
-  #' @param project_id id of the project, can be obtained with get_projects().
-  #'
-  #' @return parsed content of the project's datasets
-  #'
-  #' @import httr
-  #'
-  #' @export
-
-  page = 1
-  project_datasets = c()
-
-  # Looping over page to get all information
-  while(T) {
-    resp <- pio_request(paste0('/projects/', project_id, '/datasets?page=', page), GET)
-    resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
-
-    if(resp$status_code == 200) {
-      # Stop when no new entry appears
-      if(length(resp_parsed[["items"]])==0) {
-        break
-      }
-
-      # Store items and continue
-      project_datasets = c(project_datasets, resp_parsed[["items"]])
-      page = page + 1
-    }
-    else {
-      stop("Can't retrieve project datasets' list - ", resp$status_code, ":", resp_parsed)
-    }
-  }
-  project_datasets
 }

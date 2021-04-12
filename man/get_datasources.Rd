@@ -2,13 +2,16 @@
 % Please edit documentation in R/datasource.R
 \name{get_datasources}
 \alias{get_datasources}
-\title{Get information of all data sources available.}
+\title{Get information of all data sources available for a given project_id.}
 \usage{
-get_datasources()
+get_datasources(project_id)
+}
+\arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-parsed content of all data_sources
+parsed content of all data_sources for the suppled project_id.
 }
 \description{
-Get information of all data sources available.
+Get information of all data sources available for a given project_id.
 }

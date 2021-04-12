@@ -1,7 +1,9 @@
-get_datasources <- function() {
-  #' Get information of all data sources available.
+get_datasources <- function(project_id) {
+  #' Get information of all data sources available for a given project_id.
   #'
-  #' @return parsed content of all data_sources
+  #' @param project_id id of the project, can be obtained with get_projects().
+  #'
+  #' @return parsed content of all data_sources for the suppled project_id.
   #'
   #' @import httr
   #'
@@ -12,7 +14,7 @@ get_datasources <- function() {
 
   # Looping over page to get all information
   while(T) {
-    resp <- pio_request(paste0('/datasources?page=', page), GET)
+    resp <- pio_request(paste0('/project/', project_id, '/data-sources?page=', page), GET)
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
@@ -43,7 +45,7 @@ get_datasource_info <- function(datasource_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/datasources/', datasource_id), GET)
+  resp <- pio_request(paste0('/data-sources/', datasource_id), GET)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
@@ -54,9 +56,10 @@ get_datasource_info <- function(datasource_id) {
   }
 }
 
-get_datasource_id_from_name <- function(datasource_name) {
+get_datasource_id_from_name <- function(project_id, datasource_name) {
   #' Get a datasource_id from a datasource_name If duplicated name, the first datasource_id that match it is retrieved
   #'
+  #' @param project_id id of the project, can be obtained with get_projects(project_id).
   #' @param datasource_name name of the connector we are searching its id from. Can be obtained with get_datasources().
   #'
   #' @return id of the datasource if found.
@@ -74,9 +77,10 @@ get_datasource_id_from_name <- function(datasource_name) {
   stop("There is no datasource_id matching the datasource_name ", datasource_name)
 }
 
-create_datasource <- function(connector_id, name, path= "", database= "", table = "", bucket = "", request = "") {
+create_datasource <- function(project_id, connector_id, name, path= "", database= "", table = "", bucket = "", request = "") {
   #' Create a new datasource
   #'
+  #' @param project_id id of the project, can be obtained with get_projects(project_id).
   #' @param connector_id connector_id linked to the datasource.
   #' @param name datasource name.
   #' @param path datasource path (for SFTP & FTP connector).
@@ -92,7 +96,7 @@ create_datasource <- function(connector_id, name, path= "", database= "", table 
   #' @export
 
   # CHECKING THAT CONNECTORID IS VALID
-  connectors_id = get_connectors()
+  connectors_id = get_connectors(project_id)
   valid_id = NULL
   for (i in 1:length(connectors_id)) {
     valid_id = c(valid_id, connectors_id[[i]]$`_id`)
@@ -110,7 +114,7 @@ create_datasource <- function(connector_id, name, path= "", database= "", table 
                  bucket = bucket,
                  request = request)
 
-  resp <- pio_request('/datasources', POST, params)
+  resp <- pio_request(paste0('/project/', project_id, '/datasources'), POST, params)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
