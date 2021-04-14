@@ -14,18 +14,18 @@ get_connectors <- function(project_id) {
 
   # Looping over page to get all information
   while(T) {
-    resp <- pio_request(paste0('/project/', project_id, '/connectors?page=', page), GET)
+    resp <- pio_request(paste0('/projects/', project_id, '/connectors?page=', page), GET)
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
-      # Stop when no new entry appears
-      if(length(resp_parsed[["items"]])==0) {
-        break
-      }
-
-      # Store items and continue
+      # Store information
       connectors = c(connectors, resp_parsed[["items"]])
       page = page + 1
+
+      # Stop if next page == FALSE
+      if(resp_parsed[["metaData"]]$nextPage==FALSE) {
+        break
+      }
     }
     else {
       stop("Can't retrieve connectors list - ", resp$status_code, ":", resp_parsed)
@@ -108,7 +108,7 @@ create_connector <- function(project_id, type, name, host, port, username, passw
                  password = password,
                  googleCredentials = google_credentials)
 
-  resp <- pio_request(paste0('/project/', project_id, '/connectors'), POST, params)
+  resp <- pio_request(paste0('/projects/', project_id, '/connectors'), POST, params)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
   if(resp$status_code == 200) {
     message("Creation of connector ", name, " done - ", resp$status_code, ":", resp_parsed)

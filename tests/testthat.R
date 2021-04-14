@@ -6,8 +6,8 @@ library(previsionio)
 
 wd = getwd()
 
-test_file(paste0(wd, "tests/testthat/test-project.R"))
-test_file(paste0(wd, "tests/testthat/test-connector.R"))
+test_file(paste0(wd, "/tests/testthat/test-project.R"))
+test_file(paste0(wd, "/tests/testthat/test-connector.R"))
 test_file(paste0(wd, "tests/testthat/test-datasource.R"))
 test_file(paste0(wd, "tests/testthat/test-folder.R"))
 test_file(paste0(wd, "tests/testthat/test-dataset.R"))

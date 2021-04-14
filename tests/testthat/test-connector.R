@@ -3,7 +3,7 @@ context("Connector")
 source("helper-credentials.R")
 
 # INIT GLOBAL VARIABLE
-nb_connectors = length(get_connectors())
+nb_connectors = length(get_connectors(get_project_id_from_name("PROJECT_TESTU")))
 
 test_that("create_connector", {
   expect_is(create_connector(get_project_id_from_name("PROJECT_TESTU"),
@@ -66,12 +66,12 @@ test_that("create_connector", {
 })
 
 test_that("get_connectors", {
-  expect_is(get_connectors(get_project_id_from_name("PROJECT_TESTU"),), "list", "get_connectors() doesn't retrieve a list")
-  expect(length(get_connectors(get_project_id_from_name("PROJECT_TESTU"),)) > nb_connectors, "The number of connectors has not increased after connectors creation")
+  expect_is(get_connectors(get_project_id_from_name("PROJECT_TESTU")), "list", "get_connectors() doesn't retrieve a list")
+  expect(length(get_connectors(get_project_id_from_name("PROJECT_TESTU"))) > nb_connectors, "The number of connectors has not increased after connectors creation")
 })
 
 test_that("get_connector_info", {
-  expect_is(get_connector_info(get_connectors()[1]$`_id`), "list", "get_connector_info() doesn't retrieve a list")
+  expect_is(get_connector_info(get_connectors(get_project_id_from_name("PROJECT_TESTU"))[[1]]$`_id`), "list", "get_connector_info() doesn't retrieve a list")
 })
 
 test_that("get_connector_id_from_name", {
