@@ -14,18 +14,18 @@ get_datasources <- function(project_id) {
 
   # Looping over page to get all information
   while(T) {
-    resp <- pio_request(paste0('/project/', project_id, '/data-sources?page=', page), GET)
+    resp <- pio_request(paste0('/projects/', project_id, '/data-sources?page=', page), GET)
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
-      # Stop when no new entry appears
-      if(length(resp_parsed[["items"]])==0) {
-        break
-      }
-
-      # Store items and continue
+      # Store information
       data_sources = c(data_sources, resp_parsed[["items"]])
       page = page + 1
+
+      # Stop if next page == FALSE
+      if(resp_parsed[["metaData"]]$nextPage==FALSE) {
+        break
+      }
     }
     else {
       stop("Can't retrieve data_sources list - ", resp$status_code, ":", resp_parsed)
@@ -68,7 +68,7 @@ get_datasource_id_from_name <- function(project_id, datasource_name) {
   #'
   #' @export
 
-  datasource_list = get_datasources()
+  datasource_list = get_datasources(project_id)
   for (datasource in datasource_list) {
     if(datasource$name == datasource_name) {
       return(datasource$`_id`)
@@ -95,7 +95,7 @@ create_datasource <- function(project_id, connector_id, name, path= "", database
   #'
   #' @export
 
-  # CHECKING THAT CONNECTORID IS VALID
+  # CHECKING THAT connector_id IS VALID
   connectors_id = get_connectors(project_id)
   valid_id = NULL
   for (i in 1:length(connectors_id)) {
@@ -106,7 +106,7 @@ create_datasource <- function(project_id, connector_id, name, path= "", database
     stop("connector_id ", connector_id, " is invalid")
   }
 
-  params <- list(connectorId = connector_id,
+  params <- list(connector_id = connector_id,
                  name = name,
                  path = path,
                  database = database,
@@ -114,7 +114,7 @@ create_datasource <- function(project_id, connector_id, name, path= "", database
                  bucket = bucket,
                  request = request)
 
-  resp <- pio_request(paste0('/project/', project_id, '/datasources'), POST, params)
+  resp <- pio_request(paste0('/projects/', project_id, '/data-sources'), POST, params)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
@@ -128,13 +128,13 @@ create_datasource <- function(project_id, connector_id, name, path= "", database
 delete_datasource <- function(datasource_id) {
   #' Delete a datasource
   #'
-  #' @param datasource_id id of the connector to be deleted, can be obtained with listConnectors().
+  #' @param datasource_id id of the connector to be deleted, can be obtained with get_datasources().
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- pio_request(paste0('/datasources/', datasource_id), DELETE)
+  resp <- pio_request(paste0('/data-sources/', datasource_id), DELETE)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
@@ -154,7 +154,7 @@ test_datasource <- function(datasource_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/datasources/', datasource_id, "/test"), POST)
+  resp <- pio_request(paste0('/data-sources/', datasource_id, "/test"), POST)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {

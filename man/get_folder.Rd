@@ -4,9 +4,11 @@
 \alias{get_folder}
 \title{Get a folder from its id.}
 \usage{
-get_folder(folder_id)
+get_folder(project_id, folder_id)
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
+
 \item{folder_id}{id of the image folder, can be obtained with get_folders().}
 }
 \value{

@@ -4,12 +4,12 @@
 \alias{update_project_user_role}
 \title{Update user role in and existing project.}
 \usage{
-update_project_user_role(project_id, user_mail, user_role)
+update_project_user_role(project_id, user_id, user_role)
 }
 \arguments{
 \item{project_id}{id of the project, can be obtained with get_projects().}
 
-\item{user_mail}{email of the user to be edit, can be obtained with get_users().}
+\item{user_id}{user_id of the user to be delete, can be obtained with get_project_users().}
 
 \item{user_role}{role to grand to the user among "admin", "contributor" and "viewer"}
 }

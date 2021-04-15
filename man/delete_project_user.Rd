@@ -4,12 +4,12 @@
 \alias{delete_project_user}
 \title{Delete user in and existing project.}
 \usage{
-delete_project_user(project_id, user_mail)
+delete_project_user(project_id, user_id)
 }
 \arguments{
 \item{project_id}{id of the project, can be obtained with get_projects().}
 
-\item{user_mail}{email of the user to be delete, can be obtained with get_users().}
+\item{user_id}{user_id of the user to be delete, can be obtained with get_project_users().}
 }
 \value{
 200 on success

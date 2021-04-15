@@ -2,13 +2,16 @@
 % Please edit documentation in R/folder.R
 \name{get_folders}
 \alias{get_folders}
-\title{Get information of all folders availables.}
+\title{Get information of all folders available for a given project_id.}
 \usage{
-get_folders()
+get_folders(project_id)
+}
+\arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
 parsed content of all folders.
 }
 \description{
-Get information of all folders availables.
+Get information of all folders available for a given project_id.
 }

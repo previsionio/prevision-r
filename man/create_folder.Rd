@@ -4,9 +4,11 @@
 \alias{create_folder}
 \title{Upload folder from a local file.}
 \usage{
-create_folder(folder_name, file)
+create_folder(project_id, folder_name, file)
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
+
 \item{folder_name}{given name of the folder on the platform.}
 
 \item{file}{path to the folder.}

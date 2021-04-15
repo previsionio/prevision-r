@@ -1,5 +1,7 @@
-get_folders <- function() {
-  #' Get information of all folders availables.
+get_folders <- function(project_id) {
+  #' Get information of all folders available for a given project_id.
+  #'
+  #' @param project_id id of the project, can be obtained with get_projects().
   #'
   #' @return parsed content of all folders.
   #'
@@ -12,18 +14,18 @@ get_folders <- function() {
 
   # Looping over page to get all information
   while(T) {
-    resp <- pio_request(paste0('/datasets/folders?page=', page), GET)
+    resp <- pio_request(paste0('/projects/', project_id, '/image-folders?page=', page), GET)
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
-      # Stop when no new entry appears
-      if(length(resp_parsed[["items"]])==0) {
-        break
-      }
-
-      # Store items and continue
+      # Store information
       folders = c(folders, resp_parsed[["items"]])
       page = page + 1
+
+      # Stop if next page == FALSE
+      if(resp_parsed[["metaData"]]$nextPage==FALSE) {
+        break
+      }
     }
     else {
       stop("Can't retrieve folders list - ", resp$status_code, ":", resp_parsed)
@@ -32,9 +34,10 @@ get_folders <- function() {
   folders
 }
 
-get_folder_id_from_name <- function(folder_name) {
+get_folder_id_from_name <- function(project_id, folder_name) {
   #' Get a folder_id from a folder_name. If duplicated name, the first folder_id that match it is retrieved.
   #'
+  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param folder_name name of the folder we are searching its id from. Can be obtained with get_folders().
   #'
   #' @return id of the folder if found.
@@ -43,7 +46,7 @@ get_folder_id_from_name <- function(folder_name) {
   #'
   #' @export
 
-  folder_list = get_folders()
+  folder_list = get_folders(project_id)
   for (folder in folder_list) {
     if(folder$name == folder_name) {
       return(folder$`_id`)
@@ -52,9 +55,10 @@ get_folder_id_from_name <- function(folder_name) {
   stop("There is no folder_id matching the folder_name ", folder_name)
 }
 
-get_folder <- function(folder_id) {
+get_folder <- function(project_id, folder_id) {
   #' Get a folder from its id.
   #'
+  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param folder_id id of the image folder, can be obtained with get_folders().
   #'
   #' @return parsed content of the folder.
@@ -64,7 +68,7 @@ get_folder <- function(folder_id) {
   #' @export
 
   while (T) {
-    resp <- pio_request(paste0('/datasets/folders/', folder_id), GET)
+    resp <- pio_request(paste0('/datasets/image-folders/', folder_id), GET)
     if(resp$status_code == 200) {
       resp_parsed <- content(resp, 'parsed')
       if(resp_parsed$ready == "done") {
@@ -77,9 +81,10 @@ get_folder <- function(folder_id) {
   resp_parsed
 }
 
-create_folder <- function(folder_name, file) {
+create_folder <- function(project_id, folder_name, file) {
   #' Upload folder from a local file.
   #'
+  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param folder_name given name of the folder on the platform.
   #' @param file path to the folder.
   #'
@@ -91,11 +96,11 @@ create_folder <- function(folder_name, file) {
 
   params <- list(name = folder_name, file = upload_file(file))
 
-  resp <- pio_request('/datasets/folders', POST, params, upload = TRUE)
+  resp <- pio_request(paste0('/projects/', project_id, '/image-folders'), POST, params, upload = TRUE)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    get_folder(resp_parsed$`_id`)
+    resp_parsed
   } else {
     stop("Folder upload failed - ", resp_parsed$status, ":", resp_parsed$message)
   }
@@ -110,7 +115,7 @@ delete_folder <- function(folder_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/datasets/folders/', folder_id), DELETE)
+  resp <- pio_request(paste0('/image-folders/', folder_id), DELETE)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
