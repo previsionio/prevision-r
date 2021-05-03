@@ -1,7 +1,7 @@
-get_datasets <- function() {
-  #' Get information of all tabular datasets availables.
+get_datasets <- function(project_id) {
+  #' Get information of all datasets available for a given project_id.
   #'
-  #' @return parsed content of all datasets.
+  #' @param project_id id of the project, can be obtained with get_projects().
   #'
   #' @import httr
   #'
@@ -12,18 +12,18 @@ get_datasets <- function() {
 
   # Looping over page to get all information
   while(T) {
-    resp <- pio_request(paste0('/datasets/files?page=', page), GET)
+    resp <- pio_request(paste0('/projects/', project_id, '/datasets?page=', page), GET)
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
-      # Stop when no new entry appears
-      if(length(resp_parsed[["items"]])==0) {
-        break
-      }
-
-      # Store items and continue
+      # Store information
       datasets = c(datasets, resp_parsed[["items"]])
       page = page + 1
+
+      # Stop if next page == FALSE
+      if(resp_parsed[["metaData"]]$nextPage==FALSE) {
+        break
+      }
     }
     else {
       stop("Can't retrieve datasets list - ", resp$status_code, ":", resp_parsed)
@@ -32,9 +32,10 @@ get_datasets <- function() {
   datasets
 }
 
-get_dataset_id_from_name <- function(dataset_name) {
+get_dataset_id_from_name <- function(project_id, dataset_name) {
   #' Get a dataset_id from a dataset_name. If duplicated name, the first dataset_id that match it is retrieved.
   #'
+  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param dataset_name name of the dataset we are searching its id from. Can be obtained with get_datasets().
   #'
   #' @return id of the dataset if found.
@@ -43,7 +44,7 @@ get_dataset_id_from_name <- function(dataset_name) {
   #'
   #' @export
 
-  dataset_list = get_datasets()
+  dataset_list = get_datasets(project_id)
   for (dataset in dataset_list) {
     if(dataset$name == dataset_name) {
       return(dataset$`_id`)
@@ -64,12 +65,12 @@ get_dataset_info <- function(dataset_id) {
   #' @export
 
   while (T) {
-    resp <- pio_request(paste0('/datasets/files/', dataset_id), GET)
+    resp <- pio_request(paste0('/datasets/', dataset_id), GET)
 
     ## IF STATUS == 200 BREAK IF DATASET IS "DONE"
     if(resp$status_code == 200) {
       resp_parsed <- content(resp, 'parsed')
-      if(resp_parsed$ready == "done") {
+      if(resp_parsed$isAvailable) {
         break
       }
     }
@@ -92,7 +93,7 @@ get_dataset_head <- function(dataset_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/datasets/files/', dataset_id, '/head'), GET)
+  resp <- pio_request(paste0('/datasets/', dataset_id, '/sample'), GET)
   resp_parsed <- content(resp, 'parsed')
 
   if(length(resp_parsed$columns) < 1) {
@@ -120,10 +121,10 @@ delete_dataset <- function(dataset_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/datasets/files/', dataset_id), DELETE)
+  resp <- pio_request(paste0('/datasets/', dataset_id), DELETE)
   resp_parsed <- content(resp, 'parsed')
 
-  if(resp$status_code == 200) {
+  if(resp$status_code == 204) {
     message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
     resp$status_code
   } else {
@@ -131,11 +132,14 @@ delete_dataset <- function(dataset_id) {
   }
 }
 
-create_dataset_from_file <- function(dataset_name, file) {
+create_dataset_from_file <- function(project_id, dataset_name, file, separator = ",", decimal = ".") {
   #' Upload dataset from file name.
   #'
+  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param dataset_name given name of the dataset on the platform.
   #' @param file path to the dataset.
+  #' @param separator column separator in the file (default: ",")
+  #' @param decimal decimal separator in the file (default: ".")
   #'
   #' @return parsed content of the dataset.
   #'
@@ -143,9 +147,9 @@ create_dataset_from_file <- function(dataset_name, file) {
   #'
   #' @export
 
-  params <- list(name = dataset_name, file = upload_file(file))
+  params <- list(name = dataset_name, file = upload_file(file), separator = separator, decimal = decimal)
 
-  resp <- pio_request('/datasets/files', POST, params, upload = TRUE)
+  resp <- pio_request(paste0('/projects/', project_id, '/datasets/file'), POST, params, upload = TRUE)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
@@ -155,9 +159,10 @@ create_dataset_from_file <- function(dataset_name, file) {
   }
 }
 
-create_dataset_from_dataframe <- function(dataset_name, dataframe, zip = F) {
+create_dataset_from_dataframe <- function(project_id, dataset_name, dataframe, zip = F) {
   #' Upload dataset from data frame.
   #'
+  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param dataset_name given name of the dataset on the platform.
   #' @param dataframe data.frame to upload.
   #' @param zip is the temp file zipped before sending it to Prevision.io (default = F).
@@ -173,21 +178,25 @@ create_dataset_from_dataframe <- function(dataset_name, dataframe, zip = F) {
   if(zip) {
     message("Compressing file ", tf)
     zip(zipfile = paste0(tf, ".zip"), files = tf)
-    res <- create_dataset_from_file(dataset_name = dataset_name,
+    res <- create_dataset_from_file(project_id = project_id,
+                                    dataset_name = dataset_name,
                                     file = paste0(tf, ".zip"))
     file.remove(tf)
     file.remove(paste0(tf, ".zip"))
   }
   else {
-    res <- create_dataset_from_file(dataset_name = dataset_name, file = tf)
+    res <- create_dataset_from_file(project_id = project_id,
+                                    dataset_name = dataset_name,
+                                    file = tf)
     file.remove(tf)
   }
   res
 }
 
-create_dataset_from_datasource <- function(dataset_name, datasource_id) {
+create_dataset_from_datasource <- function(project_id, dataset_name, datasource_id) {
   #' Create a dataset from an existing datasource.
   #'
+  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param dataset_name given name of the dataset on the platform.
   #' @param datasource_id datasource id.
   #'
@@ -197,9 +206,9 @@ create_dataset_from_datasource <- function(dataset_name, datasource_id) {
   #'
   #' @export
 
-  params <- list(name = dataset_name, datasourceId = datasource_id)
+  params <- list(name = dataset_name, datasource_id = datasource_id)
 
-  resp <- pio_request('/datasets/files', POST, params)
+  resp <- pio_request(paste0('/projects/', project_id, '/datasets/data-source'), POST, params)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
@@ -228,10 +237,10 @@ create_dataframe_from_dataset <- function(dataset_id, path = getwd(), is_folder 
   complete_path <- paste0(path, "/", file_name)
 
   if(is_folder) {
-    resp <- pio_download(paste0('/datasets/folders/', dataset_id, "/download"), complete_path)
+    resp <- pio_download(paste0('/image-folders/', dataset_id, "/download"), complete_path)
   }
   else {
-    resp <- pio_download(paste0('/datasets/files/', dataset_id, "/download"), complete_path)
+    resp <- pio_download(paste0('/datasets/', dataset_id, "/download"), complete_path)
   }
 
   if(resp$status_code == 200) {
@@ -258,7 +267,7 @@ create_dataset_embedding <- function(dataset_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/datasets/files/', dataset_id, "/start-embedding"), POST)
+  resp <- pio_request(paste0('/datasets/', dataset_id, "/analysis"), POST)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
@@ -280,7 +289,7 @@ get_dataset_embedding <- function(dataset_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/datasets/files/', dataset_id, "/explorer"), GET)
+  resp <- pio_request(paste0('/datasets/', dataset_id, '/explorer'), GET)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
@@ -288,8 +297,8 @@ get_dataset_embedding <- function(dataset_id) {
 
     tensor_shape = resp_parsed[["embeddings"]][[1]][["tensorShape"]]
 
-    # respLabels  = pio_request(paste0('/datasets/files/', dataset_id, "/explorer/labels.bytes"), GET)
-    resp_tensors = pio_request(paste0('/datasets/files/', dataset_id, "/explorer/tensors.bytes"), GET)
+    # respLabels  = pio_request(paste0('/datasets/file/', dataset_id, "/explorer/labels.bytes"), GET)
+    resp_tensors = pio_request(paste0('/datasets/file/', dataset_id, "/explorer/tensors.bytes"), GET)
 
     # labels  = fread(content(respLabels, 'parsed', as = "text"), sep = "\t")
     tensors = data.table(matrix(readBin(resp_tensors$content, "numeric", n = tensor_shape[[1]] * tensor_shape[[2]], size = 4), nrow = tensor_shape[[1]], ncol = tensor_shape[[2]], byrow = T))

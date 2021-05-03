@@ -4,9 +4,11 @@
 \alias{create_dataset_from_datasource}
 \title{Create a dataset from an existing datasource.}
 \usage{
-create_dataset_from_datasource(dataset_name, datasource_id)
+create_dataset_from_datasource(project_id, dataset_name, datasource_id)
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
+
 \item{dataset_name}{given name of the dataset on the platform.}
 
 \item{datasource_id}{datasource id.}

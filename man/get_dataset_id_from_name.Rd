@@ -4,9 +4,11 @@
 \alias{get_dataset_id_from_name}
 \title{Get a dataset_id from a dataset_name. If duplicated name, the first dataset_id that match it is retrieved.}
 \usage{
-get_dataset_id_from_name(dataset_name)
+get_dataset_id_from_name(project_id, dataset_name)
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
+
 \item{dataset_name}{name of the dataset we are searching its id from. Can be obtained with get_datasets().}
 }
 \value{

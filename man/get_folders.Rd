@@ -2,7 +2,7 @@
 % Please edit documentation in R/folder.R
 \name{get_folders}
 \alias{get_folders}
-\title{Get information of all folders available for a given project_id.}
+\title{Get information of all image folders available for a given project_id.}
 \usage{
 get_folders(project_id)
 }
@@ -13,5 +13,5 @@ get_folders(project_id)
 parsed content of all folders.
 }
 \description{
-Get information of all folders available for a given project_id.
+Get information of all image folders available for a given project_id.
 }

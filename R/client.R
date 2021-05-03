@@ -40,16 +40,17 @@ pio_request <- function(endpoint, method, data = NULL, upload = FALSE) {
   request_url <- paste(pio_client$url, pio_client$apiVersion, endpoint, sep = '')
   flog.debug(paste('requesting:', request_url))
   flog.debug(paste('request body:', data))
-  flog.debug(paste("request complete body", toJSON(data, auto_unbox=TRUE)))
 
   if (upload) {
+    flog.debug(paste("request complete body", data))
     resp <- method(
       request_url,
-      add_headers(Authorization = pio_client$token),
+      add_headers("Authorization" = pio_client$token),
       body = data,
       config = config(followlocation = 0L)
     )
   } else {
+    flog.debug(paste("request complete body", toJSON(data, auto_unbox=TRUE)))
     resp <- method(
       request_url,
       add_headers("Authorization" = pio_client$token, "Content-Type" = "application/json"),

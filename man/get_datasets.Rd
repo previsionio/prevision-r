@@ -2,13 +2,13 @@
 % Please edit documentation in R/dataset.R
 \name{get_datasets}
 \alias{get_datasets}
-\title{Get information of all tabular datasets availables.}
+\title{Get information of all datasets available for a given project_id.}
 \usage{
-get_datasets()
+get_datasets(project_id)
 }
-\value{
-parsed content of all datasets.
+\arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \description{
-Get information of all tabular datasets availables.
+Get information of all datasets available for a given project_id.
 }

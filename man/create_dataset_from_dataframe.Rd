@@ -4,9 +4,11 @@
 \alias{create_dataset_from_dataframe}
 \title{Upload dataset from data frame.}
 \usage{
-create_dataset_from_dataframe(dataset_name, dataframe, zip = F)
+create_dataset_from_dataframe(project_id, dataset_name, dataframe, zip = F)
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
+
 \item{dataset_name}{given name of the dataset on the platform.}
 
 \item{dataframe}{data.frame to upload.}

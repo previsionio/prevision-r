@@ -1,5 +1,5 @@
 get_folders <- function(project_id) {
-  #' Get information of all folders available for a given project_id.
+  #' Get information of all image folders available for a given project_id.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
@@ -55,10 +55,9 @@ get_folder_id_from_name <- function(project_id, folder_name) {
   stop("There is no folder_id matching the folder_name ", folder_name)
 }
 
-get_folder <- function(project_id, folder_id) {
+get_folder <- function(folder_id) {
   #' Get a folder from its id.
   #'
-  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param folder_id id of the image folder, can be obtained with get_folders().
   #'
   #' @return parsed content of the folder.
@@ -68,13 +67,13 @@ get_folder <- function(project_id, folder_id) {
   #' @export
 
   while (T) {
-    resp <- pio_request(paste0('/datasets/image-folders/', folder_id), GET)
+    resp <- pio_request(paste0('/image-folders/', folder_id), GET)
     if(resp$status_code == 200) {
       resp_parsed <- content(resp, 'parsed')
-      if(resp_parsed$ready == "done") {
+      if(resp_parsed$state == "done") {
         break
       }
-      message('Waiting for dataset')
+      message('Waiting for image folder')
       Sys.sleep(5)
     }
   }

@@ -4,12 +4,24 @@
 \alias{create_dataset_from_file}
 \title{Upload dataset from file name.}
 \usage{
-create_dataset_from_file(dataset_name, file)
+create_dataset_from_file(
+  project_id,
+  dataset_name,
+  file,
+  separator = ",",
+  decimal = "."
+)
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
+
 \item{dataset_name}{given name of the dataset on the platform.}
 
 \item{file}{path to the dataset.}
+
+\item{separator}{column separator in the file (default: ",")}
+
+\item{decimal}{decimal separator in the file (default: ".")}
 }
 \value{
 parsed content of the dataset.
