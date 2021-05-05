@@ -6,7 +6,9 @@ source("helper-credentials.R")
 nb_projects = length(get_projects())
 
 test_that("create_project", {
-  expect_is(create_project("PROJECT_TESTU", "DESCRIPTION_TESTU", "#FF0000"), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
+  expect_is(create_project(name = "PROJECT_TESTU",
+                           description = "DESCRIPTION_TESTU",
+                           color = "#FF0000"), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
 })
 
 test_that("get_projects", {
@@ -28,15 +30,26 @@ test_that("get_project_users", {
 })
 
 test_that("create_project_user", {
-  expect_is(create_project_user(get_project_id_from_name("PROJECT_TESTU"), "gerome.pistre@prevision.io", "viewer"), "list", "create_project_user() doesn't retrieve a list")
-  expect_is(create_project_user(get_project_id_from_name("PROJECT_TESTU"), "pierre.nowak@prevision.io", "contributor"), "list", "create_project_user() doesn't retrieve a list")
-  expect_is(create_project_user(get_project_id_from_name("PROJECT_TESTU"), "nicolas.gaude@prevision.io", "admin"), "list", "create_project_user() doesn't retrieve a list")
+  expect_is(create_project_user(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                                user_mail = "gerome.pistre@prevision.io",
+                                user_role = "viewer"), "list", "create_project_user() doesn't retrieve a list")
+
+  expect_is(create_project_user(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                                user_mail = "pierre.nowak@prevision.io",
+                                user_role = "contributor"), "list", "create_project_user() doesn't retrieve a list")
+
+  expect_is(create_project_user(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                                user_mail = "nicolas.gaude@prevision.io",
+                                user_role = "admin"), "list", "create_project_user() doesn't retrieve a list")
 })
 
 test_that("update_project_user_role", {
-  expect_is(update_project_user_role(get_project_id_from_name("PROJECT_TESTU"), get_project_users(get_project_id_from_name("PROJECT_TESTU"))[[2]]$id, "admin"), "list", "update_project_user_role() doesn't retrieve a list")
+  expect_is(update_project_user_role(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                                     user_id = get_project_users(get_project_id_from_name("PROJECT_TESTU"))[[2]]$id,
+                                     user_role = "admin"), "list", "update_project_user_role() doesn't retrieve a list")
 })
 
 test_that("delete_project_user", {
-  expect(delete_project_user(get_project_id_from_name("PROJECT_TESTU"), get_project_users(get_project_id_from_name("PROJECT_TESTU"))[[2]]$id) == 200, "delete_project_user() doesn't retrieve a 200 status code")
+  expect(delete_project_user(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                             user_id = get_project_users(get_project_id_from_name("PROJECT_TESTU"))[[2]]$id) == 200, "delete_project_user() doesn't retrieve a 200 status code")
 })

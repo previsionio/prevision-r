@@ -2,14 +2,12 @@
 % Please edit documentation in R/usecase.R
 \name{get_best_model_id}
 \alias{get_best_model_id}
-\title{Get the model_id that provide the best predictive performance given usecase_id and version_number. If include_blend is false, it will return the model_id from the best "non blended" model.}
+\title{Get the model_id that provide the best predictive performance given usecase_version_id. If include_blend is false, it will return the model_id from the best "non blended" model.}
 \usage{
-get_best_model_id(usecase_id, version_number = 1, include_blend = TRUE)
+get_best_model_id(usecase_version_id, include_blend = TRUE)
 }
 \arguments{
-\item{usecase_id}{id of the usecase, can be obtained with get_usecases().}
-
-\item{version_number}{number of the version of the usecase. 1 by default.}
+\item{usecase_version_id}{id of the usecase_version, can be obtained with get_usecase_version_id().}
 
 \item{include_blend}{boolean, indicating if you want to retrieve the best model among blended models too.}
 }
@@ -17,5 +15,5 @@ get_best_model_id(usecase_id, version_number = 1, include_blend = TRUE)
 model_id.
 }
 \description{
-Get the model_id that provide the best predictive performance given usecase_id and version_number. If include_blend is false, it will return the model_id from the best "non blended" model.
+Get the model_id that provide the best predictive performance given usecase_version_id. If include_blend is false, it will return the model_id from the best "non blended" model.
 }

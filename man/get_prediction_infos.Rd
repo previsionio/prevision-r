@@ -2,20 +2,16 @@
 % Please edit documentation in R/usecase.R
 \name{get_prediction_infos}
 \alias{get_prediction_infos}
-\title{Get a information about a prediction from a specific usecase / version number.}
+\title{Get a information about a prediction_id.}
 \usage{
-get_prediction_infos(usecase_id, prediction_id, version_number = 1)
+get_prediction_infos(prediction_id)
 }
 \arguments{
-\item{usecase_id}{id of the usecase, can be obtained with get_usecases().}
-
-\item{prediction_id}{id of the prediction to be retrieved, can be obtained with usecasePredictions().}
-
-\item{version_number}{number of the version of the usecase. 1 by default.}
+\item{prediction_id}{id of the prediction to be retrieved, can be obtained with get_usecase_version_predictions().}
 }
 \value{
 list of prediction information.
 }
 \description{
-Get a information about a prediction from a specific usecase / version number.
+Get a information about a prediction_id.
 }

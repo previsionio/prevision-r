@@ -2,20 +2,16 @@
 % Please edit documentation in R/usecase.R
 \name{get_model_hyperparameters}
 \alias{get_model_hyperparameters}
-\title{Get hyperparameters corresponding to usecase_id and model_id and its version number.}
+\title{Get hyperparameters corresponding to a model_id.}
 \usage{
-get_model_hyperparameters(usecase_id, model_id, version_number = 1)
+get_model_hyperparameters(model_id)
 }
 \arguments{
-\item{usecase_id}{id of the usecase, can be obtained with get_usecases().}
-
 \item{model_id}{id of the model, can be obtained with usecaseModels(usecase_id).}
-
-\item{version_number}{number of the version of the usecase. 1 by default.}
 }
 \value{
 parsed content of the model's hyperparameters.
 }
 \description{
-Get hyperparameters corresponding to usecase_id and model_id and its version number.
+Get hyperparameters corresponding to a model_id.
 }

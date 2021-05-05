@@ -2,20 +2,18 @@
 % Please edit documentation in R/usecase.R
 \name{get_features_infos}
 \alias{get_features_infos}
-\title{Get information of a given feature related to a usecase_id and its version number.}
+\title{Get information of a given feature related to a usecase_version_id.}
 \usage{
-get_features_infos(usecase_id, feature_name, version_number = 1)
+get_features_infos(usecase_version_id, feature_name)
 }
 \arguments{
-\item{usecase_id}{id of the usecase, can be obtained with get_usecases().}
+\item{usecase_version_id}{id of the usecase_version, can be obtained with get_usecase_version_id().}
 
 \item{feature_name}{name of the feature to retrive information.}
-
-\item{version_number}{number of the version of the usecase. 1 by default.}
 }
 \value{
 parsed content of the specific feature.
 }
 \description{
-Get information of a given feature related to a usecase_id and its version number.
+Get information of a given feature related to a usecase_version_id.
 }

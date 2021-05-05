@@ -11,7 +11,7 @@ test_file(paste0(wd, "/tests/testthat/test-connector.R"))
 test_file(paste0(wd, "/tests/testthat/test-datasource.R"))
 test_file(paste0(wd, "/tests/testthat/test-folder.R"))
 test_file(paste0(wd, "/tests/testthat/test-dataset.R"))
-# test_file(paste0(wd, "tests/testthat/test-usecase.R"))
+test_file(paste0(wd, "/tests/testthat/test-usecase.R"))
 
 # test_file(paste0(wd, "tests/testthat/test-usecase-delete.R"))
 test_file(paste0(wd, "tests/testthat/test-dataset-delete.R"))

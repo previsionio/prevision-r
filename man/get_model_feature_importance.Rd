@@ -2,21 +2,12 @@
 % Please edit documentation in R/usecase.R
 \name{get_model_feature_importance}
 \alias{get_model_feature_importance}
-\title{Get feature importance corresponding to usecase_id and model_id and its version number.}
+\title{Get feature importance corresponding to a model_id.}
 \usage{
-get_model_feature_importance(
-  usecase_id,
-  model_id,
-  version_number = 1,
-  mode = "raw"
-)
+get_model_feature_importance(model_id, mode = "raw")
 }
 \arguments{
-\item{usecase_id}{id of the usecase, can be obtained with get_usecases().}
-
-\item{model_id}{id of the model, can be obtained with usecaseModels(usecase_id).}
-
-\item{version_number}{number of the version of the usecase. 1 by default.}
+\item{model_id}{id of the model, can be obtained with get_usecase_models().}
 
 \item{mode}{character indicating the type of feature importance among "raw" (default) or "engineered".}
 }
@@ -24,5 +15,5 @@ get_model_feature_importance(
 dataset of the model's feature importance.
 }
 \description{
-Get feature importance corresponding to usecase_id and model_id and its version number.
+Get feature importance corresponding to a model_id.
 }

@@ -2,13 +2,16 @@
 % Please edit documentation in R/usecase.R
 \name{get_usecases}
 \alias{get_usecases}
-\title{Retrieves all usecases.}
+\title{Get information of all usecases available for a given project_id.}
 \usage{
-get_usecases()
+get_usecases(project_id)
+}
+\arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-a usecase list.
+parsed content of all usecases for the suppled project_id.
 }
 \description{
-Retrieves all usecases.
+Get information of all usecases available for a given project_id.
 }

@@ -2,16 +2,15 @@
 % Please edit documentation in R/usecase.R
 \name{create_prediction}
 \alias{create_prediction}
-\title{Create a prediction on a existing usecase}
+\title{Create a prediction on a specified usecase_version}
 \usage{
 create_prediction(
-  usecase_id,
+  usecase_version_id,
   dataset_id = NULL,
   dataset_folder_id = NULL,
   confidence = F,
   best_single = F,
   model_id = NULL,
-  version_number = 1,
   queries_dataset_id = NULL,
   queries_dataset_content_column = NULL,
   queries_dataset_id_column = NULL,
@@ -20,19 +19,17 @@ create_prediction(
 )
 }
 \arguments{
-\item{usecase_id}{id of the usecase, can be obtained with get_usecases().}
+\item{usecase_version_id}{id of the usecase_version, can be obtained with get_usecase_version_id().}
 
-\item{dataset_id}{id of the dataset to start the prediction on, can be obtained with get_usecases().}
+\item{dataset_id}{id of the dataset to start the prediction on, can be obtained with get_datasets()().}
 
-\item{dataset_folder_id}{id of the folder dataset to start prediction on, can be obtained with get_usecases(). Only usefull for images use cases.}
+\item{dataset_folder_id}{id of the folder dataset to start prediction on, can be obtained with get_folders(). Only usefull for images use cases.}
 
-\item{confidence}{boolean. If enable, confidence intervalle will be added to predictions.}
+\item{confidence}{boolean. If enable, confidence interval will be added to predictions.}
 
 \item{best_single}{boolean. If enable, best single model (non blend) will be used for making predictions other wise, best model will be used unless if model_id is fed.}
 
 \item{model_id}{id of the model to start the prediction on. If provided, it will overwrite the "best single" params.}
-
-\item{version_number}{number of the version of the usecase. 1 by default.}
 
 \item{queries_dataset_id}{id of the datasat containing queries (text-similarity).}
 
@@ -48,5 +45,5 @@ create_prediction(
 parsed prediction list.
 }
 \description{
-Create a prediction on a existing usecase
+Create a prediction on a specified usecase_version
 }

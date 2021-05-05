@@ -4,9 +4,11 @@
 \alias{get_usecase_id_from_name}
 \title{Get a usecase_id from a usecase_name If duplicated name, the first usecase_id that match it is retrieved.}
 \usage{
-get_usecase_id_from_name(usecase_name)
+get_usecase_id_from_name(project_id, usecase_name)
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
+
 \item{usecase_name}{name of the usecase we are searching its id from. Can be obtained with get_usecases().}
 }
 \value{

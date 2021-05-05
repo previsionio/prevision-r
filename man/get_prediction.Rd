@@ -2,22 +2,12 @@
 % Please edit documentation in R/usecase.R
 \name{get_prediction}
 \alias{get_prediction}
-\title{Get a specific prediction from a specific usecase / version number. Wait up until time_out is reached and wait wait_time between each retry.}
+\title{Get a specific prediction from a prediction_id. Wait up until time_out is reached and wait wait_time between each retry.}
 \usage{
-get_prediction(
-  usecase_id,
-  prediction_id,
-  version_number = 1,
-  time_out = 3600,
-  wait_time = 10
-)
+get_prediction(prediction_id, time_out = 3600, wait_time = 10)
 }
 \arguments{
-\item{usecase_id}{id of the usecase, can be obtained with get_usecases().}
-
-\item{prediction_id}{id of the prediction to be retrieved, can be obtained with usecasePredictions().}
-
-\item{version_number}{number of the version of the usecase. 1 by default.}
+\item{prediction_id}{id of the prediction to be retrieved, can be obtained with get_usecase_version_predictions().}
 
 \item{time_out}{maximum number of seconds to wait for the prediction. 3 600 by default.}
 
@@ -27,5 +17,5 @@ get_prediction(
 a data.frame with the predictions.
 }
 \description{
-Get a specific prediction from a specific usecase / version number. Wait up until time_out is reached and wait wait_time between each retry.
+Get a specific prediction from a prediction_id. Wait up until time_out is reached and wait wait_time between each retry.
 }

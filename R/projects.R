@@ -168,10 +168,10 @@ create_project_user <- function(project_id, user_mail, user_role) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("User ", user_mail, " added with the role", user_role, " to the project ", project_id)
+    message("User ", user_mail, " added with the role ", user_role, " to the project ", project_id)
     get_project_users(resp_parsed$`_id`)
   } else {
-    stop("User wasn't added to the project - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("User ", user_mail, " wasn't added to the project - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 

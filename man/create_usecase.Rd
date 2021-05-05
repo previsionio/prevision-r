@@ -5,6 +5,7 @@
 \title{Create a new usecase on the platform.}
 \usage{
 create_usecase(
+  project_id,
   name,
   data_type,
   training_type,
@@ -49,6 +50,8 @@ create_usecase(
 )
 }
 \arguments{
+\item{project_id}{id of the project in which we create the usecase.}
+
 \item{name}{name of the usecase.}
 
 \item{data_type}{type of data ("tabular" or "images" or "timeseries").}

@@ -3,6 +3,8 @@ get_datasets <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
+  #' @return parsed content of all datasets for the suppled project_id.
+  #'
   #' @import httr
   #'
   #' @export

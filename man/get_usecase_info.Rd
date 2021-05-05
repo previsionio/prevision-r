@@ -4,12 +4,12 @@
 \alias{get_usecase_info}
 \title{Get a usecase from its usecase_id and its version number.}
 \usage{
-get_usecase_info(usecase_id, version_number = 1)
+get_usecase_info(usecase_id, version_number = NULL)
 }
 \arguments{
 \item{usecase_id}{id of the usecase, can be obtained with get_usecases().}
 
-\item{version_number}{number of the version of the usecase. 1 by default.}
+\item{version_number}{number of the version of the usecase. If not supplied, retrieve all usecase information}
 }
 \value{
 parsed content of the usecase.
