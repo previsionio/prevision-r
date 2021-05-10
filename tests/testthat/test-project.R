@@ -8,7 +8,7 @@ nb_projects = length(get_projects())
 test_that("create_project", {
   expect_is(create_project(name = "PROJECT_TESTU",
                            description = "DESCRIPTION_TESTU",
-                           color = "#FF0000"), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
+                           color = "#8D29CC"), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
 })
 
 test_that("get_projects", {
@@ -33,14 +33,6 @@ test_that("create_project_user", {
   expect_is(create_project_user(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                 user_mail = "gerome.pistre@prevision.io",
                                 user_role = "viewer"), "list", "create_project_user() doesn't retrieve a list")
-
-  expect_is(create_project_user(project_id = get_project_id_from_name("PROJECT_TESTU"),
-                                user_mail = "pierre.nowak@prevision.io",
-                                user_role = "contributor"), "list", "create_project_user() doesn't retrieve a list")
-
-  expect_is(create_project_user(project_id = get_project_id_from_name("PROJECT_TESTU"),
-                                user_mail = "nicolas.gaude@prevision.io",
-                                user_role = "admin"), "list", "create_project_user() doesn't retrieve a list")
 })
 
 test_that("update_project_user_role", {

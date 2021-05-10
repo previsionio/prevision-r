@@ -74,12 +74,12 @@ get_project_info <- function(project_id) {
   }
 }
 
-create_project <- function(name, description = NULL, color = NULL) {
+create_project <- function(name, description = NULL, color = "#8D29CC") {
   #' Create a new project.
   #'
   #' @param name name of the project.
   #' @param description description of the project.
-  #' @param color color of the project.
+  #' @param color color of the project. #8D29CC by default.
   #'
   #' @import httr
   #'

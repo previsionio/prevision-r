@@ -7,7 +7,7 @@
 get_model_cv(model_id)
 }
 \arguments{
-\item{model_id}{id of the model to get the CV, can be obtained with get_usecase_models().}
+\item{model_id}{id of the model to get the CV, can be obtained with get_usecase_version_models().}
 }
 \value{
 a dataframe containing cross validation data.

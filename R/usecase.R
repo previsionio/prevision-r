@@ -295,14 +295,14 @@ get_usecase_version_predictions <- function(usecase_version_id, generating_type 
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
+      # Store items and continue
+      predictions = c(predictions, resp_parsed[["items"]])
+      page = page + 1
+
       # Stop if next page == FALSE
       if(resp_parsed[["metaData"]]$nextPage==FALSE) {
         break
       }
-
-      # Store items and continue
-      predictions = c(predictions, resp_parsed[["items"]])
-      page = page + 1
     }
     else {
       stop("Can't retrieve predictions from usecase_version ", usecase_version_id, " - ", resp$status_code, ":", resp_parsed)
@@ -311,12 +311,12 @@ get_usecase_version_predictions <- function(usecase_version_id, generating_type 
   predictions
 }
 
-create_prediction <- function(usecase_version_id, dataset_id = NULL, dataset_folder_id = NULL, confidence = F, best_single = F, model_id = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL) {
+create_prediction <- function(usecase_version_id, dataset_id = NULL, folder_dataset_id = NULL, confidence = F, best_single = F, model_id = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL) {
   #' Create a prediction on a specified usecase_version
   #'
   #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
-  #' @param dataset_id id of the dataset to start the prediction on, can be obtained with get_datasets()().
-  #' @param dataset_folder_id id of the folder dataset to start prediction on, can be obtained with get_folders(). Only usefull for images use cases.
+  #' @param dataset_id id of the dataset to start the prediction on, can be obtained with get_datasets().
+  #' @param folder_dataset_id id of the folder dataset to start prediction on, can be obtained with get_folders(). Only usefull for images use cases.
   #' @param confidence boolean. If enable, confidence interval will be added to predictions.
   #' @param best_single boolean. If enable, best single model (non blend) will be used for making predictions other wise, best model will be used unless if model_id is fed.
   #' @param model_id id of the model to start the prediction on. If provided, it will overwrite the "best single" params.
@@ -333,11 +333,10 @@ create_prediction <- function(usecase_version_id, dataset_id = NULL, dataset_fol
   #' @export
 
   params = list(dataset_id = dataset_id,
-                dataset_folder_id = dataset_folder_id,
+                folder_dataset_id = folder_dataset_id,
                 confidence = confidence,
                 best_single = best_single,
                 model_id = model_id,
-                version_number = version_number,
                 queries_dataset_id = queries_dataset_id,
                 queries_dataset_content_column = queries_dataset_content_column,
                 queries_dataset_id_column = queries_dataset_id_column,
@@ -357,7 +356,7 @@ create_prediction <- function(usecase_version_id, dataset_id = NULL, dataset_fol
   resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/predictions'), POST, params)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
-  if(resp$status_code == 202) {
+  if(resp$status_code == 200) {
     resp_parsed
   }
   else {
@@ -434,10 +433,10 @@ delete_prediction <- function(prediction_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/', version_number, '/predictions/', prediction_id), DELETE)
+  resp <- pio_request(paste0('/predictions/', prediction_id), DELETE)
   resp_parsed <- content(resp, 'parsed')
 
-  if(resp$status_code == 200) {
+  if(resp$status_code == 204) {
     message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
   } else {
     stop("Delete KO - ", resp$status_code, ":", resp_parsed$message)
@@ -445,7 +444,7 @@ delete_prediction <- function(prediction_id) {
   return(resp$status_code)
 }
 
-create_usecase <- function(project_id, name, data_type, training_type, dataset_id, target_column = NULL, holdout_dataset_id = NULL, id_column = NULL, drop_list = NULL, profile = NULL, usecase_description = NULL, metric = NULL, fold_column = NULL, normal_models = NULL, lite_models = c('XGB'), simple_models = NULL, with_blend = NULL, weight_column = NULL, features_engineering_selected_list = NULL, features_selection_count = NULL, features_selection_time = NULL, dataset_folder_id = NULL, filename_column = NULL, y_min = NULL, y_max = NULL, x_min = NULL, x_max = NULL, time_column = NULL, start_dw = NULL, end_dw = NULL, start_fw = NULL, end_fw = NULL, group_list = NULL, apriori_list = NULL, content_column = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL, lang = NULL, models_parameters = NULL) {
+create_usecase <- function(project_id, name, data_type, training_type, dataset_id, target_column = NULL, holdout_dataset_id = NULL, id_column = NULL, drop_list = NULL, profile = NULL, usecase_description = NULL, metric = NULL, fold_column = NULL, normal_models = NULL, lite_models = c('XGB'), simple_models = NULL, with_blend = NULL, weight_column = NULL, features_engineering_selected_list = NULL, features_selection_count = NULL, features_selection_time = NULL, folder_dataset_id = NULL, filename_column = NULL, ymin = NULL, ymax = NULL, xmin = NULL, xmax = NULL, time_column = NULL, start_dw = NULL, end_dw = NULL, start_fw = NULL, end_fw = NULL, group_list = NULL, apriori_list = NULL, content_column = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL, lang = NULL, models_params = NULL) {
   #' Create a new usecase on the platform.
   #'
   #' @param project_id id of the project in which we create the usecase.
@@ -469,12 +468,12 @@ create_usecase <- function(project_id, name, data_type, training_type, dataset_i
   #' @param features_engineering_selected_list list of feature engineering to select among "Counter", "Date", "freq", "text_tfidf", "text_word2vec", "text_embedding", "tenc", "poly", "pca", "kmean".
   #' @param features_selection_count number of features to keep after the feature selection process.
   #' @param features_selection_time time budget in minutes of the feature selection process.
-  #' @param dataset_folder_id id of the dataset fold (images).
+  #' @param folder_dataset_id id of the dataset folder (images).
   #' @param filename_column name of the file name path (images).
-  #' @param y_min name of the column matching the lower y value of the image (object detection).
-  #' @param y_max name of the column matching the higher y value of the image (object detection).
-  #' @param x_min name of the column matching the lower x value of the image (object detection).
-  #' @param x_max name of the column matching the higher x value of the image (object detection).
+  #' @param ymin name of the column matching the lower y value of the image (object detection).
+  #' @param ymax name of the column matching the higher y value of the image (object detection).
+  #' @param xmin name of the column matching the lower x value of the image (object detection).
+  #' @param xmax name of the column matching the higher x value of the image (object detection).
   #' @param time_column name of column containing the timestamp (time series).
   #' @param start_dw value of the start of derivative window (time series), should be a strict negative integer.
   #' @param end_dw value of the end of derivative window (time series), should be a negative integer greater than start_dw.
@@ -489,7 +488,7 @@ create_usecase <- function(project_id, name, data_type, training_type, dataset_i
   #' @param queries_dataset_matching_id_description_column name of the column matching id in the description dataset (text-similarity).
   #' @param top_k top k individual to find (text-similarity).
   #' @param lang lang of the text (text-similarity).
-  #' @param models_parameters parameters of the model (text-similarity).
+  #' @param models_params parameters of the model (text-similarity).
   #'
   #' @import httr
   #'
@@ -547,12 +546,12 @@ create_usecase <- function(project_id, name, data_type, training_type, dataset_i
                   features_engineering_selected_list = features_engineering_selected_list,
                   features_selection_count = features_selection_count,
                   features_selection_time = features_selection_time,
-                  dataset_folder_id = dataset_folder_id,
+                  folder_dataset_id = folder_dataset_id,
                   filename_column = filename_column,
-                  y_min = y_min,
-                  y_max = y_max,
-                  x_min = x_min,
-                  x_max = x_max,
+                  ymin = ymin,
+                  ymax = ymax,
+                  xmin = xmin,
+                  xmax = xmax,
                   time_column = time_column,
                   start_dw = start_dw,
                   end_dw = end_dw,
@@ -567,19 +566,19 @@ create_usecase <- function(project_id, name, data_type, training_type, dataset_i
                   queries_dataset_matching_id_description_column = queries_dataset_matching_id_description_column,
                   top_k = top_k,
                   lang = lang,
-                  models_parameters = models_parameters)
+                  models_params = models_params)
 
   ucParams <- ucParams[!sapply(ucParams, is.null)]
 
-  resp <- pio_request(paste0('/projects/', project_id, '/usecase/', data_type, '/', training_type), POST, ucParams)
+  resp <- pio_request(paste0('/projects/', project_id, '/usecases/', data_type, '/', training_type), POST, ucParams)
   resp_parsed <- content(resp, 'parsed')
 
-  if(resp$status_code == 202) {
-    message("Usecase started - ", resp$status_code, ":", resp_parsed$message)
+  if(resp$status_code == 200) {
+    message("Usecase started - ", resp$status_code, ":", resp_parsed[[1]])
   } else {
-    stop("Usecase starting failed - ", resp$status_code, ":", resp_parsed$message)
+    stop("Usecase starting failed - ", resp$status_code, ":", resp_parsed[[1]])
   }
-  get_usecase_info(resp_parsed$`_id`)
+  get_usecase_info(resp_parsed$usecase_id)
 }
 
 update_usecase_version_description <- function(usecase_version_id, description = "") {
@@ -688,7 +687,7 @@ stop_usecase_version <- function(usecase_version_id) {
 get_model_cv <- function(model_id) {
   #' Get the cross validation file from a specific model.
   #'
-  #' @param model_id id of the model to get the CV, can be obtained with get_usecase_models().
+  #' @param model_id id of the model to get the CV, can be obtained with get_usecase_version_models().
   #'
   #' @return a dataframe containing cross validation data.
   #'
@@ -698,7 +697,7 @@ get_model_cv <- function(model_id) {
   #' @export
 
   temp <- tempfile()
-  resp <- pio_download(paste0('/models/', model_id, 'cross-validation/download'), temp)
+  resp <- pio_download(paste0('/models/', model_id, '/cross-validation/download'), temp)
 
   if(resp$status_code == 200) {
     data <- fread(unzip(temp))

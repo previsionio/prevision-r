@@ -14,13 +14,13 @@ test_that("create_connector", {
                              username = SQL_CONNECTOR_USER,
                              password = SQL_CONNECTOR_PASS), "list", "create_connector() doesn't retrieve a list for SQL type")
 
-  expect_is(create_connector(project_id = get_project_id_from_name("PROJECT_TESTU"),
-                             type = "HIVE",
-                             name = "HIVE_CONNECTOR_TESTU",
-                             host = HIVE_CONNECTOR_HOST,
-                             port = HIVE_CONNECTOR_PORT,
-                             username = HIVE_CONNECTOR_USER,
-                             password = HIVE_CONNECTOR_PASS), "list", "create_connector() doesn't retrieve a list for HIVE type")
+  # expect_is(create_connector(project_id = get_project_id_from_name("PROJECT_TESTU"),
+  #                            type = "HIVE",
+  #                            name = "HIVE_CONNECTOR_TESTU",
+  #                            host = HIVE_CONNECTOR_HOST,
+  #                            port = HIVE_CONNECTOR_PORT,
+  #                            username = HIVE_CONNECTOR_USER,
+  #                            password = HIVE_CONNECTOR_PASS), "list", "create_connector() doesn't retrieve a list for HIVE type")
 
   # expect_is(create_connector(project_id = get_project_id_from_name("PROJECT_TESTU"),
   #                           type = "HBASE",
@@ -85,8 +85,8 @@ test_that("get_connector_id_from_name", {
   expect_is(get_connector_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                        connector_name = "SQL_CONNECTOR_TESTU"), "character", "get_connector_id_from_name() doesn't retrieve a character for SQL_CONNECTOR_TESTU")
 
-  expect_is(get_connector_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
-                                       connector_name = "HIVE_CONNECTOR_TESTU"), "character", "get_connector_id_from_name() doesn't retrieve a character for HIVE_CONNECTOR_TESTU")
+  # expect_is(get_connector_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
+  #                                      connector_name = "HIVE_CONNECTOR_TESTU"), "character", "get_connector_id_from_name() doesn't retrieve a character for HIVE_CONNECTOR_TESTU")
 
   # expect_is(get_connector_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
   #                                      connector_name = "HBASE_CONNECTOR_TESTU"), "character", "get_connector_id_from_name() doesn't retrieve a character for HBASE_CONNECTOR_TESTU")
@@ -111,8 +111,8 @@ test_that("test_connector", {
   expect(test_connector(get_connector_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                                    connector_name = "SQL_CONNECTOR_TESTU")) == 200, "test_connector() doesn't retrieve a 200 status code for SQL_CONNECTOR_TESTU")
 
-  expect(test_connector(get_connector_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
-                                                   connector_name = "HIVE_CONNECTOR_TESTU")) == 200, "test_connector() doesn't retrieve a 200 status code for HIVE_CONNECTOR_TESTU")
+  # expect(test_connector(get_connector_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
+  #                                                  connector_name = "HIVE_CONNECTOR_TESTU")) == 200, "test_connector() doesn't retrieve a 200 status code for HIVE_CONNECTOR_TESTU")
 
   # expect(test_connector(get_connector_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
   #                                                  connector_name = "HBASE_CONNECTOR_TESTU")) == 200, "test_connector() doesn't retrieve a 200 status code for HBASE_CONNECTOR_TESTU")

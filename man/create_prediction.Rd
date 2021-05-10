@@ -7,7 +7,7 @@
 create_prediction(
   usecase_version_id,
   dataset_id = NULL,
-  dataset_folder_id = NULL,
+  folder_dataset_id = NULL,
   confidence = F,
   best_single = F,
   model_id = NULL,
@@ -21,9 +21,9 @@ create_prediction(
 \arguments{
 \item{usecase_version_id}{id of the usecase_version, can be obtained with get_usecase_version_id().}
 
-\item{dataset_id}{id of the dataset to start the prediction on, can be obtained with get_datasets()().}
+\item{dataset_id}{id of the dataset to start the prediction on, can be obtained with get_datasets().}
 
-\item{dataset_folder_id}{id of the folder dataset to start prediction on, can be obtained with get_folders(). Only usefull for images use cases.}
+\item{folder_dataset_id}{id of the folder dataset to start prediction on, can be obtained with get_folders(). Only usefull for images use cases.}
 
 \item{confidence}{boolean. If enable, confidence interval will be added to predictions.}
 

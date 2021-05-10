@@ -4,14 +4,14 @@
 \alias{create_project}
 \title{Create a new project.}
 \usage{
-create_project(name, description = NULL, color = NULL)
+create_project(name, description = NULL, color = "#8D29CC")
 }
 \arguments{
 \item{name}{name of the project.}
 
 \item{description}{description of the project.}
 
-\item{color}{color of the project.}
+\item{color}{color of the project. #8D29CC by default.}
 }
 \description{
 Create a new project.

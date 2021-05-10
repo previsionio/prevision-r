@@ -26,12 +26,12 @@ create_usecase(
   features_engineering_selected_list = NULL,
   features_selection_count = NULL,
   features_selection_time = NULL,
-  dataset_folder_id = NULL,
+  folder_dataset_id = NULL,
   filename_column = NULL,
-  y_min = NULL,
-  y_max = NULL,
-  x_min = NULL,
-  x_max = NULL,
+  ymin = NULL,
+  ymax = NULL,
+  xmin = NULL,
+  xmax = NULL,
   time_column = NULL,
   start_dw = NULL,
   end_dw = NULL,
@@ -46,7 +46,7 @@ create_usecase(
   queries_dataset_matching_id_description_column = NULL,
   top_k = NULL,
   lang = NULL,
-  models_parameters = NULL
+  models_params = NULL
 )
 }
 \arguments{
@@ -92,17 +92,17 @@ create_usecase(
 
 \item{features_selection_time}{time budget in minutes of the feature selection process.}
 
-\item{dataset_folder_id}{id of the dataset fold (images).}
+\item{folder_dataset_id}{id of the dataset folder (images).}
 
 \item{filename_column}{name of the file name path (images).}
 
-\item{y_min}{name of the column matching the lower y value of the image (object detection).}
+\item{ymin}{name of the column matching the lower y value of the image (object detection).}
 
-\item{y_max}{name of the column matching the higher y value of the image (object detection).}
+\item{ymax}{name of the column matching the higher y value of the image (object detection).}
 
-\item{x_min}{name of the column matching the lower x value of the image (object detection).}
+\item{xmin}{name of the column matching the lower x value of the image (object detection).}
 
-\item{x_max}{name of the column matching the higher x value of the image (object detection).}
+\item{xmax}{name of the column matching the higher x value of the image (object detection).}
 
 \item{time_column}{name of column containing the timestamp (time series).}
 
@@ -132,7 +132,7 @@ create_usecase(
 
 \item{lang}{lang of the text (text-similarity).}
 
-\item{models_parameters}{parameters of the model (text-similarity).}
+\item{models_params}{parameters of the model (text-similarity).}
 }
 \value{
 usecase information.

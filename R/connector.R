@@ -150,12 +150,11 @@ test_connector <- function(connector_id) {
   #' @export
 
   resp <- pio_request(paste0('/connectors/', connector_id, "/test"), POST)
-  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Test of connector ", connector_id, " done - ", resp$status_code, ":", resp_parsed)
+    message("Test of connector ", connector_id, " OK - ", resp$status_code)
     resp$status_code
   } else {
-    stop("Test of connector ", connector_id, " failed - ", resp$status_code, ":", resp_parsed)
+    stop("Test of connector ", connector_id, " KO - ", resp$status_code)
   }
 }
