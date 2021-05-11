@@ -252,7 +252,7 @@ get_model_feature_importance <- function(model_id, mode = "raw") {
   }
 
   if(mode == "engineered") {
-    resp <- pio_download(paste0('/models/', model_id, '/features-importances/download'), temp)
+    resp <- pio_download(paste0('/models/', model_id, '/features-engineering-importances/download'), temp)
   }
 
   if(resp$status_code == 200) {
