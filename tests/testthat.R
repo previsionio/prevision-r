@@ -13,7 +13,7 @@ test_file(paste0(wd, "/tests/testthat/test-folder.R"))
 test_file(paste0(wd, "/tests/testthat/test-dataset.R"))
 test_file(paste0(wd, "/tests/testthat/test-usecase.R"))
 
-# test_file(paste0(wd, "tests/testthat/test-usecase-delete.R"))
+test_file(paste0(wd, "tests/testthat/test-usecase-delete.R"))
 test_file(paste0(wd, "tests/testthat/test-dataset-delete.R"))
 test_file(paste0(wd, "/tests/testthat/test-folder-delete.R"))
 test_file(paste0(wd, "/tests/testthat/test-datasource-delete.R"))
