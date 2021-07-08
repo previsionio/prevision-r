@@ -72,7 +72,7 @@ get_dataset_info <- function(dataset_id) {
     ## IF STATUS == 200 BREAK IF DATASET IS "DONE"
     if(resp$status_code == 200) {
       resp_parsed <- content(resp, 'parsed')
-      if(resp_parsed$isAvailable) {
+      if(resp_parsed$describe_state == "done") {
         break
       }
     }
