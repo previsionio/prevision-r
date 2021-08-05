@@ -31,11 +31,11 @@ create_prediction(
 
 \item{model_id}{id of the model to start the prediction on. If provided, it will overwrite the "best single" params.}
 
-\item{queries_dataset_id}{id of the datasat containing queries (text-similarity).}
+\item{queries_dataset_id}{id of the dataset containing queries (text-similarity).}
 
 \item{queries_dataset_content_column}{name of the content column in the queries dataset (text-similarity).}
 
-\item{queries_dataset_id_column}{name of the id columln in the queries dataset (text-similarity).}
+\item{queries_dataset_id_column}{name of the id column in the queries dataset (text-similarity).}
 
 \item{queries_dataset_matching_id_description_column}{name of the column matching the id (text-similarity).}
 

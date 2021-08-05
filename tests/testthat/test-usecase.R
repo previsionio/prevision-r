@@ -12,9 +12,9 @@ test_that("create_usecase", {
                            training_type = "regression",
                            dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_REGRESSION"),
                            target_column = "TARGET",
-                           normal_models = c("LR", "RF"),
-                           lite_models = c("LR"),
-                           simple_models = c("LR", "DT"),
+                           normal_models = list("LR", "RF"),
+                           lite_models = list("LR"),
+                           simple_models = list("LR", "DT"),
                            with_blend = F), "list", "get_usecases() doesn't retrieve a list for USECASE_REGRESSION_TESTU")
 
   expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
@@ -23,14 +23,15 @@ test_that("create_usecase", {
                            training_type = "classification",
                            dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_CLASSIFICATION"),
                            target_column = "TARGET",
-                           normal_models = c("LGB", "XGB")), "list", "get_usecases() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
+                           normal_models = list("LGB", "XGB")), "list", "get_usecases() doesn't retrieve a list for USECASE_CLASSIFICATION_TESTU")
 
   expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
                            name = "USECASE_MULTICLASSIFICATION_TESTU",
                            data_type = "tabular",
                            training_type = "multiclassification",
                            dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_MULTICLASSIFICATION"),
-                           target_column = "TARGET"), "list", "get_usecases() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
+                           target_column = "TARGET",
+                           lite_models = list("CB")), "list", "get_usecases() doesn't retrieve a list for USECASE_MULTICLASSIFICATION_TESTU")
 
   expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
                            name = "USECASE_TIMESERIES_TESTU",
@@ -42,7 +43,10 @@ test_that("create_usecase", {
                            start_dw = -2,
                            end_dw = -1,
                            start_fw = 1,
-                           end_fw = 2), "list", "get_usecases() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
+                           end_fw = 2,
+                           features_engineering_selected_list = list("Date"),
+                           lite_models = list("RF"),
+                           normal_models = list("RF")), "list", "get_usecases() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
 
   expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
                            name = "USECASE_TEXT_SIM_TESTU",
@@ -51,13 +55,16 @@ test_that("create_usecase", {
                            dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_TEXTSIM_ITEMS"),
                            id_column = "item_id",
                            content_column = "item_desc",
+                           metric = "accuracy_at_k",
+                           top_k = 10,
+                           lang = "auto",
                            queries_dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_TEXTSIM_QUERIES"),
                            queries_dataset_content_column = "query",
                            queries_dataset_matching_id_description_column = "true_item_id",
                            models_params = list(
-                             list("model_embedding" = "tf_idf", "preprocessing" = list("word_stemming" = "yes", "ignore_stop_word" = "auto", "ignore_punctuation" = "no"), "models" = c("brute_force", "cluster_pruning")),
-                             list("model_embedding" = "transformer", "preprocessing" = NA, "models" = c("brute_force", "lsh", "hkm")),
-                             list("model_embedding" = "transformer_fine_tuned", "preprocessing" = NA, models = c("brute_force", "lsh", "hkm"))
+                             list("model_embedding" = "tf_idf", "preprocessing" = list("word_stemming" = "yes", "ignore_stop_word" = "auto", "ignore_punctuation" = "no"), "models" = list("brute_force", "cluster_pruning")),
+                             list("model_embedding" = "transformer", "preprocessing" = NA, "models" = list("brute_force", "lsh", "hkm")),
+                             list("model_embedding" = "transformer_fine_tuned", "preprocessing" = NA, models = list("brute_force", "lsh", "hkm"))
                            )), "list", "get_usecases() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
 
   expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
@@ -74,14 +81,14 @@ test_that("create_usecase", {
                            ymax = "y1"), "list", "get_usecases() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
 
   expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
-                           name = "USECASE_IMAGE_CLASSIFICATION_TESTU",
+                           name = "USECASE_IMAGE_REGRESSION_TESTU",
                            data_type = "images",
-                           training_type = "classification",
+                           training_type = "regression",
                            dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_IMG"),
                            folder_dataset_id = get_folder_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "FOLDER_TESTU"),
-                           target_column = "TARGET",
+                           target_column = "x1",
                            filename_column = "PATH",
-                           normal_models = c("XGB")), "list", "get_usecases() doesn't retrieve a list for USECASE_IMAGE_CLASSIFICATION_TESTU")
+                           normal_models = list("XGB")), "list", "get_usecases() doesn't retrieve a list for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
 Sys.sleep(120)
@@ -171,11 +178,11 @@ test_that("create_prediction", {
                               folder_dataset_id = get_folder_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
                                                                           "FOLDER_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
   expect_is(create_prediction(usecase_version_id = get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                   "USECASE_IMAGE_CLASSIFICATION_TESTU")),
+                                                                                                   "USECASE_IMAGE_REGRESSION_TESTU")),
                               dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
                                                                     "DATASET_TESTU_IMG"),
                               folder_dataset_id = get_folder_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                          "FOLDER_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_IMAGE_CLASSIFICATION_TESTU")
+                                                                          "FOLDER_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
 Sys.sleep(30)
@@ -194,7 +201,7 @@ test_that("get_usecase_version_predictions", {
   expect_is(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
                                                                                             "USECASE_OBJECT_DETECTOR_TESTU"))), "list", "get_usecase_version_predictions() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
   expect_is(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                            "USECASE_IMAGE_CLASSIFICATION_TESTU"))), "list", "get_usecase_version_predictions() doesn't retrieve a list for USECASE_IMAGE_CLASSIFICATION_TESTU")
+                                                                                            "USECASE_IMAGE_REGRESSION_TESTU"))), "list", "get_usecase_version_predictions() doesn't retrieve a list for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
 test_that("get_prediction_infos", {
@@ -211,7 +218,7 @@ test_that("get_prediction_infos", {
   expect_is(get_prediction_infos(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
                                                                                                                  "USECASE_OBJECT_DETECTOR_TESTU")))[[1]]$`_id`), "list", "get_prediction_infos() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
   expect_is(get_prediction_infos(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                                 "USECASE_IMAGE_CLASSIFICATION_TESTU")))[[1]]$`_id`), "list", "get_prediction_infos() doesn't retrieve a list for USECASE_IMAGE_CLASSIFICATION_TESTU")
+                                                                                                                 "USECASE_IMAGE_REGRESSION_TESTU")))[[1]]$`_id`), "list", "get_prediction_infos() doesn't retrieve a list for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
 test_that("get_prediction", {
@@ -228,7 +235,7 @@ test_that("get_prediction", {
   expect_is(get_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
                                                                                                            "USECASE_OBJECT_DETECTOR_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_OBJECT_DETECTOR_TESTU")
   expect_is(get_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                           "USECASE_IMAGE_CLASSIFICATION_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_IMAGE_CLASSIFICATION_TESTU")
+                                                                                                           "USECASE_IMAGE_REGRESSION_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
 test_that("delete_prediction", {
@@ -245,7 +252,7 @@ test_that("delete_prediction", {
   expect(delete_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
                                                                                                            "USECASE_OBJECT_DETECTOR_TESTU")))[[1]]$`_id`) == 204, "delete_prediction() doesn't retrieve a 204 status code for USECASE_OBJECT_DETECTOR_TESTU")
   expect(delete_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                           "USECASE_IMAGE_CLASSIFICATION_TESTU")))[[1]]$`_id`) == 204, "delete_prediction() doesn't retrieve a 204 status code for USECASE_IMAGE_CLASSIFICATION_TESTU")
+                                                                                                           "USECASE_IMAGE_REGRESSION_TESTU")))[[1]]$`_id`) == 204, "delete_prediction() doesn't retrieve a 204 status code for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
 test_that("update_usecase_version_description", {
@@ -278,7 +285,7 @@ test_that("get_best_model_id", {
   expect_is(get_best_model_id(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
                                                                               "USECASE_OBJECT_DETECTOR_TESTU"))), "character", "get_best_model_id() doesn't retrieve a character for USECASE_OBJECT_DETECTOR_TESTU")
   expect_is(get_best_model_id(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                              "USECASE_IMAGE_CLASSIFICATION_TESTU"))), "character", "get_best_model_id() doesn't retrieve a character for USECASE_IMAGE_CLASSIFICATION_TESTU")
+                                                                              "USECASE_IMAGE_REGRESSION_TESTU"))), "character", "get_best_model_id() doesn't retrieve a character for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
 test_that("pause_usecase_version", {

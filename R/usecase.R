@@ -320,9 +320,9 @@ create_prediction <- function(usecase_version_id, dataset_id = NULL, folder_data
   #' @param confidence boolean. If enable, confidence interval will be added to predictions.
   #' @param best_single boolean. If enable, best single model (non blend) will be used for making predictions other wise, best model will be used unless if model_id is fed.
   #' @param model_id id of the model to start the prediction on. If provided, it will overwrite the "best single" params.
-  #' @param queries_dataset_id id of the datasat containing queries (text-similarity).
+  #' @param queries_dataset_id id of the dataset containing queries (text-similarity).
   #' @param queries_dataset_content_column name of the content column in the queries dataset (text-similarity).
-  #' @param queries_dataset_id_column name of the id columln in the queries dataset (text-similarity).
+  #' @param queries_dataset_id_column name of the id column in the queries dataset (text-similarity).
   #' @param queries_dataset_matching_id_description_column name of the column matching the id (text-similarity).
   #' @param top_k number of class to retrieve (text-similarity).
   #'
@@ -444,7 +444,7 @@ delete_prediction <- function(prediction_id) {
   return(resp$status_code)
 }
 
-create_usecase <- function(project_id, name, data_type, training_type, dataset_id, target_column = NULL, holdout_dataset_id = NULL, id_column = NULL, drop_list = NULL, profile = NULL, usecase_description = NULL, metric = NULL, fold_column = NULL, normal_models = NULL, lite_models = c('XGB'), simple_models = NULL, with_blend = NULL, weight_column = NULL, features_engineering_selected_list = NULL, features_selection_count = NULL, features_selection_time = NULL, folder_dataset_id = NULL, filename_column = NULL, ymin = NULL, ymax = NULL, xmin = NULL, xmax = NULL, time_column = NULL, start_dw = NULL, end_dw = NULL, start_fw = NULL, end_fw = NULL, group_list = NULL, apriori_list = NULL, content_column = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL, lang = NULL, models_params = NULL) {
+create_usecase <- function(project_id, name, data_type, training_type, dataset_id, target_column = NULL, holdout_dataset_id = NULL, id_column = NULL, drop_list = NULL, profile = NULL, usecase_description = NULL, metric = NULL, fold_column = NULL, normal_models = NULL, lite_models = NULL, simple_models = NULL, with_blend = NULL, weight_column = NULL, features_engineering_selected_list = NULL, features_selection_count = NULL, features_selection_time = NULL, folder_dataset_id = NULL, filename_column = NULL, ymin = NULL, ymax = NULL, xmin = NULL, xmax = NULL, time_column = NULL, start_dw = NULL, end_dw = NULL, start_fw = NULL, end_fw = NULL, group_list = NULL, apriori_list = NULL, content_column = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL, lang = NULL, models_params = NULL) {
   #' Create a new usecase on the platform.
   #'
   #' @param project_id id of the project in which we create the usecase.
@@ -460,12 +460,12 @@ create_usecase <- function(project_id, name, data_type, training_type, dataset_i
   #' @param usecase_description usecase description.
   #' @param metric name of the metric to optimise.
   #' @param fold_column name of the fold column.
-  #' @param normal_models list of (normal) models to select with full FE & hyperparameters search.
-  #' @param lite_models list of (lite) models to select with lite FE & default hyperparameters.
-  #' @param simple_models list of simple models to select.
-  #' @param with_blend do we allow to include blend in the modelisation.
+  #' @param normal_models list of (normal) models to select with full FE & hyperparameters search (among "LR", "RF", "ET", "XGB", "LGB", "NN", "CB").
+  #' @param lite_models list of (lite) models to select with lite FE & default hyperparameters (among "LR", "RF", "ET", "XGB", "LGB", "NN", "CB", "NBC").
+  #' @param simple_models list of simple models to select (among "LR", "DT").
+  #' @param with_blend boolean, do we allow to include blend in the modelisation.
   #' @param weight_column name of the weight columns.
-  #' @param features_engineering_selected_list list of feature engineering to select among "Counter", "Date", "freq", "text_tfidf", "text_word2vec", "text_embedding", "tenc", "poly", "pca", "kmean".
+  #' @param features_engineering_selected_list list of feature engineering to select (among "Counter", "Date", "freq", "text_tfidf", "text_word2vec", "text_embedding", "tenc", "poly", "pca", "kmean").
   #' @param features_selection_count number of features to keep after the feature selection process.
   #' @param features_selection_time time budget in minutes of the feature selection process.
   #' @param folder_dataset_id id of the dataset folder (images).
@@ -512,14 +512,14 @@ create_usecase <- function(project_id, name, data_type, training_type, dataset_i
   }
 
   # CHECKING CONDITIONS FOR normal_models, lite_models and simple_models
-  if (length(normal_models) + length(lite_models) + length(simple_models) < 1) {
-    stop("must give at least one model")
+  # if (length(normal_models) + length(lite_models) + length(simple_models) < 1) {
+  #   stop("must give at least one model")
+  # }
+  if(!all(normal_models %in% c("LR", "RF", "ET", "XGB", "LGB", "NN", "CB"))) {
+    stop("normal_models must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\", \"CB\" or \"NN\"")
   }
-  if(!all(normal_models %in% c("LR", "RF", "ET", "XGB", "LGB", "NN"))) {
-    stop("normal_models must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\" or \"NN\"")
-  }
-  if(!all(lite_models %in% c("LR", "RF", "ET", "XGB", "LGB", "NN", "NBC"))) {
-    stop("lite_models must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\", \"NN\" or \"NBC\"")
+  if(!all(lite_models %in% c("LR", "RF", "ET", "XGB", "LGB", "NN", "NBC", "CB"))) {
+    stop("lite_models must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\", \"NN\", \"CB\" or \"NBC\"")
   }
   if(!all(simple_models %in% c("DT", "LR"))) {
     stop("simple models must be either \"DT\" or \"LR\"")

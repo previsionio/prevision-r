@@ -19,7 +19,7 @@ create_usecase(
   metric = NULL,
   fold_column = NULL,
   normal_models = NULL,
-  lite_models = c("XGB"),
+  lite_models = NULL,
   simple_models = NULL,
   with_blend = NULL,
   weight_column = NULL,
@@ -76,17 +76,17 @@ create_usecase(
 
 \item{fold_column}{name of the fold column.}
 
-\item{normal_models}{list of (normal) models to select with full FE & hyperparameters search.}
+\item{normal_models}{list of (normal) models to select with full FE & hyperparameters search (among "LR", "RF", "ET", "XGB", "LGB", "NN", "CB").}
 
-\item{lite_models}{list of (lite) models to select with lite FE & default hyperparameters.}
+\item{lite_models}{list of (lite) models to select with lite FE & default hyperparameters (among "LR", "RF", "ET", "XGB", "LGB", "NN", "CB", "NBC").}
 
-\item{simple_models}{list of simple models to select.}
+\item{simple_models}{list of simple models to select (among "LR", "DT").}
 
-\item{with_blend}{do we allow to include blend in the modelisation.}
+\item{with_blend}{boolean, do we allow to include blend in the modelisation.}
 
 \item{weight_column}{name of the weight columns.}
 
-\item{features_engineering_selected_list}{list of feature engineering to select among "Counter", "Date", "freq", "text_tfidf", "text_word2vec", "text_embedding", "tenc", "poly", "pca", "kmean".}
+\item{features_engineering_selected_list}{list of feature engineering to select (among "Counter", "Date", "freq", "text_tfidf", "text_word2vec", "text_embedding", "tenc", "poly", "pca", "kmean").}
 
 \item{features_selection_count}{number of features to keep after the feature selection process.}
 
