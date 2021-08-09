@@ -45,8 +45,7 @@ test_that("create_usecase", {
                            start_fw = 1,
                            end_fw = 2,
                            features_engineering_selected_list = list("Date"),
-                           lite_models = list("RF"),
-                           normal_models = list("RF")), "list", "get_usecases() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
+                           lite_models = list("RF")), "list", "get_usecases() doesn't retrieve a list for USECASE_TIMESERIES_TESTU")
 
   expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
                            name = "USECASE_TEXT_SIM_TESTU",
@@ -68,6 +67,16 @@ test_that("create_usecase", {
                            )), "list", "get_usecases() doesn't retrieve a list for USECASE_TEXT_SIM_TESTU")
 
   expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                           name = "USECASE_IMAGE_REGRESSION_TESTU",
+                           data_type = "images",
+                           training_type = "regression",
+                           dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_IMG"),
+                           folder_dataset_id = get_folder_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "FOLDER_TESTU"),
+                           target_column = "x1",
+                           filename_column = "PATH",
+                           lite_models = list("XGB")), "list", "get_usecases() doesn't retrieve a list for USECASE_IMAGE_REGRESSION_TESTU")
+
+  expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
                            name = "USECASE_OBJECT_DETECTOR_TESTU",
                            data_type = "images",
                            training_type = "object-detection",
@@ -79,19 +88,9 @@ test_that("create_usecase", {
                            xmax = "x2",
                            ymin = "y2",
                            ymax = "y1"), "list", "get_usecases() doesn't retrieve a list for USECASE_OBJECT_DETECTOR_TESTU")
-
-  expect_is(create_usecase(project_id = get_project_id_from_name("PROJECT_TESTU"),
-                           name = "USECASE_IMAGE_REGRESSION_TESTU",
-                           data_type = "images",
-                           training_type = "regression",
-                           dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_IMG"),
-                           folder_dataset_id = get_folder_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "FOLDER_TESTU"),
-                           target_column = "x1",
-                           filename_column = "PATH",
-                           normal_models = list("XGB")), "list", "get_usecases() doesn't retrieve a list for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
-Sys.sleep(120)
+Sys.sleep(180)
 
 test_that("get_usecases", {
   expect_is(get_usecases(get_project_id_from_name("PROJECT_TESTU")), "list", "get_usecases() doesn't retrieve a list")

@@ -287,7 +287,7 @@ get_usecase_version_predictions <- function(usecase_version_id, generating_type 
   # Looping over page to get all information
   while(T) {
     if(generating_type == "user") {
-      resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/experimental-predictions?page=', page), GET)
+      resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/validation-predictions?page=', page), GET)
     }
     else {
       resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/holdout-predictions?page=', page), GET)
@@ -353,7 +353,7 @@ create_prediction <- function(usecase_version_id, dataset_id = NULL, folder_data
     message("model_id is set, the best_single param won't be taken into account")
   }
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/experimental-predictions'), POST, params)
+  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/validation-predictions'), POST, params)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
@@ -375,7 +375,7 @@ get_prediction_infos <- function(prediction_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/experimental-predictions/', prediction_id), GET)
+  resp <- pio_request(paste0('/validation-predictions/', prediction_id), GET)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
@@ -402,7 +402,7 @@ get_prediction <- function(prediction_id, time_out = 3600, wait_time = 10) {
   attempt = 0
   while(attempt < time_out/wait_time) {
     temp <- tempfile()
-    resp <- pio_download(paste0('/experimental-predictions/', prediction_id, '/download'), temp)
+    resp <- pio_download(paste0('/validation-predictions/', prediction_id, '/download'), temp)
 
     # IF STATUS 200 RETURN PREDICTION
     if(resp$status_code == 200) {
@@ -433,7 +433,7 @@ delete_prediction <- function(prediction_id) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/experimental-predictions/', prediction_id), DELETE)
+  resp <- pio_request(paste0('/validation-predictions/', prediction_id), DELETE)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 204) {
