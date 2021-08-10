@@ -31,8 +31,8 @@ get_deployments <- function(project_id, type) {
 
   # Looping over page to get all information
   while(T) {
-    if(type == "model")       {resp <- pio_request(paste0('/projects/', project_id, '/model-deployments?page=', page), GET)}
-    if(type == "app") {resp <- pio_request(paste0('/projects/', project_id, '/application-deployments?page=', page), GET)}
+    if(type == "model") {resp <- pio_request(paste0('/projects/', project_id, '/model-deployments?page=', page), GET)}
+    if(type == "app")   {resp <- pio_request(paste0('/projects/', project_id, '/application-deployments?page=', page), GET)}
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
@@ -202,5 +202,75 @@ delete_deployment <- function(deployment_id, type) {
   }
   else {
     stop("Deletion of deployment ", deployment_id, " failed - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+get_deployment_app_logs <- function(deployment_id, log_type) {
+  #' Get logs from a deployed app.
+  #'
+  #' @param deployment_id id of the deployment to get the log, can be obtained with get_deployments().
+  #' @param log_type type of logs we want to get among "build", "deploy" or "run".
+  #'
+  #' @import httr
+  #' @import XML
+  #'
+  #' @export
+
+  if(!log_type %in% c("build", "deploy", "run")) {
+    stop("log_type should be either \"build\", \"deploy\" or \"run\"")
+  }
+
+  resp <- pio_request(paste0('/deployments/', deployment_id, '/logs/', log_type), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    html = htmlTreeParse(resp_parsed, useInternal = TRUE)
+    html_cleaned = xpathApply(html, "//body//text()[not(ancestor::script)][not(ancestor::style)][not(ancestor::noscript)]", xmlValue)
+    #cat(unlist(html_cleaned))
+    paste(unlist(html_cleaned), collapse="\n")
+  }
+  else {
+    stop("Can't retrieve ", log_type, " logs for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+get_deployment_api_keys <- function(deployment_id) {
+  #' Get API keys for a deployed model.
+  #'
+  #' @param deployment_id id of the deployment to get API keys, can be obtained with get_deployments().
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/deployments/', deployment_id, '/api-keys/'), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    resp_parsed[["items"]]
+  }
+  else {
+    stop("Can't retrieve API keys for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+create_deployment_api_key <- function(deployment_id) {
+  #' Create a new API key for a deployed model.
+  #'
+  #' @param deployment_id id of the deployment to create an API key on, can be obtained with get_deployments().
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/deployments/', deployment_id, '/api-keys/'), POST)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    message("API key successfully created for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+    resp_parsed
+  }
+  else {
+    stop("Can't create API key for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }

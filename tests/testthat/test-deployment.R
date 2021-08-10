@@ -71,6 +71,8 @@ test_that("create_deployment_app", {
                                                                    list("var2" = "val2")))), "list", "create_deployment_app() doesn't retrieve a list for APP_DEPLOYMENT_TESTU_R_ENVVAR_PRIVATE")
 })
 
+Sys.sleep(120)
+
 test_that("get_deployments", {
   expect_error(get_deployments(get_project_id_from_name("PROJECT_TESTU")), info = "get_deployments() needs a type argument")
   expect_error(get_deployments(get_project_id_from_name("PROJECT_TESTU"), "bonjour"), info = "get_deployments() needs a valid type argument")
@@ -90,4 +92,22 @@ test_that("get_deployment_id_from_name", {
 test_that("get_deployment_info", {
   expect_is(get_deployment_info(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), "list", "get_deployment_info() doesn't retrieve a list for a deployed model")
   expect_is(get_deployment_info(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED", "app")), "list", "get_deployment_info() doesn't retrieve a list for a deployed app")
+})
+
+# Logs can take lot of time to come...
+test_that("get_deployment_app_logs", {
+  expect_error(get_deployment_app_logs(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED", "app"), "bonjour"), info = "get_deployment_app_logs() needs a valid type argument")
+  # expect_is(get_deployment_app_logs(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED", "app"), "build"), "character", "get_deployment_app_logs() doesn't retrieve a character for build logs of a deployed app")
+  # expect_is(get_deployment_app_logs(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED", "app"), "deploy"), "character", "get_deployment_app_logs() doesn't retrieve a character for deploy logs of a deployed app")
+  # expect_is(get_deployment_app_logs(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED", "app"), "run"), "character", "get_deployment_app_logs() doesn't retrieve a character for run logs of a deployed app")
+})
+
+test_that("get_deployment_api_keys", {
+  expect_is(get_deployment_api_keys(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), "list", "get_deployment_api_keys() doesn't retrieve a list for a deployed model")
+  nb_api_keys = length(get_deployment_api_keys(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")))
+})
+
+test_that("create_deployment_api_key", {
+  expect_is(create_deployment_api_key(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), "list", "get_deployment_info() doesn't retrieve a list for a deployed model")
+  expect(length(get_deployment_api_keys(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"))) > nb_api_keys, "The number of api keys has not increased after api key creation")
 })
