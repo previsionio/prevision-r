@@ -8,8 +8,8 @@ create_pipeline(
   project_id,
   type,
   name,
-  git_branch = NULL,
   git_url = NULL,
+  git_branch = NULL,
   repository_name = NULL,
   broker = NULL,
   config_dataset_id = NULL,
@@ -25,13 +25,13 @@ create_pipeline(
 
 \item{name}{name of the pipeline.}
 
-\item{git_branch}{branch of the git repository than contains the component.}
-
 \item{git_url}{url of the git repository than contains the component.}
+
+\item{git_branch}{branch of the git repository than contains the component.}
 
 \item{repository_name}{name of the git repository that contains the component.}
 
-\item{broker}{broker of the git repository (gitlab, github) that contains the component.}
+\item{broker}{broker of the git repository that contains the component.}
 
 \item{config_dataset_id}{only for templates.}
 

@@ -1,0 +1,206 @@
+test_deployment_type <- function(type) {
+  #' Check if a type of a deployment is supported
+  #'
+  #' @param type type of the deployment among "model" or "app".
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  if(!type %in% c("model", "app")) {
+    stop("type should be either \"model\" or \"app\"")
+  }
+}
+
+get_deployments <- function(project_id, type) {
+  #' Get information of all deployments of a given type available for a given project_id.
+  #'
+  #' @param project_id id of the project, can be obtained with get_projects().
+  #' @param type type of the deployment to retrieve among "model" or "app".
+  #'
+  #' @return parsed content of all deployments of the given type for the supplied project_id.
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  test_deployment_type(type)
+
+  page = 1
+  deployments = c()
+
+  # Looping over page to get all information
+  while(T) {
+    if(type == "model")       {resp <- pio_request(paste0('/projects/', project_id, '/model-deployments?page=', page), GET)}
+    if(type == "app") {resp <- pio_request(paste0('/projects/', project_id, '/application-deployments?page=', page), GET)}
+    resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+    if(resp$status_code == 200) {
+      # Store information
+      deployments = c(deployments, resp_parsed[["items"]])
+      page = page + 1
+
+      # Stop if next page == FALSE
+      if(resp_parsed[["metaData"]]$nextPage==FALSE) {
+        break
+      }
+    }
+    else {
+      stop("Can't retrieve deployments list - ", resp$status_code, ":", resp_parsed)
+    }
+  }
+  deployments
+}
+
+get_deployment_info <- function(deployment_id) {
+  #' Get information about a deployment from its id.
+  #'
+  #' @param deployment_id id of the deployment to be retrieved, can be obtained with get_deployments().
+  #'
+  #' @return parsed content of the deployment
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/deployments/', deployment_id), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    resp_parsed
+  }
+  else {
+    stop("Can't retrieve deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+get_deployment_id_from_name <- function(project_id, name, type) {
+  #' Get a deployment_id from a name and type for a given project_id. If duplicated name, the first deployment_id that match it is retrieved.
+  #'
+  #' @param project_id id of the project, can be obtained with get_projects().
+  #' @param name name of the deployment we are searching its id from.
+  #' @param type type of the deployment to be retrieved among "model" or "app".
+  #'
+  #' @return id of the connector if found.
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  deployment_list = get_deployments(project_id, type)
+  for (deployment in deployment_list) {
+    if(deployment$name == name) {
+      return(deployment$`_id`)
+    }
+  }
+  stop("There is no deployment matching the name ", name, " for the type ", type)
+}
+
+create_deployment_model <- function(project_id, name, usecase_id, main_model_usecase_version_id, challenger_model_usecase_version_id = NULL, access_type = c("fine_grained", "private", "public"), description = NULL, main_model_id, challenger_model_id = NULL) {
+  #' Create a new deployment for a model.
+  #'
+  #' @param project_id id of the project, can be obtained with get_projects().
+  #' @param name name of the deployment.
+  #' @param usecase_id id of the usecase to deploy, can be obtained with get_usecase_id_from_name().
+  #' @param main_model_usecase_version_id id of the usecase_version to deploy, can be obtained with get_usecase_version_id().
+  #' @param challenger_model_usecase_version_id id of the challenger usecase_version to deploy, can be obtained with get_usecase_version_id().
+  #' @param access_type type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).
+  #' @param description description of the deployment.
+  #' @param main_model_id id of the model to deploy (will be removed in 11.3.0+)
+  #' @param challenger_model_id id of the challenger model to deploy (will be removed in 11.3.0+)
+  #'
+  #' @return parsed content of the deployment
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  params <- list(name = name,
+                 usecase_id = usecase_id,
+                 main_model_usecase_version_id = main_model_usecase_version_id,
+                 challenger_model_usecase_version_id = challenger_model_usecase_version_id,
+                 access_type = access_type,
+                 description = description,
+                 main_model_id = main_model_id,
+                 challenger_model_id = challenger_model_id)
+
+  params <- params[!sapply(params, is.null)]
+
+  resp <- pio_request(paste0('/projects/', project_id, '/model-deployments/'), POST, params)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    message("Creation of deployment ", name, " done - ", resp$status_code, ":", resp_parsed)
+    get_deployment_info(resp_parsed$`_id`)
+  }
+  else {
+    stop("Creation of deployment ", name, " failed - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+create_deployment_app <- function(project_id, name, git_url, git_branch, type, broker, app_cpu = 1, app_ram = "128Mi", app_replica_count = 1, env_vars = list(), access_type = "fine_grained", description = NULL) {
+  #' Create a new deployment for an application.
+  #'
+  #' @param project_id id of the project, can be obtained with get_projects().
+  #' @param name name of the deployment.
+  #' @param git_url url of the git repository than contains the app to be deployed.
+  #' @param git_branch branch of the git repository than contains the app to be deployed.
+  #' @param type type of language in which the app is written among "r", "python" or "node".
+  #' @param broker broker of the git repository (gitlab, github) that contains the application.
+  #' @param app_cpu number of CPU that is allocated for the application deployment (1 default, 2 or 4)
+  #' @param app_ram quantity of RAM that is allocated for the application deployment (128Mi default, 256Mi, 512Mi, 1Gi, 2Gi, 4Gi or 8Gi)
+  #' @param app_replica_count number of replica allocated for the application deployment (1 default, 2, 3, 4, 5, 6, 7, 8, 9 or 10)
+  #' @param env_vars list of environnement variables (optional).
+  #' @param access_type type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).
+  #' @param description description of the deployment (optional).
+  #'
+  #' @return parsed content of the deployment
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  params <- list(name = name,
+                 git_url = git_url,
+                 git_branch = git_branch,
+                 type = type,
+                 broker = broker,
+                 app_cpu = app_cpu,
+                 app_ram = app_ram,
+                 app_replica_count = app_replica_count,
+                 env_vars = env_vars,
+                 access_type = access_type,
+                 description = description)
+
+  resp <- pio_request(paste0('/projects/', project_id, '/application-deployments/'), POST, params)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    message("Creation of deployment ", name, " done - ", resp$status_code, ":", resp_parsed)
+    get_deployment_info(resp_parsed$`_id`)
+  }
+  else {
+    stop("Creation of deployment ", name, " failed - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+delete_deployment <- function(deployment_id, type) {
+  #' Delete an existing deployment
+  #'
+  #' @param deployment_id id of the deployment to be retrieved, can be obtained with get_deployments().
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/deployments/', deployment_id), DELETE)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 204) {
+    message("Deletion of deployment ", deployment_id, " done - ", resp$status_code, ":", resp_parsed)
+    resp$status_code
+  }
+  else {
+    stop("Deletion of deployment ", deployment_id, " failed - ", resp$status_code, ":", resp_parsed)
+  }
+}

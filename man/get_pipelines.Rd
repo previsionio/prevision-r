@@ -9,7 +9,7 @@ get_pipelines(project_id, type)
 \arguments{
 \item{project_id}{id of the project, can be obtained with get_projects().}
 
-\item{type}{type of the pipeline to retrieve among "component", "template", or "run"}
+\item{type}{type of the pipeline to retrieve among "component", "template", or "run".}
 }
 \value{
 parsed content of all pipelines of the given type for the supplied project_id.

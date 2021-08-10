@@ -8,7 +8,7 @@ test_pipeline_type <- function(type) {
   #' @export
 
   if(!type %in% c("component", "template", "run")) {
-    stop("type should be either component, template or run")
+    stop("type should be either \"component\", \"template\" or \"run\"")
   }
 }
 
@@ -16,7 +16,7 @@ get_pipelines <- function(project_id, type) {
   #' Get information of all pipelines of a given type available for a given project_id.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
-  #' @param type type of the pipeline to retrieve among "component", "template", or "run"
+  #' @param type type of the pipeline to retrieve among "component", "template", or "run".
   #'
   #' @return parsed content of all pipelines of the given type for the supplied project_id.
   #'
@@ -27,7 +27,7 @@ get_pipelines <- function(project_id, type) {
   test_pipeline_type(type)
 
   page = 1
-  pipeline = c()
+  pipelines = c()
 
   # Looping over page to get all information
   while(T) {
@@ -38,7 +38,7 @@ get_pipelines <- function(project_id, type) {
 
     if(resp$status_code == 200) {
       # Store information
-      pipeline = c(pipeline, resp_parsed[["items"]])
+      pipelines = c(pipelines, resp_parsed[["items"]])
       page = page + 1
 
       # Stop if next page == FALSE
@@ -47,10 +47,10 @@ get_pipelines <- function(project_id, type) {
       }
     }
     else {
-      stop("Can't retrieve pipeline list - ", resp$status_code, ":", resp_parsed)
+      stop("Can't retrieve pipelines list - ", resp$status_code, ":", resp_parsed)
     }
   }
-  pipeline
+  pipelines
 }
 
 get_pipeline_info <- function(pipeline_id, type) {
@@ -81,11 +81,11 @@ get_pipeline_info <- function(pipeline_id, type) {
   }
 }
 
-get_pipeline_id_from_name <- function(project_id, pipeline_name, type) {
+get_pipeline_id_from_name <- function(project_id, name, type) {
   #' Get a pipeline_id from a pipeline_name and type for a given project_id. If duplicated name, the first pipeline_id that match it is retrieved.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
-  #' @param pipeline_name name of the pipeline we are searching its id from.
+  #' @param name name of the pipeline we are searching its id from.
   #' @param type type of the pipeline to be retrieved among "component", "template", "run".
   #'
   #' @return id of the connector if found.
@@ -97,29 +97,29 @@ get_pipeline_id_from_name <- function(project_id, pipeline_name, type) {
   pipeline_list = get_pipelines(project_id, type)
   for (pipineline in pipeline_list) {
     if(type != "component") {
-      if(pipineline$name == pipeline_name) {
+      if(pipineline$name == name) {
         return(pipineline$`_id`)
       }
     }
     if(type == "component") {
-      if(pipineline$metadata$name == pipeline_name) {
+      if(pipineline$metadata$name == name) {
         return(pipineline$`_id`)
       }
     }
   }
-  stop("There is no pipeline_list matching the pipeline_name ", pipeline_name, " for the type ", type)
+  stop("There is no pipeline matching the name ", name, " for the type ", type)
 }
 
-create_pipeline <- function(project_id, type, name, git_branch = NULL, git_url = NULL, repository_name = NULL, broker = NULL, config_dataset_id = NULL, nodes = NULL, pipeline_template_id = NULL, pipeline_parameters = NULL) {
+create_pipeline <- function(project_id, type, name, git_url = NULL, git_branch = NULL, repository_name = NULL, broker = NULL, config_dataset_id = NULL, nodes = NULL, pipeline_template_id = NULL, pipeline_parameters = NULL) {
   #' Create a new connector of a supported type among "component", "template", "run". [BETA]
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param type type of the pipeline to be retrieved among "component", "template", "run".
   #' @param name name of the pipeline.
-  #' @param git_branch branch of the git repository than contains the component.
   #' @param git_url url of the git repository than contains the component.
+  #' @param git_branch branch of the git repository than contains the component.
   #' @param repository_name name of the git repository that contains the component.
-  #' @param broker broker of the git repository (gitlab, github) that contains the component.
+  #' @param broker broker of the git repository that contains the component.
   #' @param config_dataset_id only for templates.
   #' @param nodes list, only for templates.
   #' @param pipeline_template_id id of the pipeline template to add for a run.
@@ -144,7 +144,7 @@ create_pipeline <- function(project_id, type, name, git_branch = NULL, git_url =
                  pipeline_template_id = pipeline_template_id,
                  pipeline_parameters = pipeline_parameters)
 
-
+  params <- params[!sapply(params, is.null)]
 
   if(type == "component") {resp <- pio_request(paste0('/projects/', project_id, '/pipeline-components/'), POST, params)}
   if(type == "template")  {resp <- pio_request(paste0('/projects/', project_id, '/pipeline-templates/'), POST, params)}
@@ -184,5 +184,26 @@ delete_pipeline <- function(pipeline_id, type) {
   }
   else {
     stop("Deletion of pipeline ", pipeline_id, " of type ", type, " failed - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+create_pipeline_trigger <- function(pipeline_id) {
+  #' Trigger an existing pipeline run. [BETA]
+  #'
+  #' @param pipeline_id id of the pipeline run to trigger, can be obtained with get_pipelines().
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/pipeline-scheduled-runs/', pipeline_id, '/trigger'), POST, NULL)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    message("Trigger of pipeline ", pipeline_id, " done - ", resp$status_code, ":", resp_parsed)
+    resp$status_code
+  }
+  else {
+    stop("Trigger of pipeline ", pipeline_id, " failed - ", resp$status_code, ":", resp_parsed)
   }
 }
