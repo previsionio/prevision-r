@@ -2,7 +2,7 @@
 % Please edit documentation in R/deployment.R
 \name{create_deployment_app}
 \alias{create_deployment_app}
-\title{Create a new deployment for an application.}
+\title{[BETA] Create a new deployment for an application.}
 \usage{
 create_deployment_app(
   project_id,
@@ -48,5 +48,5 @@ create_deployment_app(
 parsed content of the deployment
 }
 \description{
-Create a new deployment for an application.
+[BETA] Create a new deployment for an application.
 }

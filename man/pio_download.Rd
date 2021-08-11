@@ -11,9 +11,6 @@ pio_download(endpoint, tempFile)
 
 \item{tempFile}{temporary file to download.}
 }
-\value{
-write on disk the content of the temporary file.
-}
 \description{
 Download resources according specific parameters.
 }

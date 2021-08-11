@@ -111,7 +111,7 @@ get_pipeline_id_from_name <- function(project_id, name, type) {
 }
 
 create_pipeline <- function(project_id, type, name, git_url = NULL, git_branch = NULL, repository_name = NULL, broker = NULL, config_dataset_id = NULL, nodes = NULL, pipeline_template_id = NULL, pipeline_parameters = NULL) {
-  #' Create a new connector of a supported type among "component", "template", "run". [BETA]
+  #' [BETA] Create a new connector of a supported type among "component", "template", "run".
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param type type of the pipeline to be retrieved among "component", "template", "run".
@@ -188,7 +188,7 @@ delete_pipeline <- function(pipeline_id, type) {
 }
 
 create_pipeline_trigger <- function(pipeline_id) {
-  #' Trigger an existing pipeline run. [BETA]
+  #' [BETA] Trigger an existing pipeline run.
   #'
   #' @param pipeline_id id of the pipeline run to trigger, can be obtained with get_pipelines().
   #'

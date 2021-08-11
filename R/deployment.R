@@ -97,7 +97,7 @@ get_deployment_id_from_name <- function(project_id, name, type) {
 }
 
 create_deployment_model <- function(project_id, name, usecase_id, main_model_usecase_version_id, challenger_model_usecase_version_id = NULL, access_type = c("fine_grained", "private", "public"), description = NULL, main_model_id, challenger_model_id = NULL) {
-  #' Create a new deployment for a model.
+  #' [BETA] Create a new deployment for a model.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param name name of the deployment.
@@ -139,7 +139,7 @@ create_deployment_model <- function(project_id, name, usecase_id, main_model_use
 }
 
 create_deployment_app <- function(project_id, name, git_url, git_branch, type, broker, app_cpu = 1, app_ram = "128Mi", app_replica_count = 1, env_vars = list(), access_type = "fine_grained", description = NULL) {
-  #' Create a new deployment for an application.
+  #' [BETA] Create a new deployment for an application.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param name name of the deployment.
@@ -247,7 +247,7 @@ get_deployment_api_keys <- function(deployment_id) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    resp_parsed[["items"]]
+    pio_list_to_df(resp_parsed[["items"]])
   }
   else {
     stop("Can't retrieve API keys for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
@@ -268,9 +268,64 @@ create_deployment_api_key <- function(deployment_id) {
 
   if(resp$status_code == 200) {
     message("API key successfully created for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
-    resp_parsed
+    get_deployment_api_keys(deployment_id)
   }
   else {
     stop("Can't create API key for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+get_deployment_usage <- function(deployment_id, usage_type) {
+  #' Get usage (calls, errors and response time) of the last version of a deployed model.
+  #'
+  #' @param deployment_id id of the deployment to get usage, can be obtained with get_deployments().
+  #' @param usage_type type of usage to get, among "calls", "errors", "response_time".
+  #'
+  #' @import httr
+  #' @importFrom magrittr %>%
+  #' @importFrom plotly plot_ly
+  #' @importFrom plotly add_trace
+  #' @importFrom plotly layout
+  #'
+  #' @export
+
+  if(!usage_type %in% c("calls", "errors", "response_time")) {
+    stop("usage_type should be among \"calls\", \"errors\", \"response_time\"")
+  }
+
+  resp <- pio_request(paste0('/deployments/', deployment_id, '/usage/'), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    # Stop if no monitoring data is available
+    if(length(resp_parsed$usage_chart[[usage_type]]) == 0) {
+      stop("There is no ", usage_type, " data available for the current version of deployment ", deployment_id)
+    }
+
+    # Get the "main" data an prepare the chart
+    df = pio_list_to_df(resp_parsed$usage_chart[[usage_type]]$main)
+    df$x = as.Date(df$x)
+    df$y = as.numeric(df$y)
+    names(df) = c("date", usage_type)
+
+    to_plot = plot_ly(df, x = ~date, y = ~get(usage_type), name = "main", type = "scatter", mode = "lines+markers") %>% layout(title = paste(usage_type, "~ date for version", resp_parsed$meta_data$versions, "of deployment", get_deployment_info(deployment_id)$name),
+                                                                                                                               xaxis = list(title = "date"),
+                                                                                                                               yaxis = list (title = usage_type))
+
+    # If challenger is missing
+    if(length(resp_parsed$usage_chart[[usage_type]]$challenger) < 1) {
+      to_plot
+    }
+    # If challenger is present
+    else {
+      df_chall = pio_list_to_df(resp_parsed$usage_chart[[usage_type]]$challenger)
+      df_chall$x = as.Date(df_chall$x)
+      df_chall$y = as.numeric(df_chall$y)
+      names(df_chall) = c("date", usage_type)
+      to_plot %>% add_trace(y = ~get(usage_type), name = "challenger", mode = "lines+markers")
+    }
+  }
+  else {
+    stop("Can't retrieve usage type ", usage_type, " for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }

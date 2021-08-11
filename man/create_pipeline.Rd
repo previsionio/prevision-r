@@ -2,7 +2,7 @@
 % Please edit documentation in R/pipelines.R
 \name{create_pipeline}
 \alias{create_pipeline}
-\title{Create a new connector of a supported type among "component", "template", "run". [BETA]}
+\title{[BETA] Create a new connector of a supported type among "component", "template", "run".}
 \usage{
 create_pipeline(
   project_id,
@@ -45,5 +45,5 @@ create_pipeline(
 parsed content of the pipeline
 }
 \description{
-Create a new connector of a supported type among "component", "template", "run". [BETA]
+[BETA] Create a new connector of a supported type among "component", "template", "run".
 }

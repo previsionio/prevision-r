@@ -103,11 +103,19 @@ test_that("get_deployment_app_logs", {
 })
 
 test_that("get_deployment_api_keys", {
-  expect_is(get_deployment_api_keys(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), "list", "get_deployment_api_keys() doesn't retrieve a list for a deployed model")
+  expect_is(get_deployment_api_keys(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), "data.frame", "get_deployment_api_keys() doesn't retrieve a data frame for a deployed model")
   nb_api_keys = length(get_deployment_api_keys(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")))
 })
 
 test_that("create_deployment_api_key", {
-  expect_is(create_deployment_api_key(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), "list", "get_deployment_info() doesn't retrieve a list for a deployed model")
+  expect_is(create_deployment_api_key(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), "data.frame", "get_deployment_info() doesn't retrieve a data frame for a deployed model")
   expect(length(get_deployment_api_keys(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"))) > nb_api_keys, "The number of api keys has not increased after api key creation")
+})
+
+test_that("get_deployment_usage", {
+  expect_error(get_deployment_usage(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), info = "get_deployment_usage() needs a type argument")
+  expect_error(get_deployment_usage(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"), "bonjour"), info = "get_deployment_usage() needs a valid type argument")
+  expect_is(get_deployment_usage(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"), "calls"), "list", "get_deployment_usage() doesn't retrieve a list for calls monitoring of a deployed model")
+  expect_is(get_deployment_usage(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"), "errors"), "list", "get_deployment_usage() doesn't retrieve a list for errors monitoring of a deployed model")
+  expect_is(get_deployment_usage(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"), "response_time"), "list", "get_deployment_usage() doesn't retrieve a list for response_time monitoring of a deployed model")
 })

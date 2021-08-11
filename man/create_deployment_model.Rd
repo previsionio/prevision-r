@@ -2,7 +2,7 @@
 % Please edit documentation in R/deployment.R
 \name{create_deployment_model}
 \alias{create_deployment_model}
-\title{Create a new deployment for a model.}
+\title{[BETA] Create a new deployment for a model.}
 \usage{
 create_deployment_model(
   project_id,
@@ -39,5 +39,5 @@ create_deployment_model(
 parsed content of the deployment
 }
 \description{
-Create a new deployment for a model.
+[BETA] Create a new deployment for a model.
 }
