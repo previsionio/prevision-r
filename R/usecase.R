@@ -385,10 +385,11 @@ get_prediction_infos <- function(prediction_id) {
   }
 }
 
-get_prediction <- function(prediction_id, time_out = 3600, wait_time = 10) {
+get_prediction <- function(prediction_id, prediction_type, time_out = 3600, wait_time = 10) {
   #' Get a specific prediction from a prediction_id. Wait up until time_out is reached and wait wait_time between each retry.
   #'
   #' @param prediction_id id of the prediction to be retrieved, can be obtained with get_usecase_version_predictions().
+  #' @param prediction_type type of prediction among "validation" (not deployed model) and "deployment" (deployed model).
   #' @param time_out maximum number of seconds to wait for the prediction. 3 600 by default.
   #' @param wait_time number of seconds to wait between each retry. 10 by default.
   #'
@@ -399,10 +400,14 @@ get_prediction <- function(prediction_id, time_out = 3600, wait_time = 10) {
   #'
   #' @export
 
+  if(!prediction_type %in% c("validation", "deployment")) {
+    stop("prediction_type should be either \"validation\" or \"deployment\"")
+  }
+
   attempt = 0
   while(attempt < time_out/wait_time) {
     temp <- tempfile()
-    resp <- pio_download(paste0('/validation-predictions/', prediction_id, '/download'), temp)
+    resp <- pio_download(paste0('/', prediction_type, '-predictions/', prediction_id, '/download'), temp)
 
     # IF STATUS 200 RETURN PREDICTION
     if(resp$status_code == 200) {
@@ -413,13 +418,18 @@ get_prediction <- function(prediction_id, time_out = 3600, wait_time = 10) {
     }
 
     # IF STATUS 404 SLEEP AND RETRY
-    if(resp$status_code == 404) {
+    else if(resp$status_code == 404 | resp$status_code == 400) {
       message("Prediction is beeing computed...")
       Sys.sleep(wait_time)
       attempt = attempt + 1
     }
+
+    # OTHERWISE BREAK
+    else {
+      break
+    }
   }
-  stop("Can't retrieve prediction prediction ", prediction_id, " - ", resp$status_code)
+  stop("Can't retrieve prediction prediction ", prediction_id, " for prediction_typ ", prediction_type," - ", resp$status_code)
 }
 
 delete_prediction <- function(prediction_id) {

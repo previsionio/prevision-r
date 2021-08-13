@@ -71,7 +71,7 @@ test_that("create_deployment_app", {
                                                                    list("var2" = "val2")))), "list", "create_deployment_app() doesn't retrieve a list for APP_DEPLOYMENT_TESTU_R_ENVVAR_PRIVATE")
 })
 
-Sys.sleep(120)
+Sys.sleep(300)
 
 test_that("get_deployments", {
   expect_error(get_deployments(get_project_id_from_name("PROJECT_TESTU")), info = "get_deployments() needs a type argument")
@@ -110,6 +110,24 @@ test_that("get_deployment_api_keys", {
 test_that("create_deployment_api_key", {
   expect_is(create_deployment_api_key(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), "data.frame", "get_deployment_info() doesn't retrieve a data frame for a deployed model")
   expect(length(get_deployment_api_keys(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"))) > nb_api_keys, "The number of api keys has not increased after api key creation")
+})
+
+test_that("get_deployment_predictions", {
+  expect_is(get_deployment_predictions(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model")), "list", "get_deployment_predictions() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED")
+})
+
+test_that("create_deployment_predictions", {
+  expect_is(create_deployment_predictions(deployment_id = get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"),
+                                          dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_REGRESSION")), "list", "create_deployment_predictions() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED")
+})
+
+test_that("get_deployment_prediction_info", {
+  expect_is(get_deployment_prediction_info(get_deployment_predictions(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"))[[1]]$`_id`), "list", "get_deployment_prediction_info() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED")
+})
+
+test_that("get_prediction", {
+  expect_is(get_prediction(prediction_id = get_deployment_predictions(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED", "model"))[[1]]$`_id`,
+                           prediction_type = "deployment"), "data.frame", "get_prediction() doesn't retrieve a data.frame for MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED")
 })
 
 test_that("get_deployment_usage", {

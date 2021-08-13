@@ -4,10 +4,12 @@
 \alias{get_prediction}
 \title{Get a specific prediction from a prediction_id. Wait up until time_out is reached and wait wait_time between each retry.}
 \usage{
-get_prediction(prediction_id, time_out = 3600, wait_time = 10)
+get_prediction(prediction_id, prediction_type, time_out = 3600, wait_time = 10)
 }
 \arguments{
 \item{prediction_id}{id of the prediction to be retrieved, can be obtained with get_usecase_version_predictions().}
+
+\item{prediction_type}{type of prediction among "validation" (not deployed model) and "deployment" (deployed model).}
 
 \item{time_out}{maximum number of seconds to wait for the prediction. 3 600 by default.}
 

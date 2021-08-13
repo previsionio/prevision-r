@@ -275,6 +275,84 @@ create_deployment_api_key <- function(deployment_id) {
   }
 }
 
+get_deployment_predictions <- function(deployment_id) {
+  #' Get listing of predictions related to a deployment_id.
+  #'
+  #' @param deployment_id id of the deployment, can be obtained with get_deployments().
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  page = 1
+  predictions = c()
+
+  # Looping over page to get all information
+  while(T) {
+    resp <- pio_request(paste0('/deployments/', deployment_id, '/deployment-predictions?page=', page), GET)
+    resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+    if(resp$status_code == 200) {
+      # Store information
+      predictions = c(predictions, resp_parsed[["items"]])
+      page = page + 1
+
+      # Stop if next page == FALSE
+      if(resp_parsed[["metaData"]]$nextPage==FALSE) {
+        break
+      }
+    }
+    else {
+      stop("Can't retrieve predictions list - ", resp$status_code, ":", resp_parsed)
+    }
+  }
+  predictions
+}
+
+get_deployment_prediction_info <- function(prediction_id) {
+  #' Get information related to predictions of a prediction_id.
+  #'
+  #' @param prediction_id id of the prediction returned by create_deployment_predictions or that can be obtained with get_deployment_predictions().
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/deployment-predictions/', prediction_id), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    resp_parsed
+  }
+  else {
+    stop("Can't retrieve predictions for prediction_id ", prediction_id, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+create_deployment_predictions <- function(deployment_id, dataset_id) {
+  #' Create predictions on a deployed model using a dataset.
+  #'
+  #' @param deployment_id id of the deployment, can be obtained with get_deployments().
+  #' @param dataset_id id of the dataset to predict, can be obtained with get_dataset_id_from_name().
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  params <- list(dataset_id = dataset_id)
+
+  resp <- pio_request(paste0('/deployments/', deployment_id, '/deployment-predictions'), POST, params)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    message("Deployment prediction started")
+    resp_parsed$`_id`
+  }
+  else {
+    stop("Can't create deployment prediction for deployment ", deployment_id, " and dataset ", dataset_id, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
 get_deployment_usage <- function(deployment_id, usage_type) {
   #' Get usage (calls, errors and response time) of the last version of a deployed model.
   #'

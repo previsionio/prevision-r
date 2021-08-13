@@ -40,6 +40,7 @@ test_that("create_usecase", {
                            dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_TS"),
                            target_column = "TARGET",
                            time_column = "TS",
+                           apriori_list = list("X2", "X3"),
                            start_dw = -2,
                            end_dw = -1,
                            start_fw = 1,
@@ -184,7 +185,7 @@ test_that("create_prediction", {
                                                                           "FOLDER_TESTU")), "list", "create_prediction() doesn't retrieve a list for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
-Sys.sleep(30)
+Sys.sleep(60)
 
 test_that("get_usecase_version_predictions", {
   expect_is(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
@@ -222,19 +223,19 @@ test_that("get_prediction_infos", {
 
 test_that("get_prediction", {
   expect_is(get_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                           "USECASE_REGRESSION_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_REGRESSION_TESTU")
+                                                                                                           "USECASE_REGRESSION_TESTU")))[[1]]$`_id`, "validation"), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_REGRESSION_TESTU")
   expect_is(get_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                           "USECASE_CLASSIFICATION_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_CLASSIFICATION_TESTU")
+                                                                                                           "USECASE_CLASSIFICATION_TESTU")))[[1]]$`_id`, "validation"), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_CLASSIFICATION_TESTU")
   expect_is(get_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                           "USECASE_MULTICLASSIFICATION_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_MULTICLASSIFICATION_TESTU")
+                                                                                                           "USECASE_MULTICLASSIFICATION_TESTU")))[[1]]$`_id`, "validation"), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_MULTICLASSIFICATION_TESTU")
   expect_is(get_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                           "USECASE_TIMESERIES_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_TIMESERIES_TESTU")
+                                                                                                           "USECASE_TIMESERIES_TESTU")))[[1]]$`_id`, "validation"), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_TIMESERIES_TESTU")
   expect_is(get_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                           "USECASE_TEXT_SIM_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_TEXT_SIM_TESTU")
+                                                                                                           "USECASE_TEXT_SIM_TESTU")))[[1]]$`_id`, "validation"), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_TEXT_SIM_TESTU")
   expect_is(get_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                           "USECASE_OBJECT_DETECTOR_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_OBJECT_DETECTOR_TESTU")
+                                                                                                           "USECASE_OBJECT_DETECTOR_TESTU")))[[1]]$`_id`, "validation"), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_OBJECT_DETECTOR_TESTU")
   expect_is(get_prediction(get_usecase_version_predictions(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                           "USECASE_IMAGE_REGRESSION_TESTU")))[[1]]$`_id`), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_IMAGE_REGRESSION_TESTU")
+                                                                                                           "USECASE_IMAGE_REGRESSION_TESTU")))[[1]]$`_id`, "validation"), "data.frame", "get_prediction() doesn't retrieve a data.frame for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
 test_that("delete_prediction", {
@@ -287,15 +288,15 @@ test_that("get_best_model_id", {
                                                                               "USECASE_IMAGE_REGRESSION_TESTU"))), "character", "get_best_model_id() doesn't retrieve a character for USECASE_IMAGE_REGRESSION_TESTU")
 })
 
-test_that("pause_usecase_version", {
-  expect(pause_usecase_version(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                               "USECASE_REGRESSION_TESTU"))) == 200, "pause_usecase_version() doesn't retrieve a 200 status code")
-})
-
-test_that("resume_usecase_version", {
-  expect(resume_usecase_version(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                "USECASE_REGRESSION_TESTU"))) == 200, "resume_usecase_version() doesn't retrieve a 200 status code")
-})
+# test_that("pause_usecase_version", {
+#   expect(pause_usecase_version(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
+#                                                                                "USECASE_REGRESSION_TESTU"))) == 200, "pause_usecase_version() doesn't retrieve a 200 status code")
+# })
+#
+# test_that("resume_usecase_version", {
+#   expect(resume_usecase_version(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
+#                                                                                 "USECASE_REGRESSION_TESTU"))) == 200, "resume_usecase_version() doesn't retrieve a 200 status code")
+# })
 
 test_that("stop_usecase_version", {
   expect(stop_usecase_version(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
