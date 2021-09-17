@@ -13,7 +13,7 @@ library(previsionio)
 
 # Building Documentation 
 
-1) To generate the Doxygen documentation
+1) To generate Doxygen documentation
 All the functions are commented directly in the code. 
 The following lines generate a new folder " man " in the R project. 
 In Rstudio, type : 
