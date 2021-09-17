@@ -80,6 +80,7 @@ get_connector_id_from_name <- function(project_id, connector_name) {
 create_connector <- function(project_id, type, name, host, port, username, password, google_credentials = NULL) {
   #' Create a new connector of a supported type (among: "SQL", "HIVE", "FTP", "SFTP", "S3", "GCP").
   #'
+  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param type connector type.
   #' @param name connector name.
   #' @param host connector host.

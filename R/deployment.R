@@ -184,7 +184,7 @@ create_deployment_app <- function(project_id, name, git_url, git_branch, type, b
   }
 }
 
-delete_deployment <- function(deployment_id, type) {
+delete_deployment <- function(deployment_id) {
   #' Delete an existing deployment
   #'
   #' @param deployment_id id of the deployment to be retrieved, can be obtained with get_deployments().

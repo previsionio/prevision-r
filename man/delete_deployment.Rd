@@ -4,7 +4,7 @@
 \alias{delete_deployment}
 \title{Delete an existing deployment}
 \usage{
-delete_deployment(deployment_id, type)
+delete_deployment(deployment_id)
 }
 \arguments{
 \item{deployment_id}{id of the deployment to be retrieved, can be obtained with get_deployments().}

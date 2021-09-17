@@ -16,6 +16,8 @@ create_connector(
 )
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
+
 \item{type}{connector type.}
 
 \item{name}{connector name.}

@@ -108,6 +108,7 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   #' @import Metrics
   #' @import utils
   #' @importFrom graphics abline
+  #' @importFrom graphics par
   #'
   #' @export
 

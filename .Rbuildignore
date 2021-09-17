@@ -2,3 +2,8 @@
 ^\.Rproj\.user$
 ^examples.R$
 ^README.MD$
+^\.git$
+^\..Rcheck$
+^.gitignore$
+^.Rhistory$
+^previsionio.Rproj$

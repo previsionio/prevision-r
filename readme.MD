@@ -35,5 +35,5 @@ See : https://tex.stackexchange.com/questions/125274/error-font-ts1-zi4r-at-540-
 
 3) In order to check if package is viable on CRAN, type :
 ```
-R CMD check ./ --as-cran
+R CMD check ./ --as-cran or better devtools::check()
 ```
