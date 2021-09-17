@@ -224,7 +224,7 @@ get_deployment_app_logs <- function(deployment_id, log_type) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    html = htmlTreeParse(resp_parsed, useInternal = TRUE)
+    html = htmlTreeParse(resp_parsed, useInternalNodes = TRUE)
     html_cleaned = xpathApply(html, "//body//text()[not(ancestor::script)][not(ancestor::style)][not(ancestor::noscript)]", xmlValue)
     #cat(unlist(html_cleaned))
     paste(unlist(html_cleaned), collapse="\n")
