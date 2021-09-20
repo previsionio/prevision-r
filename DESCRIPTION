@@ -4,7 +4,7 @@ Title: Prevision.io R SDK
 Version: 11.2.0
 Author: Prevision.io
 Maintainer: Florian Laroumagne <florian.laroumagne@prevision.io>
-Description: For working with the 'Prevision.io' AI model management platform's API <https://www.prevision.io>.
+Description: For working with the 'Prevision.io' AI model management platform's API <https://prevision.io/>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
