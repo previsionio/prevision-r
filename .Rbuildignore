@@ -9,3 +9,4 @@
 ^previsionio.Rproj$
 ^tests/testthat/gcp.json$
 ^tests/testthat/helper-credentials.R$
+^LICENSE\.md$
