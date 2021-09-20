@@ -7,7 +7,7 @@ Maintainer: Florian Laroumagne <florian.laroumagne@prevision.io>
 Description: Set of functions that will help you to use the Prevision.io APIs directly from R environnement.
 License: file LICENSE
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 RoxygenNote: 7.1.1
 Imports:
     data.table,
