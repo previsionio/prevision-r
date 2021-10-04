@@ -17,7 +17,7 @@ test_that("create_project", {
 test_that("get_projects", {
   expect_is(get_projects(), "list", "get_projects() doesn't retrieve a list")
   expect(length(get_projects()) >= 1, "get_projects() doesn't have at least one element")
-  expect(length(get_projects()) >= nb_projects+1, "The number of usecases has not increased after dataset creation")
+  expect(length(get_projects()) >= nb_projects+1, "The number of experiments has not increased after dataset creation")
 })
 
 test_that("get_project_id_from_name", {

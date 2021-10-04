@@ -25,7 +25,7 @@ pio_request <- function(endpoint, method, data = NULL, upload = FALSE) {
   #' @param data object to upload when using method POST.
   #' @param upload used parameter when uploading dataset (for encoding in API call), don't use it.
   #'
-  #' @examples \dontrun{pio_request(paste0('/jobs/', usecase$jobId), DELETE)}
+  #' @examples \dontrun{pio_request(paste0('/jobs/', experiment$jobId), DELETE)}
   #'
   #' @import httr
   #' @import futile.logger

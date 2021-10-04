@@ -6,7 +6,7 @@
 \usage{
 helper_optimal_prediction(
   project_id,
-  usecase_id,
+  experiment_id,
   model_id,
   df,
   actionable_features,
@@ -19,7 +19,7 @@ helper_optimal_prediction(
 \arguments{
 \item{project_id}{id of the project containing the use case.}
 
-\item{usecase_id}{id of the usecase to be predicted on.}
+\item{experiment_id}{id of the experiment to be predicted on.}
 
 \item{model_id}{id of the model to be predicted on.}
 

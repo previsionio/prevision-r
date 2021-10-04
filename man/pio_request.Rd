@@ -19,6 +19,6 @@ pio_request(endpoint, method, data = NULL, upload = FALSE)
 Request the platform. Thanks to an endpoint, the url and the API, you can create request.
 }
 \examples{
-\dontrun{pio_request(paste0('/jobs/', usecase$jobId), DELETE)}
+\dontrun{pio_request(paste0('/jobs/', experiment$jobId), DELETE)}
 
 }

@@ -179,11 +179,11 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   return(res)
 }
 
-helper_optimal_prediction <- function(project_id, usecase_id, model_id, df, actionable_features, nb_sample, maximize, zip = F, version = 1) {
+helper_optimal_prediction <- function(project_id, experiment_id, model_id, df, actionable_features, nb_sample, maximize, zip = F, version = 1) {
   #' [BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested.
   #'
   #' @param project_id id of the project containing the use case.
-  #' @param usecase_id id of the usecase to be predicted on.
+  #' @param experiment_id id of the experiment to be predicted on.
   #' @param model_id id of the model to be predicted on.
   #' @param df a data frame to be predicted on.
   #' @param actionable_features a list of actionable_featuress features contained in the names of the data frame.
@@ -208,7 +208,7 @@ helper_optimal_prediction <- function(project_id, usecase_id, model_id, df, acti
   }
 
   # GET THE TRAIN SET USED FOR MODELLING
-  dataset_id = get_usecase_info(usecase_id)[[1]]$dataset_id
+  dataset_id = get_experiment_info(experiment_id)[[1]]$dataset_id
   train      = create_dataframe_from_dataset(dataset_id)
 
   # SELECT RANDOM SAMPLES FROM THE TRAIN SET GIVEN ACTIONNABLES FEATURES & nb_sampleS
@@ -232,7 +232,7 @@ helper_optimal_prediction <- function(project_id, usecase_id, model_id, df, acti
   message("the optimisation process will make ", nrow(df)," predictions")
 
   df_prevision = create_dataset_from_dataframe(project_id, "expensed_df", df, zip = zip)
-  pred         = create_prediction(usecase_version_id = get_usecase_version_id(usecase_id, version),
+  pred         = create_prediction(experiment_version_id = get_experiment_version_id(experiment_id, version),
                                    model_id = model_id,
                                    dataset_id = df_prevision$`_id`,
                                    confidence = F)

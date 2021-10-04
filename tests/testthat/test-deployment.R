@@ -9,35 +9,35 @@ nb_app_deployed = length(get_deployments(get_project_id_from_name("PROJECT_TESTU
 test_that("create_deployment_model", {
   expect_is(create_deployment_model(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                     name = "MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED",
-                                    usecase_id = get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU"),
-                                    main_model_usecase_version_id = get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU")),
+                                    experiment_id = get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU"),
+                                    main_model_experiment_version_id = get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU")),
                                     access_type = "fine_grained",
                                     description = "DESCRIPTION",
-                                    main_model_id = get_best_model_id(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU")))), "list", "create_deployment_model() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED")
+                                    main_model_id = get_best_model_id(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU")))), "list", "create_deployment_model() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_FINEGRAINED")
 
   expect_is(create_deployment_model(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                     name = "MODEL_DEPLOYMENT_TESTU_MAIN_PRIVATE",
-                                    usecase_id = get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU"),
-                                    main_model_usecase_version_id = get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU")),
+                                    experiment_id = get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU"),
+                                    main_model_experiment_version_id = get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU")),
                                     access_type = "private",
                                     description = "DESCRIPTION",
-                                    main_model_id = get_best_model_id(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU")))), "list", "create_deployment_model() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_PRIVATE")
+                                    main_model_id = get_best_model_id(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU")))), "list", "create_deployment_model() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_PRIVATE")
 
   expect_is(create_deployment_model(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                     name = "MODEL_DEPLOYMENT_TESTU_MAIN_PUBLIC",
-                                    usecase_id = get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU"),
-                                    main_model_usecase_version_id = get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU")),
+                                    experiment_id = get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU"),
+                                    main_model_experiment_version_id = get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU")),
                                     access_type = "public",
                                     description = "DESCRIPTION",
-                                    main_model_id = get_best_model_id(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU")))), "list", "create_deployment_model() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_PUBLIC")
+                                    main_model_id = get_best_model_id(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU")))), "list", "create_deployment_model() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_PUBLIC")
 
   expect_is(create_deployment_model(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                     name = "MODEL_DEPLOYMENT_TESTU_MAIN_CHALLENGER_PUBLIC",
-                                    usecase_id = get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU"),
-                                    main_model_usecase_version_id = get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU")),
-                                    challenger_model_usecase_version_id = get_usecase_version_models(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU")))[[1]]$`_id`,
+                                    experiment_id = get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU"),
+                                    main_model_experiment_version_id = get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU")),
+                                    challenger_model_experiment_version_id = get_experiment_version_models(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU")))[[1]]$`_id`,
                                     access_type = c("public"),
-                                    main_model_id = get_best_model_id(get_usecase_version_id(get_usecase_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "USECASE_REGRESSION_TESTU")))), "list", "create_deployment_model() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_CHALLENGER_PUBLIC")
+                                    main_model_id = get_best_model_id(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "experiment_REGRESSION_TESTU")))), "list", "create_deployment_model() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_CHALLENGER_PUBLIC")
 })
 
 test_that("create_deployment_app", {

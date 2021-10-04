@@ -96,14 +96,14 @@ get_deployment_id_from_name <- function(project_id, name, type) {
   stop("There is no deployment matching the name ", name, " for the type ", type)
 }
 
-create_deployment_model <- function(project_id, name, usecase_id, main_model_usecase_version_id, challenger_model_usecase_version_id = NULL, access_type = c("fine_grained", "private", "public"), description = NULL, main_model_id, challenger_model_id = NULL) {
+create_deployment_model <- function(project_id, name, experiment_id, main_model_experiment_version_id, challenger_model_experiment_version_id = NULL, access_type = c("fine_grained", "private", "public"), description = NULL, main_model_id, challenger_model_id = NULL) {
   #' [BETA] Create a new deployment for a model.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param name name of the deployment.
-  #' @param usecase_id id of the usecase to deploy, can be obtained with get_usecase_id_from_name().
-  #' @param main_model_usecase_version_id id of the usecase_version to deploy, can be obtained with get_usecase_version_id().
-  #' @param challenger_model_usecase_version_id id of the challenger usecase_version to deploy, can be obtained with get_usecase_version_id().
+  #' @param experiment_id id of the experiment to deploy, can be obtained with get_experiment_id_from_name().
+  #' @param main_model_experiment_version_id id of the experiment_version to deploy, can be obtained with get_experiment_version_id().
+  #' @param challenger_model_experiment_version_id id of the challenger experiment_version to deploy, can be obtained with get_experiment_version_id().
   #' @param access_type type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).
   #' @param description description of the deployment.
   #' @param main_model_id id of the model to deploy (will be removed in 11.3.0+)
@@ -116,9 +116,9 @@ create_deployment_model <- function(project_id, name, usecase_id, main_model_use
   #' @export
 
   params <- list(name = name,
-                 usecase_id = usecase_id,
-                 main_model_usecase_version_id = main_model_usecase_version_id,
-                 challenger_model_usecase_version_id = challenger_model_usecase_version_id,
+                 experiment_id = experiment_id,
+                 main_model_experiment_version_id = main_model_experiment_version_id,
+                 challenger_model_experiment_version_id = challenger_model_experiment_version_id,
                  access_type = access_type,
                  description = description,
                  main_model_id = main_model_id,

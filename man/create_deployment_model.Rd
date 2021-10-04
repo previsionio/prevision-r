@@ -7,9 +7,9 @@
 create_deployment_model(
   project_id,
   name,
-  usecase_id,
-  main_model_usecase_version_id,
-  challenger_model_usecase_version_id = NULL,
+  experiment_id,
+  main_model_experiment_version_id,
+  challenger_model_experiment_version_id = NULL,
   access_type = c("fine_grained", "private", "public"),
   description = NULL,
   main_model_id,
@@ -21,11 +21,11 @@ create_deployment_model(
 
 \item{name}{name of the deployment.}
 
-\item{usecase_id}{id of the usecase to deploy, can be obtained with get_usecase_id_from_name().}
+\item{experiment_id}{id of the experiment to deploy, can be obtained with get_experiment_id_from_name().}
 
-\item{main_model_usecase_version_id}{id of the usecase_version to deploy, can be obtained with get_usecase_version_id().}
+\item{main_model_experiment_version_id}{id of the experiment_version to deploy, can be obtained with get_experiment_version_id().}
 
-\item{challenger_model_usecase_version_id}{id of the challenger usecase_version to deploy, can be obtained with get_usecase_version_id().}
+\item{challenger_model_experiment_version_id}{id of the challenger experiment_version to deploy, can be obtained with get_experiment_version_id().}
 
 \item{access_type}{type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).}
 

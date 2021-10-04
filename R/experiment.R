@@ -1,25 +1,25 @@
-get_usecases <- function(project_id) {
-  #' Get information of all usecases available for a given project_id.
+get_experiments <- function(project_id) {
+  #' Get information of all experiments available for a given project_id.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return parsed content of all usecases for the suppled project_id.
+  #' @return parsed content of all experiments for the suppled project_id.
   #'
   #' @import httr
   #'
   #' @export
 
   page = 1
-  usecases = c()
+  experiments = c()
 
   # Looping over page to get all information
   while(T) {
-    resp <- pio_request(paste0('/projects/', project_id, '/usecases?page=', page), GET)
+    resp <- pio_request(paste0('/projects/', project_id, '/experiments?page=', page), GET)
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
     if(resp$status_code == 200) {
       # Store information
-      usecases = c(usecases, resp_parsed[["items"]])
+      experiments = c(experiments, resp_parsed[["items"]])
       page = page + 1
 
       # Stop if next page == FALSE
@@ -28,81 +28,90 @@ get_usecases <- function(project_id) {
       }
     }
     else {
-      stop("Can't retrieve usecases list - ", resp$status_code, ":", resp_parsed)
+      stop("Can't retrieve experiments list - ", resp$status_code, ":", resp_parsed)
     }
   }
-  usecases
+  experiments
 }
 
-get_usecase_id_from_name <- function(project_id, usecase_name) {
-  #' Get a usecase_id from a usecase_name If duplicated name, the first usecase_id that match it is retrieved.
+get_experiment_id_from_name <- function(project_id, experiment_name) {
+  #' Get a experiment_id from a experiment_name If duplicated name, the first experiment_id that match it is retrieved.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
-  #' @param usecase_name name of the usecase we are searching its id from. Can be obtained with get_usecases().
+  #' @param experiment_name name of the experiment we are searching its id from. Can be obtained with get_experiments().
   #'
-  #' @return usecase_id of the usecase_name if found.
+  #' @return experiment_id of the experiment_name if found.
   #'
   #' @import httr
   #'
   #' @export
 
-  usecase_list = get_usecases(project_id)
-  for (usecase in usecase_list) {
-    if(usecase$name == usecase_name) {
-      return(usecase$`_id`)
+  experiment_list = get_experiments(project_id)
+  for (experiment in experiment_list) {
+    if(experiment$name == experiment_name) {
+      return(experiment$`_id`)
     }
   }
-  stop("There is no usecase_id matching the usecase_name ", usecase_name)
+  stop("There is no experiment_id matching the experiment_name ", experiment_name)
 }
 
-get_usecase_info <- function(usecase_id, version_number = NULL) {
-  #' Get a usecase from its usecase_id and its version number.
+get_experiment_info <- function(experiment_id) {
+  #' Get a experiment from its experiment_id.
   #'
-  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
-  #' @param version_number number of the version of the usecase. If not supplied, retrieve all usecase information
+  #' @param experiment_id id of the experiment, can be obtained with get_experiments().
   #'
-  #' @return parsed content of the usecase.
+  #' @return parsed content of the experiment.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/'), GET)
+  resp <- pio_request(paste0('/experiments/', experiment_id), GET)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    # If version number isn't supplied, retrieve the complete information
-    if(is.null(version_number)) {
-      resp_parsed$items
-    }
-
-    # Otherwise, retrieve only the selected version information
-    else {
-      for(item in resp_parsed$items) {
-        if(item$version == version_number) {
-          item
-        }
-      }
-    }
+    resp_parsed
   }
   else {
-    stop("Can't retrieve information from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
+    stop("Can't retrieve information from experiment ", experiment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-get_usecase_version_id <- function(usecase_id, version_number = 1) {
-  #' Get a usecase version id from a usecase_id and its version number.
+get_experiment_version_info <- function(experiment_version_id) {
+  #' Get a experiment_version info from its experiment_version_id
   #'
-  #' @param usecase_id id of the usecase, can be obtained with get_usecases().
-  #' @param version_number number of the version of the usecase. 1 by default
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
-  #' @return usecase version id.
+  #' @return parsed content of the experiment_version.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecases/', usecase_id, '/versions/'), GET)
+  resp <- pio_request(paste0('/experiment-versions/', experiment_version_id), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    resp_parsed
+  }
+  else {
+    stop("Can't retrieve information from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+get_experiment_version_id <- function(experiment_id, version_number = 1) {
+  #' Get a experiment version id from a experiment_id and its version number.
+  #'
+  #' @param experiment_id id of the experiment, can be obtained with get_experiments().
+  #' @param version_number number of the version of the experiment. 1 by default
+  #'
+  #' @return experiment version id.
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/experiments/', experiment_id, '/versions/'), GET)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
@@ -111,38 +120,39 @@ get_usecase_version_id <- function(usecase_id, version_number = 1) {
         return(item$`_id`)
       }
     }
+    stop("Can't retrieve experiment version id from experiment ", experiment_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
   else {
-    stop("Can't retrieve usecase version id from usecase ", usecase_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
+    stop("Can't retrieve experiment version id from experiment ", experiment_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-get_usecase_version_features <- function(usecase_version_id) {
-  #' Get features information related to a usecase_version_id.
+get_experiment_version_features <- function(experiment_version_id) {
+  #' Get features information related to a experiment_version_id.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
-  #' @return parsed content of the usecase_version features information.
+  #' @return parsed content of the experiment_version features information.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/features'), GET)
+  resp <- pio_request(paste0('/experiment-versions/', experiment_version_id, '/features'), GET)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve features information from usecase_version ", usecase_version_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("Can't retrieve features information from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-get_features_infos <- function(usecase_version_id, feature_name) {
-  #' Get information of a given feature related to a usecase_version_id.
+get_features_infos <- function(experiment_version_id, feature_name) {
+  #' Get information of a given feature related to a experiment_version_id.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #' @param feature_name name of the feature to retrive information.
   #'
   #' @return parsed content of the specific feature.
@@ -151,43 +161,43 @@ get_features_infos <- function(usecase_version_id, feature_name) {
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/features/', feature_name), GET)
+  resp <- pio_request(paste0('/experiment-versions/', experiment_version_id, '/features/', feature_name), GET)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve information from feature ", feature_name, " from usecase_version ", usecase_version_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("Can't retrieve information from feature ", feature_name, " from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
-get_usecase_version_models <- function(usecase_version_id) {
-  #' Get a model list related to a usecase_version_id.
+get_experiment_version_models <- function(experiment_version_id) {
+  #' Get a model list related to a experiment_version_id.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
-  #' @return parsed content of models attached to usecase_version_id.
+  #' @return parsed content of models attached to experiment_version_id.
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/models'), GET)
+  resp <- pio_request(paste0('/experiment-versions/', experiment_version_id, '/models'), GET)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
     resp_parsed$items
   }
   else {
-    stop("Can't retrieve models from usecase_version ", usecase_version_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("Can't retrieve models from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
 get_model_infos <- function(model_id) {
   #' Get model information corresponding to a model_id.
   #'
-  #' @param model_id id of the model, can be obtained with get_usecase_models().
+  #' @param model_id id of the model, can be obtained with get_experiment_models().
   #'
   #' @return parsed content of the model.
   #'
@@ -209,7 +219,7 @@ get_model_infos <- function(model_id) {
 get_model_hyperparameters <- function(model_id) {
   #' Get hyperparameters corresponding to a model_id.
   #'
-  #' @param model_id id of the model, can be obtained with usecaseModels(usecase_id).
+  #' @param model_id id of the model, can be obtained with experimentModels(experiment_id).
   #'
   #' @return parsed content of the model's hyperparameters.
   #'
@@ -231,7 +241,7 @@ get_model_hyperparameters <- function(model_id) {
 get_model_feature_importance <- function(model_id, mode = "raw") {
   #' Get feature importance corresponding to a model_id.
   #'
-  #' @param model_id id of the model, can be obtained with get_usecase_models().
+  #' @param model_id id of the model, can be obtained with get_experiment_models().
   #' @param mode character indicating the type of feature importance among "raw" (default) or "engineered".
   #'
   #' @return dataset of the model's feature importance.
@@ -265,10 +275,10 @@ get_model_feature_importance <- function(model_id, mode = "raw") {
   }
 }
 
-get_usecase_version_predictions <- function(usecase_version_id, generating_type = "user") {
-  #' Get a list of prediction from a usecase_version_id.
+get_experiment_version_predictions <- function(experiment_version_id, generating_type = "user") {
+  #' Get a list of prediction from a experiment_version_id.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #' @param generating_type can be "user" (= user predictions) or "auto" (= hold out predictions).
   #'
   #' @return parsed prediction list items.
@@ -287,10 +297,10 @@ get_usecase_version_predictions <- function(usecase_version_id, generating_type 
   # Looping over page to get all information
   while(T) {
     if(generating_type == "user") {
-      resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/validation-predictions?page=', page), GET)
+      resp <- pio_request(paste0('/experiment-versions/', experiment_version_id, '/validation-predictions?page=', page), GET)
     }
     else {
-      resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/holdout-predictions?page=', page), GET)
+      resp <- pio_request(paste0('/experiment-versions/', experiment_version_id, '/holdout-predictions?page=', page), GET)
     }
     resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
@@ -305,16 +315,16 @@ get_usecase_version_predictions <- function(usecase_version_id, generating_type 
       }
     }
     else {
-      stop("Can't retrieve predictions from usecase_version ", usecase_version_id, " - ", resp$status_code, ":", resp_parsed)
+      stop("Can't retrieve predictions from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
     }
   }
   predictions
 }
 
-create_prediction <- function(usecase_version_id, dataset_id = NULL, folder_dataset_id = NULL, confidence = F, best_single = F, model_id = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL) {
-  #' Create a prediction on a specified usecase_version
+create_prediction <- function(experiment_version_id, dataset_id = NULL, folder_dataset_id = NULL, confidence = F, best_single = F, model_id = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL) {
+  #' Create a prediction on a specified experiment_version
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #' @param dataset_id id of the dataset to start the prediction on, can be obtained with get_datasets().
   #' @param folder_dataset_id id of the folder dataset to start prediction on, can be obtained with get_folders(). Only usefull for images use cases.
   #' @param confidence boolean. If enable, confidence interval will be added to predictions.
@@ -353,21 +363,21 @@ create_prediction <- function(usecase_version_id, dataset_id = NULL, folder_data
     message("model_id is set, the best_single param won't be taken into account")
   }
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/validation-predictions'), POST, params)
+  resp <- pio_request(paste0('/experiment-versions/', experiment_version_id, '/validation-predictions'), POST, params)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
     resp_parsed
   }
   else {
-    stop("Can't start prediction for usecase_version ", usecase_version_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("Can't start prediction for experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
 get_prediction_infos <- function(prediction_id) {
   #' Get a information about a prediction_id.
   #'
-  #' @param prediction_id id of the prediction to be retrieved, can be obtained with get_usecase_version_predictions().
+  #' @param prediction_id id of the prediction to be retrieved, can be obtained with get_experiment_version_predictions().
   #'
   #' @return list of prediction information.
   #'
@@ -388,7 +398,7 @@ get_prediction_infos <- function(prediction_id) {
 get_prediction <- function(prediction_id, prediction_type, time_out = 3600, wait_time = 10) {
   #' Get a specific prediction from a prediction_id. Wait up until time_out is reached and wait wait_time between each retry.
   #'
-  #' @param prediction_id id of the prediction to be retrieved, can be obtained with get_usecase_version_predictions().
+  #' @param prediction_id id of the prediction to be retrieved, can be obtained with get_experiment_version_predictions().
   #' @param prediction_type type of prediction among "validation" (not deployed model) and "deployment" (deployed model).
   #' @param time_out maximum number of seconds to wait for the prediction. 3 600 by default.
   #' @param wait_time number of seconds to wait between each retry. 10 by default.
@@ -435,11 +445,11 @@ get_prediction <- function(prediction_id, prediction_type, time_out = 3600, wait
 delete_prediction <- function(prediction_id) {
   #' Delete a prediction.
   #'
-  #' @param prediction_id id of the prediction to be retrieved, can be obtained with get_usecase_version_predictions()
+  #' @param prediction_id id of the prediction to be retrieved, can be obtained with get_experiment_version_predictions()
   #'
   #' @import httr
   #'
-  #' @return list of predictions of usecase_id.
+  #' @return list of predictions of experiment_id.
   #'
   #' @export
 
@@ -454,20 +464,61 @@ delete_prediction <- function(prediction_id) {
   return(resp$status_code)
 }
 
-create_usecase <- function(project_id, name, data_type, training_type, dataset_id, target_column = NULL, holdout_dataset_id = NULL, id_column = NULL, drop_list = NULL, profile = NULL, usecase_description = NULL, metric = NULL, fold_column = NULL, normal_models = NULL, lite_models = NULL, simple_models = NULL, with_blend = NULL, weight_column = NULL, features_engineering_selected_list = NULL, features_selection_count = NULL, features_selection_time = NULL, folder_dataset_id = NULL, filename_column = NULL, ymin = NULL, ymax = NULL, xmin = NULL, xmax = NULL, time_column = NULL, start_dw = NULL, end_dw = NULL, start_fw = NULL, end_fw = NULL, group_list = NULL, apriori_list = NULL, content_column = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL, lang = NULL, models_params = NULL) {
-  #' Create a new usecase on the platform.
+create_experiment <- function(project_id, name, provider, data_type, training_type) {
+  #' Create a new experiment on the platform.
   #'
-  #' @param project_id id of the project in which we create the usecase.
-  #' @param name name of the usecase.
-  #' @param data_type type of data ("tabular" or "images" or "timeseries").
-  #' @param training_type type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection", "text-similarity").
+  #' @param project_id id of the project in which we create the experiment.
+  #' @param name name of the experiment.
+  #' @param provider provider of the experiment ("prevision-auto-ml" or "external")
+  #' @param data_type type of data ("tabular", "images" or "timeseries").
+  #' @param training_type type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection" or "text-similarity").
+  #'
+  #' @import httr
+  #'
+  #' @return experiment information.
+  #'
+  #' @export
+
+  # CHECKING data_type
+  if(!data_type %in% c("tabular", "images", "timeseries")) {
+    stop("data_type must be either \"tabular\", \"images\" or \"timeseries\"")
+  }
+
+  # CHECKING training_type
+  if(!training_type %in% c("regression", "classification", "multiclassification", "object-detection", "text-similarity")) {
+    stop("training_type must be either \"regression\", \"classification\", \"multiclassification\" or \"object-detection\" or \"text-similarity\"")
+  }
+
+  # GET PARAMS AND REMOVE NULL ONES
+  params = list(name = name,
+                provider = provider,
+                data_type = data_type,
+                training_type = training_type)
+
+  params <- params[!sapply(params, is.null)]
+
+  resp <- pio_request(paste0('/projects/', project_id, '/experiments/'), POST, params)
+  resp_parsed <- content(resp, 'parsed')
+
+  if(resp$status_code == 200) {
+    message("experiment created")
+  } else {
+    stop("experiment creation failed - ", resp$status_code, ":", resp_parsed[[1]])
+  }
+  get_experiment_info(resp_parsed$`_id`)
+}
+
+create_experiment_version <- function(experiment_id, dataset_id, target_column = NULL, holdout_dataset_id = NULL, id_column = NULL, drop_list = NULL, profile = NULL, experiment_description = NULL, metric = NULL, fold_column = NULL, normal_models = NULL, lite_models = NULL, simple_models = NULL, with_blend = NULL, weight_column = NULL, features_engineering_selected_list = NULL, features_selection_count = NULL, features_selection_time = NULL, folder_dataset_id = NULL, filename_column = NULL, ymin = NULL, ymax = NULL, xmin = NULL, xmax = NULL, time_column = NULL, start_dw = NULL, end_dw = NULL, start_fw = NULL, end_fw = NULL, group_list = NULL, apriori_list = NULL, content_column = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL, lang = NULL, models_params = NULL) {
+  #' Create a new version of an existing experiment.
+  #'
+  #' @param experiment_id id of the experiment that will host the new version.
   #' @param dataset_id id of the dataset used for the training phase.
   #' @param target_column name of the TARGET column.
   #' @param holdout_dataset_id id of the holdout dataset.
   #' @param id_column name of the id column.
   #' @param drop_list list of names of features to drop.
   #' @param profile chosen profil among "quick", "normal", "advanced".
-  #' @param usecase_description usecase description.
+  #' @param experiment_description experiment description.
   #' @param metric name of the metric to optimise.
   #' @param fold_column name of the fold column.
   #' @param normal_models list of (normal) models to select with full FE & hyperparameters search (among "LR", "RF", "ET", "XGB", "LGB", "NN", "CB").
@@ -502,29 +553,11 @@ create_usecase <- function(project_id, name, data_type, training_type, dataset_i
   #'
   #' @import httr
   #'
-  #' @return usecase information.
+  #' @return experiment information.
   #'
   #' @export
 
-  # CHECKING data_type
-  if(!data_type %in% c("tabular", "images", "timeseries")) {
-    stop("data_type must be either \"tabular\", \"images\" or \"timeseries\"")
-  }
-
-  # CHECKING training_type
-  if(!training_type %in% c("regression", "classification", "multiclassification", "object-detection", "text-similarity")) {
-    stop("training_type must be either \"regression\", \"classification\", \"multiclassification\" or \"object-detection\" or \"text-similarity\"")
-  }
-
-  # CHECKING dataset_id EXISTS
-  if(!dataset_id %in% unlist(get_datasets(project_id))) {
-    stop("dataset_id doesn't exist")
-  }
-
   # CHECKING CONDITIONS FOR normal_models, lite_models and simple_models
-  # if (length(normal_models) + length(lite_models) + length(simple_models) < 1) {
-  #   stop("must give at least one model")
-  # }
   if(!all(normal_models %in% c("LR", "RF", "ET", "XGB", "LGB", "NN", "CB"))) {
     stop("normal_models must be either \"LR\", \"RF\", \"ET\", \"XGB\", \"LGB\", \"CB\" or \"NN\"")
   }
@@ -534,68 +567,69 @@ create_usecase <- function(project_id, name, data_type, training_type, dataset_i
   if(!all(simple_models %in% c("DT", "LR"))) {
     stop("simple models must be either \"DT\" or \"LR\"")
   }
-  if(!training_type %in% c("classification", "multiclassification") & "NBC" %in% lite_models) {
-    stop("NBC liteModel is only available for classification or multiclassification")
-  }
 
   # GET PARAMS AND REMOVE NULL ONES
-  ucParams = list(name = name,
-                  dataset_id = dataset_id,
-                  target_column = target_column,
-                  holdout_dataset_id = holdout_dataset_id,
-                  id_column = id_column,
-                  drop_list = drop_list,
-                  profile = profile,
-                  metric = metric,
-                  fold_column = fold_column,
-                  normal_models = normal_models,
-                  lite_models = lite_models,
-                  simple_models = simple_models,
-                  with_blend = with_blend,
-                  weight_column = weight_column,
-                  features_engineering_selected_list = features_engineering_selected_list,
-                  features_selection_count = features_selection_count,
-                  features_selection_time = features_selection_time,
-                  folder_dataset_id = folder_dataset_id,
-                  filename_column = filename_column,
-                  ymin = ymin,
-                  ymax = ymax,
-                  xmin = xmin,
-                  xmax = xmax,
-                  time_column = time_column,
-                  start_dw = start_dw,
-                  end_dw = end_dw,
-                  start_fw = start_fw,
-                  end_fw = end_fw,
-                  group_list = group_list,
-                  apriori_list = apriori_list,
-                  content_column = content_column,
-                  queries_dataset_id = queries_dataset_id,
-                  queries_dataset_content_column = queries_dataset_content_column,
-                  queries_dataset_id_column = queries_dataset_id_column,
-                  queries_dataset_matching_id_description_column = queries_dataset_matching_id_description_column,
-                  top_k = top_k,
-                  lang = lang,
-                  models_params = models_params)
+  params = list(dataset_id = dataset_id,
+                target_column = target_column,
+                holdout_dataset_id = holdout_dataset_id,
+                id_column = id_column,
+                drop_list = drop_list,
+                profile = profile,
+                metric = metric,
+                fold_column = fold_column,
+                normal_models = normal_models,
+                lite_models = lite_models,
+                simple_models = simple_models,
+                with_blend = with_blend,
+                weight_column = weight_column,
+                features_engineering_selected_list = features_engineering_selected_list,
+                features_selection_count = features_selection_count,
+                features_selection_time = features_selection_time,
+                folder_dataset_id = folder_dataset_id,
+                filename_column = filename_column,
+                ymin = ymin,
+                ymax = ymax,
+                xmin = xmin,
+                xmax = xmax,
+                time_column = time_column,
+                start_dw = start_dw,
+                end_dw = end_dw,
+                start_fw = start_fw,
+                end_fw = end_fw,
+                group_list = group_list,
+                apriori_list = apriori_list,
+                content_column = content_column,
+                queries_dataset_id = queries_dataset_id,
+                queries_dataset_content_column = queries_dataset_content_column,
+                queries_dataset_id_column = queries_dataset_id_column,
+                queries_dataset_matching_id_description_column = queries_dataset_matching_id_description_column,
+                top_k = top_k,
+                lang = lang,
+                models_params = models_params)
 
-  ucParams <- ucParams[!sapply(ucParams, is.null)]
+  params <- params[!sapply(params, is.null)]
 
-  resp <- pio_request(paste0('/projects/', project_id, '/usecases/', data_type, '/', training_type), POST, ucParams)
+  # CREATE EXPERIMENT VERSION
+  resp <- pio_request(paste0('/experiments/', experiment_id, '/versions/'), POST, params)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Usecase started - ", resp$status_code, ":", resp_parsed[[1]])
+    # LAUNCH EXPERIMENT VERSION IF CREATION IS SUCCESSFUL
+    resp <- pio_request(paste0('/experiment-versions/', resp_parsed$`_id`, '/confirm/'), PUT)
+    if(resp$status_code == 200) {
+      message("version ", resp_parsed$version, " of experiment ", resp_parsed$`_id`, " started")
+      return(get_experiment_version_info(resp_parsed$`_id`))
+    }
   } else {
-    stop("Usecase starting failed - ", resp$status_code, ":", resp_parsed[[1]])
+    stop("new experiment version failed to start - ", resp$status_code, ":", resp_parsed[[1]])
   }
-  get_usecase_info(resp_parsed$usecase_id)
 }
 
-update_usecase_version_description <- function(usecase_version_id, description = "") {
-  #' Update the description of a given usecase_version_id.
+update_experiment_version_description <- function(experiment_version_id, description = "") {
+  #' Update the description of a given experiment_version_id.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
-  #' @param description Description of the usecase.
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
+  #' @param description Description of the experiment.
   #'
   #' @import httr
   #'
@@ -603,93 +637,93 @@ update_usecase_version_description <- function(usecase_version_id, description =
 
   params = list(description = description)
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id), PUT, params)
+  resp <- pio_request(paste0('/experiment-versions/', experiment_version_id), PUT, params)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Description of the usecase_version ", usecase_version_id, " updated - ", resp$status_code, ":", resp_parsed$message)
+    message("Description of the experiment_version ", experiment_version_id, " updated")
   } else {
-    stop("Update of the description of the usecase_version ", usecase_version_id, " failed - ", resp$status_code, ":", resp_parsed$message)
+    stop("Update of the description of the experiment_version ", experiment_version_id, " failed - ", resp$status_code, ":", resp_parsed$message)
   }
   return(resp$status_code)
 }
 
-delete_usecase_version <- function(usecase_version_id) {
-  #' Delete a usecase_version on the platform.
+delete_experiment <- function(experiment_id) {
+  #' Delete a experiment on the platform.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_id id of the experiment, can be obtained with get_experiments().
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id), DELETE)
+  resp <- pio_request(paste0('/experiments/', experiment_id), DELETE)
   resp_parsed <- content(resp, 'parsed')
 
-  if(resp$status_code == 200) {
-    message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
+  if(resp$status_code == 204) {
+    message("Deletion of experiment ", experiment_id, " done")
   } else {
-    message("Delete KO - ", resp$status_code, ":", resp_parsed$message)
+    stop("Deletion of experiment ", experiment_id, " failed")
   }
   resp$status_code
 }
 
-pause_usecase_version <- function(usecase_version_id) {
-  #' Pause a running usecase_version on the platform.
+pause_experiment_version <- function(experiment_version_id) {
+  #' Pause a running experiment_version on the platform.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/pause'), PUT)
+  resp <- pio_request(paste0('/experiment-versions/', experiment_version_id, '/pause'), PUT)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Pause OK - ", resp$status_code, ":", resp_parsed$message)
+    message("experiment_version_id ", experiment_version_id, " paused")
   } else {
-    message("Pause KO - ", resp$status_code, ":", resp_parsed$message)
+    stop("fail to pause experiment_version_id ", experiment_version_id)
   }
   resp$status_code
 }
 
-resume_usecase_version <- function(usecase_version_id) {
-  #' Resume a paused usecase_version on the platform.
+resume_experiment_version <- function(experiment_version_id) {
+  #' Resume a paused experiment_version on the platform.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/resume'), PUT)
+  resp <- pio_request(paste0('/experiment-versions/', experiment_version_id, '/resume'), PUT)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Resume OK - ", resp$status_code, ":", resp_parsed$message)
+    message("experiment_version_id ", experiment_version_id, " resumed")
   } else {
-    message("Resume KO - ", resp$status_code, ":", resp_parsed$message)
+    stop("fail to resume experiment_version_id ", experiment_version_id)
   }
   resp$status_code
 }
 
-stop_usecase_version <- function(usecase_version_id) {
-  #' Stop a running or paused usecase_version on the platform.
+stop_experiment_version <- function(experiment_version_id) {
+  #' Stop a running or paused experiment_version on the platform.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
   #' @import httr
   #'
   #' @export
 
-  resp <- pio_request(paste0('/usecase-versions/', usecase_version_id, '/stop'), PUT)
+  resp <- pio_request(paste0('/experiment-versions/', experiment_version_id, '/stop'), PUT)
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Stop OK - ", resp$status_code, ":", resp_parsed$message)
+    message("experiment_version_id ", experiment_version_id, " stopped")
   } else {
-    message("Stop KO - ", resp$status_code, ":", resp_parsed$message)
+    stop("fail to stop experiment_version_id ", experiment_version_id)
   }
   resp$status_code
 }
@@ -697,7 +731,7 @@ stop_usecase_version <- function(usecase_version_id) {
 get_model_cv <- function(model_id) {
   #' Get the cross validation file from a specific model.
   #'
-  #' @param model_id id of the model to get the CV, can be obtained with get_usecase_version_models().
+  #' @param model_id id of the model to get the CV, can be obtained with get_experiment_version_models().
   #'
   #' @return a dataframe containing cross validation data.
   #'
@@ -715,14 +749,14 @@ get_model_cv <- function(model_id) {
     file.remove(temp)
     data
   } else {
-    stop("Can't retrieve CV file for model ", model_id, " - ", resp$status_code)
+    stop("Can't retrieve CV file for model ", model_id)
   }
 }
 
-get_best_model_id <- function(usecase_version_id, include_blend = TRUE) {
-  #' Get the model_id that provide the best predictive performance given usecase_version_id. If include_blend is false, it will return the model_id from the best "non blended" model.
+get_best_model_id <- function(experiment_version_id, include_blend = TRUE) {
+  #' Get the model_id that provide the best predictive performance given experiment_version_id. If include_blend is false, it will return the model_id from the best "non blended" model.
   #'
-  #' @param usecase_version_id id of the usecase_version, can be obtained with get_usecase_version_id().
+  #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #' @param include_blend boolean, indicating if you want to retrieve the best model among blended models too.
   #'
   #' @return model_id.
@@ -732,7 +766,7 @@ get_best_model_id <- function(usecase_version_id, include_blend = TRUE) {
   #' @export
 
   # GET MODELS FROM A USE CASE
-  models = get_usecase_version_models(usecase_version_id)
+  models = get_experiment_version_models(experiment_version_id)
 
   # LOOP OVER THEM AND RETRIEVE THE ONE MATCHING SELECTED CRITERIA
   for(model in models) {
@@ -744,5 +778,5 @@ get_best_model_id <- function(usecase_version_id, include_blend = TRUE) {
     }
   }
 
-  stop("No model found for usecase_version ", usecase_version_id)
+  stop("No model found for experiment_version ", experiment_version_id)
 }
