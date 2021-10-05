@@ -99,7 +99,7 @@ create_project <- function(name, description = NULL, color = "#a748f5") {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("project ", project_id, " created with sucess")
+    message("project ", name, " created with sucess")
     get_project_info(resp_parsed$`_id`)
   } else {
     stop("project creation failed - ", resp_parsed$status, ":", resp_parsed$message)
