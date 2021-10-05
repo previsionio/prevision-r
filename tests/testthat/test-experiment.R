@@ -59,6 +59,24 @@ test_that("create_experiment", {
                               provider = "prevision-auto-ml",
                               data_type = "images",
                               training_type = "object-detection"), "list", "create_experiment() doesn't retrieve a list for EXPERIMENT_PREVISION_IMG_OBJECT_DETECTION_TESTU")
+
+  expect_is(create_experiment(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                              name = "EXPERIMENT_EXTERNAL_REGRESSION_TESTU",
+                              provider = "external",
+                              data_type = "tabular",
+                              training_type = "regression"), "list", "create_experiment() doesn't retrieve a list for EXPERIMENT_EXTERNAL_REGRESSION_TESTU")
+
+  expect_is(create_experiment(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                              name = "EXPERIMENT_EXTERNAL_CLASSIFICATION_TESTU",
+                              provider = "external",
+                              data_type = "tabular",
+                              training_type = "classification"), "list", "create_experiment() doesn't retrieve a list for EXPERIMENT_EXTERNAL_CLASSIFICATION_TESTU")
+
+  expect_is(create_experiment(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                              name = "EXPERIMENT_EXTERNAL_MULTICLASSIFICATION_TESTU",
+                              provider = "external",
+                              data_type = "tabular",
+                              training_type = "multiclassification"), "list", "create_experiment() doesn't retrieve a list for EXPERIMENT_EXTERNAL_MULTICLASSIFICATION_TESTU")
 })
 
 test_that("create_experiment_version", {
@@ -124,6 +142,27 @@ test_that("create_experiment_version", {
                                       xmax = "x2",
                                       ymin = "y2",
                                       ymax = "y1"), "list", "get_experiments() doesn't retrieve a list for EXPERIMENT_PREVISION_IMG_OBJECT_DETECTION_TESTU")
+
+  expect_is(create_experiment_version(experiment_id = get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "EXPERIMENT_EXTERNAL_REGRESSION_TESTU"),
+                                      holdout_dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_EXTERNAL_REGRESSION_TESTU"),
+                                      target_column = "TARGET",
+                                      name = "EXPERIMENT_EXTERNAL_REGRESSION_TESTU",
+                                      onnx_file = paste0(wd, "/tests/testthat/data/regression_model.onnx"),
+                                      yaml_file = paste0(wd, "/tests/testthat/data/regression_model.yaml")), "list", "get_experiments() doesn't retrieve a list for EXPERIMENT_EXTERNAL_REGRESSION_TESTU")
+
+  expect_is(create_experiment_version(experiment_id = get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "EXPERIMENT_EXTERNAL_CLASSIFICATION_TESTU"),
+                                      holdout_dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_EXTERNAL_CLASSIFICATION_TESTU"),
+                                      target_column = "TARGET",
+                                      name = "EXPERIMENT_EXTERNAL_CLASSIFICATION_TESTU",
+                                      onnx_file = paste0(wd, "/tests/testthat/data/classification_model.onnx"),
+                                      yaml_file = paste0(wd, "/tests/testthat/data/classification_model.yaml")), "list", "get_experiments() doesn't retrieve a list for EXPERIMENT_EXTERNAL_CLASSIFICATION_TESTU")
+
+  expect_is(create_experiment_version(experiment_id = get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "EXPERIMENT_EXTERNAL_MULTICLASSIFICATION_TESTU"),
+                                      holdout_dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_EXTERNAL_MULTICLASSIFICATION_TESTU"),
+                                      target_column = "TARGET",
+                                      name = "EXPERIMENT_EXTERNAL_MULTICLASSIFICATION_TESTU",
+                                      onnx_file = paste0(wd, "/tests/testthat/data/multiclassification_model.onnx"),
+                                      yaml_file = paste0(wd, "/tests/testthat/data/multiclassification_model.yaml")), "list", "get_experiments() doesn't retrieve a list for EXPERIMENT_EXTERNAL_MULTICLASSIFICATION_TESTU")
 })
 
 Sys.sleep(180)
@@ -156,7 +195,7 @@ test_that("get_experiment_version_features", {
 
 test_that("get_features_infos", {
   expect_is(get_features_infos(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                       "EXPERIMENT_PREVISION_REGRESSION_TESTU"), 1),
+                                                                                     "EXPERIMENT_PREVISION_REGRESSION_TESTU"), 1),
                                get_experiment_version_features(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "EXPERIMENT_PREVISION_REGRESSION_TESTU")))$items[[1]]$name), "list", "get_features_infos() doesn't retrieve a list")
 })
 
@@ -275,8 +314,6 @@ test_that("get_prediction", {
 })
 
 test_that("delete_prediction", {
-  expect(delete_prediction(get_experiment_version_predictions(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                                                    "EXPERIMENT_PREVISION_REGRESSION_TESTU")))[[1]]$`_id`) == 204, "delete_prediction() doesn't retrieve a 204 status code for EXPERIMENT_PREVISION_REGRESSION_TESTU")
   expect(delete_prediction(get_experiment_version_predictions(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
                                                                                                                     "EXPERIMENT_PREVISION_CLASSIFICATION_TESTU")))[[1]]$`_id`) == 204, "delete_prediction() doesn't retrieve a 204 status code for EXPERIMENT_PREVISION_CLASSIFICATION_TESTU")
   expect(delete_prediction(get_experiment_version_predictions(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"),

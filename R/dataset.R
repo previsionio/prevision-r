@@ -78,7 +78,7 @@ get_dataset_info <- function(dataset_id) {
     }
 
     ## PRINT MESSAGE AND WAIT 5 SECONDS BEFORE RETRYING
-    message('Waiting for dataset')
+    message('waiting for dataset')
     Sys.sleep(5)
   }
   resp_parsed
@@ -127,10 +127,10 @@ delete_dataset <- function(dataset_id) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 204) {
-    message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
+    message("dataset ", dataset_id, " deleted")
     resp$status_code
   } else {
-    stop("Delete KO - ", resp$status_code, ":", resp_parsed$message)
+    stop("failed to delete dataset ", dataset_id , " - ", resp$status_code, ":", resp_parsed$message)
   }
 }
 
@@ -155,9 +155,10 @@ create_dataset_from_file <- function(project_id, dataset_name, file, separator =
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
+    message("dataset ", dataset_name, "created")
     get_dataset_info(resp_parsed$`_id`)
   } else {
-    stop("Dataset upload failed - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("failed to create dataset ", dataset_name, " - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
@@ -214,9 +215,10 @@ create_dataset_from_datasource <- function(project_id, dataset_name, datasource_
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
+    message("dataset ", dataset_name, "created")
     get_dataset_info(resp_parsed$`_id`)
   } else {
-    stop("Dataset creation failed - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("failed to create dataset ", dataset_name, " - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
@@ -246,11 +248,11 @@ create_dataframe_from_dataset <- function(dataset_id, path = getwd(), is_folder 
   }
 
   if(resp$status_code == 200) {
-    message("Download of dataset ", dataset_id, " done - ", complete_path)
+    message("dataset ", dataset_id, " retrieved - ", complete_path)
     path <- complete_path
   }
   else {
-    stop("Download of dataset ", dataset_id, " failed - ", complete_path)
+    stop("failed to create datafram from dataset ", dataset_id, " - ", complete_path)
   }
 
   unzip(path, overwrite = T, exdir = dataset_id)
@@ -273,10 +275,10 @@ create_dataset_embedding <- function(dataset_id) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Embedding started - ", resp$status_code, ":", resp_parsed$message)
+    message("embedding of dataset ", dataset_id, " created")
     resp$status_code
   } else {
-    stop("Dataset embedding creation failed - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("failed to create embedding of dataset ", dataset_id, " - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
@@ -307,6 +309,6 @@ get_dataset_embedding <- function(dataset_id) {
     tensors
   }
   else {
-    stop("Can't retrieve dataset embedding - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("can't retrieve dataset embedding - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }

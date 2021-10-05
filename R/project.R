@@ -26,7 +26,7 @@ get_projects <- function() {
       }
     }
     else {
-      stop("Can't retrieve project list - ", resp$status_code, ":", resp_parsed)
+      stop("can't retrieve project list - ", resp$status_code, ":", resp_parsed)
     }
   }
   projects
@@ -49,7 +49,7 @@ get_project_id_from_name <- function(project_name) {
       return(project$`_id`)
     }
   }
-  stop("There is no project_id matching the project_name ", project_name)
+  stop("there is no project_id matching the project_name ", project_name)
 }
 
 get_project_info <- function(project_id) {
@@ -70,7 +70,7 @@ get_project_info <- function(project_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve information from project ", project_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve information from project ", project_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -99,9 +99,10 @@ create_project <- function(name, description = NULL, color = "#a748f5") {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
+    message("project ", project_id, " created with sucess")
     get_project_info(resp_parsed$`_id`)
   } else {
-    stop("Project creation failed - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("project creation failed - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
@@ -120,10 +121,10 @@ delete_project <- function(project_id) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 204) {
-    message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
+    message("project ", project_id, " deleted")
     resp$status_code
   } else {
-    stop("Delete KO - ", resp$status_code, ":", resp_parsed$message)
+    stop("failed to delete project ", project_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
 }
 
@@ -145,7 +146,7 @@ get_project_users <- function(project_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve project users' list - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve project users' list - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -172,10 +173,10 @@ create_project_user <- function(project_id, user_mail, user_role) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("User ", user_mail, " added with the role ", user_role, " to the project ", project_id)
+    message("user ", user_mail, " added with the role ", user_role, " to the project ", project_id)
     get_project_users(resp_parsed$`_id`)
   } else {
-    stop("User ", user_mail, " wasn't added to the project - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("user ", user_mail, " wasn't added to the project - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
@@ -202,10 +203,10 @@ update_project_user_role <- function(project_id, user_id, user_role) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("User updated with the role", user_role, " to the project ", project_id)
+    message("user updated with the role", user_role, " to the project ", project_id)
     get_project_users(resp_parsed$`_id`)
   } else {
-    stop("User role hasn't been updated - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("user role hasn't been updated - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
@@ -225,9 +226,9 @@ delete_project_user <- function(project_id, user_id) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
+    message("user ", user_id, " deleted from project ", project_id)
     resp$status_code
   } else {
-    stop("Delete KO - ", resp$status_code, ":", resp_parsed$message)
+    stop("failed to delete user ", user_id, " from project ", project_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
 }

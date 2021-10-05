@@ -5,7 +5,7 @@ library(previsionio)
 # test_check("previsionio")
 
 # wd = getwd()
-#
+
 # test_file(paste0(wd, "/tests/testthat/test-project.R"))
 # test_file(paste0(wd, "/tests/testthat/test-connector.R"))
 # test_file(paste0(wd, "/tests/testthat/test-datasource.R"))
@@ -14,7 +14,9 @@ library(previsionio)
 # test_file(paste0(wd, "/tests/testthat/test-experiment.R"))
 # test_file(paste0(wd, "/tests/testthat/test-pipeline.R"))
 # test_file(paste0(wd, "/tests/testthat/test-deployment.R"))
-#
+# test_file(paste0(wd, "/tests/testthat/test-exporter.R"))
+
+# test_file(paste0(wd, "/tests/testthat/test-exporter-delete.R"))
 # test_file(paste0(wd, "/tests/testthat/test-deployment-delete.R"))
 # test_file(paste0(wd, "/tests/testthat/test-pipeline-delete.R"))
 # test_file(paste0(wd, "/tests/testthat/test-experiment-delete.R"))

@@ -38,7 +38,7 @@ create_deployment_app(
 
 \item{app_replica_count}{number of replica allocated for the application deployment (1 default, 2, 3, 4, 5, 6, 7, 8, 9 or 10)}
 
-\item{env_vars}{list of environnement variables (optional).}
+\item{env_vars}{list of environment variables (optional).}
 
 \item{access_type}{type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).}
 

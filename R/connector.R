@@ -28,7 +28,7 @@ get_connectors <- function(project_id) {
       }
     }
     else {
-      stop("Can't retrieve connectors list - ", resp$status_code, ":", resp_parsed)
+      stop("can't retrieve connectors list - ", resp$status_code, ":", resp_parsed)
     }
   }
   connectors
@@ -52,7 +52,7 @@ get_connector_info <- function(connector_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve connector ", connector_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve connector ", connector_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -74,11 +74,11 @@ get_connector_id_from_name <- function(project_id, connector_name) {
       return(connector$`_id`)
     }
   }
-  stop("There is no connector_id matching the connector_name ", connector_name)
+  stop("there is no connector_id matching the connector_name ", connector_name)
 }
 
 create_connector <- function(project_id, type, name, host, port, username, password, google_credentials = NULL) {
-  #' Create a new connector of a supported type (among: "SQL", "HIVE", "FTP", "SFTP", "S3", "GCP").
+  #' Create a new connector of a supported type (among: "SQL", "FTP", "SFTP", "S3", "GCP").
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param type connector type.
@@ -95,10 +95,10 @@ create_connector <- function(project_id, type, name, host, port, username, passw
   #'
   #' @export
 
-  supported_type = c("SQL", "HIVE", "FTP", "SFTP", "S3", "GCP")
+  supported_type = c("SQL", "FTP", "SFTP", "S3", "GCP")
 
   if(!(type %in% supported_type)) {
-    stop("Connector type ", type, " is not in supported types : ", supported_type)
+    stop("connector type ", type, " is not in supported types : ", supported_type)
   }
 
   params <- list(type = type,
@@ -112,11 +112,11 @@ create_connector <- function(project_id, type, name, host, port, username, passw
   resp <- pio_request(paste0('/projects/', project_id, '/connectors'), POST, params)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
   if(resp$status_code == 200) {
-    message("Creation of connector ", name, " done - ", resp$status_code, ":", resp_parsed)
+    message("connector ", name, " created")
     get_connector_info(resp_parsed$`_id`)
   }
   else {
-    stop("Creation of connector ", name, " failed - ", resp$status_code, ":", resp_parsed)
+    stop("failed to create connector ", name, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -133,11 +133,11 @@ delete_connector <- function(connector_id) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Deletion of connector ", connector_id, " done - ", resp$status_code, ":", resp_parsed)
+    message("connector ", connector_id, " deleted")
     resp$status_code
   }
   else {
-    stop("Deletion of connector ", connector_id, " failed - ", resp$status_code, ":", resp_parsed)
+    stop("failed to delete connector ", connector_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -153,9 +153,9 @@ test_connector <- function(connector_id) {
   resp <- pio_request(paste0('/connectors/', connector_id, "/test"), POST)
 
   if(resp$status_code == 200) {
-    message("Test of connector ", connector_id, " OK - ", resp$status_code)
+    message("test of connector ", connector_id, " successful")
     resp$status_code
   } else {
-    stop("Test of connector ", connector_id, " KO - ", resp$status_code)
+    stop("failed to test the connector ", connector_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }

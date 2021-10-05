@@ -85,6 +85,10 @@ pio_list_to_df <- function(list) {
   #'
   #' @export
 
+  if(length(list) == 0) {
+    return(data.frame())
+  }
+
   df = data.frame(matrix(unlist(list), nrow = length(list), byrow = TRUE), stringsAsFactors = FALSE)
   names(df) = names(list[[1]])
   df

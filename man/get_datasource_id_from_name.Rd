@@ -7,9 +7,9 @@
 get_datasource_id_from_name(project_id, datasource_name)
 }
 \arguments{
-\item{project_id}{id of the project, can be obtained with get_projects(project_id).}
+\item{project_id}{id of the project, can be obtained with get_projects().}
 
-\item{datasource_name}{name of the connector we are searching its id from. Can be obtained with get_datasources().}
+\item{datasource_name}{name of the datasource we are searching its id from. Can be obtained with get_datasources().}
 }
 \value{
 id of the datasource if found.

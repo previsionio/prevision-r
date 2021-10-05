@@ -46,7 +46,7 @@ get_deployments <- function(project_id, type) {
       }
     }
     else {
-      stop("Can't retrieve deployments list - ", resp$status_code, ":", resp_parsed)
+      stop("can't retrieve deployments list - ", resp$status_code, ":", resp_parsed)
     }
   }
   deployments
@@ -70,7 +70,7 @@ get_deployment_info <- function(deployment_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -93,7 +93,7 @@ get_deployment_id_from_name <- function(project_id, name, type) {
       return(deployment$`_id`)
     }
   }
-  stop("There is no deployment matching the name ", name, " for the type ", type)
+  stop("there is no deployment matching the name ", name, " for the type ", type)
 }
 
 create_deployment_model <- function(project_id, name, experiment_id, main_model_experiment_version_id, challenger_model_experiment_version_id = NULL, access_type = c("fine_grained", "private", "public"), description = NULL, main_model_id, challenger_model_id = NULL) {
@@ -130,11 +130,11 @@ create_deployment_model <- function(project_id, name, experiment_id, main_model_
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Creation of deployment ", name, " done - ", resp$status_code, ":", resp_parsed)
+    message("creation of deployment ", name, " done - ", resp$status_code, ":", resp_parsed)
     get_deployment_info(resp_parsed$`_id`)
   }
   else {
-    stop("Creation of deployment ", name, " failed - ", resp$status_code, ":", resp_parsed)
+    stop("failed to create deployment ", name, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -150,7 +150,7 @@ create_deployment_app <- function(project_id, name, git_url, git_branch, type, b
   #' @param app_cpu number of CPU that is allocated for the application deployment (1 default, 2 or 4)
   #' @param app_ram quantity of RAM that is allocated for the application deployment (128Mi default, 256Mi, 512Mi, 1Gi, 2Gi, 4Gi or 8Gi)
   #' @param app_replica_count number of replica allocated for the application deployment (1 default, 2, 3, 4, 5, 6, 7, 8, 9 or 10)
-  #' @param env_vars list of environnement variables (optional).
+  #' @param env_vars list of environment variables (optional).
   #' @param access_type type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).
   #' @param description description of the deployment (optional).
   #'
@@ -176,18 +176,18 @@ create_deployment_app <- function(project_id, name, git_url, git_branch, type, b
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Creation of deployment ", name, " done - ", resp$status_code, ":", resp_parsed)
+    message("deployment ", name, " created")
     get_deployment_info(resp_parsed$`_id`)
   }
   else {
-    stop("Creation of deployment ", name, " failed - ", resp$status_code, ":", resp_parsed)
+    stop("failed to create deployment ", name, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
 delete_deployment <- function(deployment_id) {
   #' Delete an existing deployment
   #'
-  #' @param deployment_id id of the deployment to be retrieved, can be obtained with get_deployments().
+  #' @param deployment_id id of the deployment, can be obtained with get_deployments().
   #'
   #' @import httr
   #'
@@ -197,11 +197,11 @@ delete_deployment <- function(deployment_id) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 204) {
-    message("Deletion of deployment ", deployment_id, " done - ", resp$status_code, ":", resp_parsed)
+    message("deployment ", deployment_id, " deleted")
     resp$status_code
   }
   else {
-    stop("Deletion of deployment ", deployment_id, " failed - ", resp$status_code, ":", resp_parsed)
+    stop("failed to delete deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -230,7 +230,7 @@ get_deployment_app_logs <- function(deployment_id, log_type) {
     paste(unlist(html_cleaned), collapse="\n")
   }
   else {
-    stop("Can't retrieve ", log_type, " logs for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve ", log_type, " logs for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -250,7 +250,7 @@ get_deployment_api_keys <- function(deployment_id) {
     pio_list_to_df(resp_parsed[["items"]])
   }
   else {
-    stop("Can't retrieve API keys for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve API keys for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -267,11 +267,11 @@ create_deployment_api_key <- function(deployment_id) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("API key successfully created for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+    message("api key created for deployment ", deployment_id)
     get_deployment_api_keys(deployment_id)
   }
   else {
-    stop("Can't create API key for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("failed to create api key for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -303,7 +303,7 @@ get_deployment_predictions <- function(deployment_id) {
       }
     }
     else {
-      stop("Can't retrieve predictions list - ", resp$status_code, ":", resp_parsed)
+      stop("can't retrieve predictions list - ", resp$status_code, ":", resp_parsed)
     }
   }
   predictions
@@ -325,7 +325,7 @@ get_deployment_prediction_info <- function(prediction_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve predictions for prediction_id ", prediction_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve predictions for prediction_id ", prediction_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -345,11 +345,11 @@ create_deployment_predictions <- function(deployment_id, dataset_id) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Deployment prediction started")
+    message("deployment prediction started")
     resp_parsed$`_id`
   }
   else {
-    stop("Can't create deployment prediction for deployment ", deployment_id, " and dataset ", dataset_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("failed to create prediction for deployment ", deployment_id, " and dataset ", dataset_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -377,7 +377,7 @@ get_deployment_usage <- function(deployment_id, usage_type) {
   if(resp$status_code == 200) {
     # Stop if no monitoring data is available
     if(length(resp_parsed$usage_chart[[usage_type]]) == 0) {
-      stop("There is no ", usage_type, " data available for the current version of deployment ", deployment_id)
+      stop("there is no ", usage_type, " data available for the current version of deployment ", deployment_id)
     }
 
     # Get the "main" data an prepare the chart
@@ -404,6 +404,6 @@ get_deployment_usage <- function(deployment_id, usage_type) {
     }
   }
   else {
-    stop("Can't retrieve usage type ", usage_type, " for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve usage type ", usage_type, " for deployment ", deployment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }

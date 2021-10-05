@@ -28,7 +28,7 @@ get_experiments <- function(project_id) {
       }
     }
     else {
-      stop("Can't retrieve experiments list - ", resp$status_code, ":", resp_parsed)
+      stop("can't retrieve experiments list - ", resp$status_code, ":", resp_parsed)
     }
   }
   experiments
@@ -52,7 +52,7 @@ get_experiment_id_from_name <- function(project_id, experiment_name) {
       return(experiment$`_id`)
     }
   }
-  stop("There is no experiment_id matching the experiment_name ", experiment_name)
+  stop("there is no experiment_id matching the experiment_name ", experiment_name)
 }
 
 get_experiment_info <- function(experiment_id) {
@@ -73,7 +73,7 @@ get_experiment_info <- function(experiment_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve information from experiment ", experiment_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve information from experiment ", experiment_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -95,7 +95,7 @@ get_experiment_version_info <- function(experiment_version_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve information from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve information from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -120,10 +120,10 @@ get_experiment_version_id <- function(experiment_id, version_number = 1) {
         return(item$`_id`)
       }
     }
-    stop("Can't retrieve experiment version id from experiment ", experiment_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve experiment version id from experiment ", experiment_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
   else {
-    stop("Can't retrieve experiment version id from experiment ", experiment_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve experiment version id from experiment ", experiment_id, " version ", version_number, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -145,7 +145,7 @@ get_experiment_version_features <- function(experiment_version_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve features information from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve features information from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -168,7 +168,7 @@ get_features_infos <- function(experiment_version_id, feature_name) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve information from feature ", feature_name, " from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve information from feature ", feature_name, " from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -190,7 +190,7 @@ get_experiment_version_models <- function(experiment_version_id) {
     resp_parsed$items
   }
   else {
-    stop("Can't retrieve models from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve models from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -212,7 +212,7 @@ get_model_infos <- function(model_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve model ", model_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve model ", model_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -234,7 +234,7 @@ get_model_hyperparameters <- function(model_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve hyperparameters of model ", model_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve hyperparameters of model ", model_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -271,7 +271,7 @@ get_model_feature_importance <- function(model_id, mode = "raw") {
     data
   }
   else {
-    stop("Can't retrieve feature importance of model ", model_id, " - ", resp$status_code)
+    stop("can't retrieve feature importance of mode ", mode, " for model ", model_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -315,7 +315,7 @@ get_experiment_version_predictions <- function(experiment_version_id, generating
       }
     }
     else {
-      stop("Can't retrieve predictions from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
+      stop("can't retrieve predictions from experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
     }
   }
   predictions
@@ -367,10 +367,11 @@ create_prediction <- function(experiment_version_id, dataset_id = NULL, folder_d
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
+    message("predictions started on experiment_version ", experiment_version_id)
     resp_parsed
   }
   else {
-    stop("Can't start prediction for experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't start prediction on experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -391,7 +392,7 @@ get_prediction_infos <- function(prediction_id) {
   if(resp$status_code == 200) {
     resp_parsed
   } else {
-    stop("Can't retrieve prediction infos of prediction ", prediction_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve prediction infos of prediction ", prediction_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -439,13 +440,13 @@ get_prediction <- function(prediction_id, prediction_type, time_out = 3600, wait
       break
     }
   }
-  stop("Can't retrieve prediction prediction ", prediction_id, " for prediction_typ ", prediction_type," - ", resp$status_code)
+  stop("can't retrieve prediction prediction ", prediction_id, " for prediction_type ", prediction_type," - ", resp$status_code)
 }
 
 delete_prediction <- function(prediction_id) {
   #' Delete a prediction.
   #'
-  #' @param prediction_id id of the prediction to be retrieved, can be obtained with get_experiment_version_predictions()
+  #' @param prediction_id id of the prediction to be deleted, can be obtained with get_experiment_version_predictions()
   #'
   #' @import httr
   #'
@@ -457,9 +458,9 @@ delete_prediction <- function(prediction_id) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 204) {
-    message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
+    message("prediction ", prediction_id, " deleted")
   } else {
-    stop("Delete KO - ", resp$status_code, ":", resp_parsed$message)
+    stop("failed to delete prediction ", prediction_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
   return(resp$status_code)
 }
@@ -503,12 +504,12 @@ create_experiment <- function(project_id, name, provider, data_type, training_ty
   if(resp$status_code == 200) {
     message("experiment created")
   } else {
-    stop("experiment creation failed - ", resp$status_code, ":", resp_parsed[[1]])
+    stop("failed to create experiment - ", resp$status_code, ":", resp_parsed[[1]])
   }
   get_experiment_info(resp_parsed$`_id`)
 }
 
-create_experiment_version <- function(experiment_id, dataset_id, target_column = NULL, holdout_dataset_id = NULL, id_column = NULL, drop_list = NULL, profile = NULL, experiment_description = NULL, metric = NULL, fold_column = NULL, normal_models = NULL, lite_models = NULL, simple_models = NULL, with_blend = NULL, weight_column = NULL, features_engineering_selected_list = NULL, features_selection_count = NULL, features_selection_time = NULL, folder_dataset_id = NULL, filename_column = NULL, ymin = NULL, ymax = NULL, xmin = NULL, xmax = NULL, time_column = NULL, start_dw = NULL, end_dw = NULL, start_fw = NULL, end_fw = NULL, group_list = NULL, apriori_list = NULL, content_column = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL, lang = NULL, models_params = NULL) {
+create_experiment_version <- function(experiment_id, dataset_id = NULL, target_column = NULL, holdout_dataset_id = NULL, id_column = NULL, drop_list = NULL, profile = NULL, experiment_description = NULL, metric = NULL, fold_column = NULL, normal_models = NULL, lite_models = NULL, simple_models = NULL, with_blend = NULL, weight_column = NULL, features_engineering_selected_list = NULL, features_selection_count = NULL, features_selection_time = NULL, folder_dataset_id = NULL, filename_column = NULL, ymin = NULL, ymax = NULL, xmin = NULL, xmax = NULL, time_column = NULL, start_dw = NULL, end_dw = NULL, start_fw = NULL, end_fw = NULL, group_list = NULL, apriori_list = NULL, content_column = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL, lang = NULL, models_params = NULL, name = NULL, onnx_file = NULL, yaml_file = NULL) {
   #' Create a new version of an existing experiment.
   #'
   #' @param experiment_id id of the experiment that will host the new version.
@@ -550,6 +551,9 @@ create_experiment_version <- function(experiment_id, dataset_id, target_column =
   #' @param top_k top k individual to find (text-similarity).
   #' @param lang lang of the text (text-similarity).
   #' @param models_params parameters of the model (text-similarity).
+  #' @param name name of the external model (external model).
+  #' @param onnx_file path to the onnx file (external model).
+  #' @param yaml_file path to the yaml file (external model).
   #'
   #' @import httr
   #'
@@ -614,14 +618,24 @@ create_experiment_version <- function(experiment_id, dataset_id, target_column =
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    # LAUNCH EXPERIMENT VERSION IF CREATION IS SUCCESSFUL
+    # IF EXPERIMENT IS ABOUT EXTERNAL MODEL ADD ONE STEP
+    if(get_experiment_info(experiment_id)$provider == "external") {
+      params = list(name = name,
+                    onnx_file = upload_file(onnx_file),
+                    yaml_file = upload_file(yaml_file, type = "text/x-yaml"))
+
+      params <- params[!sapply(params, is.null)]
+      resp <- pio_request(paste0('/experiment-versions/', get_experiment_info(experiment_id)$latest_experiment_version, '/external-models/'), POST, params, upload = TRUE)
+    }
+
+    # LAUNCH EXPERIMENT VERSION
     resp <- pio_request(paste0('/experiment-versions/', resp_parsed$`_id`, '/confirm/'), PUT)
     if(resp$status_code == 200) {
-      message("version ", resp_parsed$version, " of experiment ", resp_parsed$`_id`, " started")
+      message("version ", resp_parsed$version, " of experiment ", resp_parsed$`_id`, " created")
       return(get_experiment_version_info(resp_parsed$`_id`))
     }
   } else {
-    stop("new experiment version failed to start - ", resp$status_code, ":", resp_parsed[[1]])
+    stop("failed to create new experiment version - ", resp$status_code, ":", resp_parsed[[1]])
   }
 }
 
@@ -641,9 +655,9 @@ update_experiment_version_description <- function(experiment_version_id, descrip
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Description of the experiment_version ", experiment_version_id, " updated")
+    message("description of the experiment_version ", experiment_version_id, " updated")
   } else {
-    stop("Update of the description of the experiment_version ", experiment_version_id, " failed - ", resp$status_code, ":", resp_parsed$message)
+    stop("failed to update the description of the experiment_version ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
   return(resp$status_code)
 }
@@ -661,9 +675,9 @@ delete_experiment <- function(experiment_id) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 204) {
-    message("Deletion of experiment ", experiment_id, " done")
+    message("experiment ", experiment_id, " deleted")
   } else {
-    stop("Deletion of experiment ", experiment_id, " failed")
+    stop("failed to delete experiment ", experiment_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
   resp$status_code
 }
@@ -683,7 +697,7 @@ pause_experiment_version <- function(experiment_version_id) {
   if(resp$status_code == 200) {
     message("experiment_version_id ", experiment_version_id, " paused")
   } else {
-    stop("fail to pause experiment_version_id ", experiment_version_id)
+    stop("failed to pause experiment_version_id ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
   resp$status_code
 }
@@ -703,7 +717,7 @@ resume_experiment_version <- function(experiment_version_id) {
   if(resp$status_code == 200) {
     message("experiment_version_id ", experiment_version_id, " resumed")
   } else {
-    stop("fail to resume experiment_version_id ", experiment_version_id)
+    stop("failed to resume experiment_version_id ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
   resp$status_code
 }
@@ -723,7 +737,7 @@ stop_experiment_version <- function(experiment_version_id) {
   if(resp$status_code == 200) {
     message("experiment_version_id ", experiment_version_id, " stopped")
   } else {
-    stop("fail to stop experiment_version_id ", experiment_version_id)
+    stop("failed to stop experiment_version_id ", experiment_version_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
   resp$status_code
 }
@@ -749,7 +763,7 @@ get_model_cv <- function(model_id) {
     file.remove(temp)
     data
   } else {
-    stop("Can't retrieve CV file for model ", model_id)
+    stop("can't retrieve CV file for model ", model_id)
   }
 }
 
@@ -778,5 +792,5 @@ get_best_model_id <- function(experiment_version_id, include_blend = TRUE) {
     }
   }
 
-  stop("No model found for experiment_version ", experiment_version_id)
+  stop("no model found for experiment_version ", experiment_version_id)
 }

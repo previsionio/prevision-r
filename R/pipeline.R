@@ -47,7 +47,7 @@ get_pipelines <- function(project_id, type) {
       }
     }
     else {
-      stop("Can't retrieve pipelines list - ", resp$status_code, ":", resp_parsed)
+      stop("can't retrieve pipelines list - ", resp$status_code, ":", resp_parsed)
     }
   }
   pipelines
@@ -77,7 +77,7 @@ get_pipeline_info <- function(pipeline_id, type) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve pipeline ", pipeline_id, " of type ", type, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve pipeline ", pipeline_id, " of type ", type, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -107,7 +107,7 @@ get_pipeline_id_from_name <- function(project_id, name, type) {
       }
     }
   }
-  stop("There is no pipeline matching the name ", name, " for the type ", type)
+  stop("there is no pipeline matching the name ", name, " for the type ", type)
 }
 
 create_pipeline <- function(project_id, type, name, git_url = NULL, git_branch = NULL, repository_name = NULL, broker = NULL, config_dataset_id = NULL, nodes = NULL, pipeline_template_id = NULL, pipeline_parameters = NULL) {
@@ -152,11 +152,11 @@ create_pipeline <- function(project_id, type, name, git_url = NULL, git_branch =
 
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
   if(resp$status_code == 200) {
-    message("Creation of pipeline ", name, " done - ", resp$status_code, ":", resp_parsed)
+    message("pipeline ", name, " created")
     get_pipeline_info(resp_parsed$`_id`, type)
   }
   else {
-    stop("Creation of pipiline ", name, " failed - ", resp$status_code, ":", resp_parsed)
+    stop("failed to create pipiline ", name, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -179,11 +179,11 @@ delete_pipeline <- function(pipeline_id, type) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 204) {
-    message("Deletion of pipeline ", pipeline_id, " of type ", type, " done - ", resp$status_code, ":", resp_parsed)
+    message("pipeline ", pipeline_id, " of type ", type, " deleted - ", resp$status_code, ":", resp_parsed)
     resp$status_code
   }
   else {
-    stop("Deletion of pipeline ", pipeline_id, " of type ", type, " failed - ", resp$status_code, ":", resp_parsed)
+    stop("failed to delete pipeline ", pipeline_id, " of type ", type, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -200,10 +200,10 @@ create_pipeline_trigger <- function(pipeline_id) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Trigger of pipeline ", pipeline_id, " done - ", resp$status_code, ":", resp_parsed)
+    message("pipeline ", pipeline_id, " triggered - ", resp$status_code, ":", resp_parsed)
     resp$status_code
   }
   else {
-    stop("Trigger of pipeline ", pipeline_id, " failed - ", resp$status_code, ":", resp_parsed)
+    stop("failed to trigger pipeline ", pipeline_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }

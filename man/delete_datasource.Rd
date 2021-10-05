@@ -7,7 +7,7 @@
 delete_datasource(datasource_id)
 }
 \arguments{
-\item{datasource_id}{id of the connector to be deleted, can be obtained with get_datasources().}
+\item{datasource_id}{id of the datasource to be deleted, can be obtained with get_datasources().}
 }
 \description{
 Delete a datasource

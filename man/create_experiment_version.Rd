@@ -6,7 +6,7 @@
 \usage{
 create_experiment_version(
   experiment_id,
-  dataset_id,
+  dataset_id = NULL,
   target_column = NULL,
   holdout_dataset_id = NULL,
   id_column = NULL,
@@ -43,7 +43,10 @@ create_experiment_version(
   queries_dataset_matching_id_description_column = NULL,
   top_k = NULL,
   lang = NULL,
-  models_params = NULL
+  models_params = NULL,
+  name = NULL,
+  onnx_file = NULL,
+  yaml_file = NULL
 )
 }
 \arguments{
@@ -124,6 +127,12 @@ create_experiment_version(
 \item{lang}{lang of the text (text-similarity).}
 
 \item{models_params}{parameters of the model (text-similarity).}
+
+\item{name}{name of the external model (external model).}
+
+\item{onnx_file}{path to the onnx file (external model).}
+
+\item{yaml_file}{path to the yaml file (external model).}
 }
 \value{
 experiment information.

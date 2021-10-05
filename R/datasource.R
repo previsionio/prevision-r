@@ -28,7 +28,7 @@ get_datasources <- function(project_id) {
       }
     }
     else {
-      stop("Can't retrieve data_sources list - ", resp$status_code, ":", resp_parsed)
+      stop("can't retrieve data_sources list - ", resp$status_code, ":", resp_parsed)
     }
   }
   data_sources
@@ -52,15 +52,15 @@ get_datasource_info <- function(datasource_id) {
     resp_parsed
   }
   else {
-    stop("Can't retrieve datasource ", datasource_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve datasource ", datasource_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
 get_datasource_id_from_name <- function(project_id, datasource_name) {
   #' Get a datasource_id from a datasource_name If duplicated name, the first datasource_id that match it is retrieved
   #'
-  #' @param project_id id of the project, can be obtained with get_projects(project_id).
-  #' @param datasource_name name of the connector we are searching its id from. Can be obtained with get_datasources().
+  #' @param project_id id of the project, can be obtained with get_projects().
+  #' @param datasource_name name of the datasource we are searching its id from. Can be obtained with get_datasources().
   #'
   #' @return id of the datasource if found.
   #'
@@ -74,20 +74,20 @@ get_datasource_id_from_name <- function(project_id, datasource_name) {
       return(datasource$`_id`)
     }
   }
-  stop("There is no datasource_id matching the datasource_name ", datasource_name)
+  stop("there is no datasource_id matching the datasource_name ", datasource_name)
 }
 
 create_datasource <- function(project_id, connector_id, name, path= "", database= "", table = "", bucket = "", request = "") {
   #' Create a new datasource
   #'
-  #' @param project_id id of the project, can be obtained with get_projects(project_id).
+  #' @param project_id id of the project, can be obtained with get_projects().
   #' @param connector_id connector_id linked to the datasource.
   #' @param name datasource name.
   #' @param path datasource path (for SFTP & FTP connector).
-  #' @param database datasource database (for SQL & HIVE & HBASE connector).
-  #' @param table datasource table (for SQL & HIVE & HBASE connector).
+  #' @param database datasource database (for SQL connector).
+  #' @param table datasource table (for SQL connector).
   #' @param bucket datasource bucket (for S3 connector).
-  #' @param request datasource request (for SQL & HIVE connector).
+  #' @param request datasource request (for SQLconnector).
   #'
   #' @return parsed content of the datasource
   #'
@@ -118,17 +118,17 @@ create_datasource <- function(project_id, connector_id, name, path= "", database
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Creation of datasource ", name, " OK - ", resp$status_code, ":", resp_parsed)
+    message("datasource ", name, " created")
     resp_parsed
   } else {
-    stop("Creation of datasource ", name, " KO - ", resp$status_code, ":", resp_parsed)
+    stop("failed to create datasource ", name, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
 delete_datasource <- function(datasource_id) {
   #' Delete a datasource
   #'
-  #' @param datasource_id id of the connector to be deleted, can be obtained with get_datasources().
+  #' @param datasource_id id of the datasource to be deleted, can be obtained with get_datasources().
   #'
   #' @import httr
   #'
@@ -138,10 +138,10 @@ delete_datasource <- function(datasource_id) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Deletation of datasource ", datasource_id, " OK - ", resp$status_code, ":", resp_parsed)
+    message("datasource ", datasource_id, " deleted")
     resp$status_code
   } else {
-    stop("Deletion of datasource ", datasource_id, " KO - ", resp$status_code, ":", resp_parsed)
+    stop("failed to delete datasource ", datasource_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }
 
@@ -158,9 +158,9 @@ test_datasource <- function(datasource_id) {
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
   if(resp$status_code == 200) {
-    message("Test of datasource ", datasource_id, " OK - ", resp$status_code, ":", resp_parsed)
+    message("test of datasource ", datasource_id, " successful")
     resp$status_code
   } else {
-    stop("Test of datasource ", datasource_id, " KO - ", resp$status_code, ":", resp_parsed)
+    stop("failed to test the datasource ", datasource_id, " - ", resp$status_code, ":", resp_parsed)
   }
 }

@@ -8,6 +8,26 @@ nb_datasets = length(get_datasets(get_project_id_from_name("PROJECT_TESTU")))
 n_row       = 1000
 n_features  = 10
 
+test_that("create_dataset_from_file", {
+  expect_is(create_dataset_from_file(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                                     dataset_name = "DATASET_EXTERNAL_REGRESSION_TESTU",
+                                     file = paste0(wd, "/tests/testthat/data/regression_holdout_dataset.csv"),
+                                     separator = ",",
+                                     decimal = "."), "list", "create_dataset_from_file() doesn't retrieve a list for DATASET_EXTERNAL_REGRESSION_TESTU")
+
+  expect_is(create_dataset_from_file(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                                     dataset_name = "DATASET_EXTERNAL_CLASSIFICATION_TESTU",
+                                     file = paste0(wd, "/tests/testthat/data/classification_holdout_dataset.csv"),
+                                     separator = ",",
+                                     decimal = "."), "list", "create_dataset_from_file() doesn't retrieve a list for DATASET_EXTERNAL_CLASSIFICATION_TESTU")
+
+  expect_is(create_dataset_from_file(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                                     dataset_name = "DATASET_EXTERNAL_MULTICLASSIFICATION_TESTU",
+                                     file = paste0(wd, "/tests/testthat/data/multiclassification_holdout_dataset.csv"),
+                                     separator = ",",
+                                     decimal = "."), "list", "create_dataset_from_file() doesn't retrieve a list for DATASET_EXTERNAL_MULTICLASSIFICATION_TESTU")
+})
+
 test_that("create_dataset_from_dataframe", {
   expect_is(create_dataset_from_dataframe(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                           dataset_name = "DATASET_TESTU",
@@ -65,22 +85,6 @@ test_that("create_dataset_from_datasource", {
                                            dataset_name = "DATASET_SQL_DATASOURCE_REQUEST_TESTU",
                                            datasource_id = get_datasource_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "SQL_DATASOURCE_REQUEST_TESTU")), "list", "create_dataset_from_datasource() doesn't retrieve a list for SQL_DATASOURCE_REQUEST_TESTU")
 
-  # expect_is(create_dataset_from_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                                          dataset_name = "DATASET_HIVE_DATASOURCE_RAW_TESTU",
-  #                                          datasource_id = get_datasource_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "HIVE_DATASOURCE_RAW_TESTU")), "list", "create_dataset_from_datasource() doesn't retrieve a list for HIVE_DATASOURCE_RAW_TESTU")
-
-  # expect_is(create_dataset_from_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                                          dataset_name = "DATASET_HIVE_DATASOURCE_REQUEST_TESTU",
-  #                                          datasource_id = get_datasource_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "HIVE_DATASOURCE_REQUEST_TESTU")), "list", "create_dataset_from_datasource() doesn't retrieve a list for HIVE_DATASOURCE_REQUEST_TESTU")
-
-  # expect_is(create_dataset_from_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                                          dataset_name = "DATASET_HBASE_DATASOURCE_RAW_TESTU",
-  #                                          datasource_id = get_datasource_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "HBASE_DATASOURCE_RAW_TESTU")), "list", "create_dataset_from_datasource() doesn't retrieve a list for HBASE_DATASOURCE_RAW_TESTU")
-
-  # expect_is(create_dataset_from_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                                          dataset_name = "DATASET_HDFS_DATASOURCE_RAW_TESTU",
-  #                                          datasource_id = get_datasource_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "HDFS_DATASOURCE_RAW_TESTU")), "list", "create_dataset_from_datasource() doesn't retrieve a list for HDFS_DATASOURCE_RAW_TESTU")
-
   expect_is(create_dataset_from_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                            dataset_name = "DATASET_S3_DATASOURCE_RAW_TESTU",
                                            datasource_id = get_datasource_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "S3_DATASOURCE_RAW_TESTU")), "list", "create_dataset_from_datasource() doesn't retrieve a list for S3_DATASOURCE_RAW_TESTU")
@@ -89,9 +93,9 @@ test_that("create_dataset_from_datasource", {
                                            dataset_name = "DATASET_SFTP_DATASOURCE_RAW_TESTU",
                                            datasource_id = get_datasource_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "SFTP_DATASOURCE_RAW_TESTU")), "list", "create_dataset_from_datasource() doesn't retrieve a list for SFTP_DATASOURCE_RAW_TESTU")
 
-  # expect_is(create_dataset_from_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                                          dataset_name = "DATASET_FTP_DATASOURCE_RAW_TESTU",
-  #                                          datasource_id = get_datasource_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "FTP_DATASOURCE_RAW_TESTU")), "list", "create_dataset_from_datasource() doesn't retrieve a list for FTP_DATASOURCE_RAW_TESTU")
+  expect_is(create_dataset_from_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                                           dataset_name = "DATASET_FTP_DATASOURCE_RAW_TESTU",
+                                           datasource_id = get_datasource_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "FTP_DATASOURCE_RAW_TESTU")), "list", "create_dataset_from_datasource() doesn't retrieve a list for FTP_DATASOURCE_RAW_TESTU")
 })
 
 Sys.sleep(300)
