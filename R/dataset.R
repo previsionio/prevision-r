@@ -301,10 +301,7 @@ get_dataset_embedding <- function(dataset_id) {
 
     tensor_shape = resp_parsed[["embeddings"]][[1]][["tensorShape"]]
 
-    # respLabels  = pio_request(paste0('/datasets/file/', dataset_id, "/explorer/labels.bytes"), GET)
-    resp_tensors = pio_request(paste0('/datasets/file/', dataset_id, "/explorer/tensors.bytes"), GET)
-
-    # labels  = fread(content(respLabels, 'parsed', as = "text"), sep = "\t")
+    resp_tensors = pio_request(paste0('/datasets/', dataset_id, "/explorer/tensors.bytes"), GET)
     tensors = data.table(matrix(readBin(resp_tensors$content, "numeric", n = tensor_shape[[1]] * tensor_shape[[2]], size = 4), nrow = tensor_shape[[1]], ncol = tensor_shape[[2]], byrow = T))
     tensors
   }
