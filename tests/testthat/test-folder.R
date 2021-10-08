@@ -6,7 +6,7 @@ source("helper-credentials.R")
 nb_folders = length(get_folders(get_project_id_from_name("PROJECT_TESTU")))
 
 test_that("create_folder", {
-  expect_is(create_folder(get_project_id_from_name("PROJECT_TESTU"), "FOLDER_TESTU", paste0(wd, "/data/img.zip")), "list", "create_folder() doesn't retrieve a list")
+  expect_is(create_folder(get_project_id_from_name("PROJECT_TESTU"), "FOLDER_TESTU", paste0(wd, "/tests/testthat/data/img.zip")), "list", "create_folder() doesn't retrieve a list")
 })
 
 test_that("get_folders", {

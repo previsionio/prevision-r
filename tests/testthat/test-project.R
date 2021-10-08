@@ -6,15 +6,18 @@ source("helper-credentials.R")
 nb_projects = length(get_projects())
 
 test_that("create_project", {
+  expect_error(create_project(name = "PROJECT_TESTU",
+                              description = "DESCRIPTION_TESTU",
+                              color = "#000000"), info = "create_project() doesn't retrieve an error for a incorrect color in PROJECT_TESTU")
   expect_is(create_project(name = "PROJECT_TESTU",
                            description = "DESCRIPTION_TESTU",
-                           color = "#8D29CC"), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
+                           color = "#a748f5"), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
 })
 
 test_that("get_projects", {
   expect_is(get_projects(), "list", "get_projects() doesn't retrieve a list")
   expect(length(get_projects()) >= 1, "get_projects() doesn't have at least one element")
-  expect(length(get_projects()) >= nb_projects+1, "The number of usecases has not increased after dataset creation")
+  expect(length(get_projects()) >= nb_projects+1, "The number of experiments has not increased after dataset creation")
 })
 
 test_that("get_project_id_from_name", {

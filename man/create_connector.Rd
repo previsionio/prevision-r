@@ -2,7 +2,7 @@
 % Please edit documentation in R/connector.R
 \name{create_connector}
 \alias{create_connector}
-\title{Create a new connector of a supported type (among: "SQL", "HIVE", "FTP", "SFTP", "S3", "GCP").}
+\title{Create a new connector of a supported type (among: "SQL", "FTP", "SFTP", "S3", "GCP").}
 \usage{
 create_connector(
   project_id,
@@ -16,6 +16,8 @@ create_connector(
 )
 }
 \arguments{
+\item{project_id}{id of the project, can be obtained with get_projects().}
+
 \item{type}{connector type.}
 
 \item{name}{connector name.}
@@ -34,5 +36,5 @@ create_connector(
 parsed content of the connector.
 }
 \description{
-Create a new connector of a supported type (among: "SQL", "HIVE", "FTP", "SFTP", "S3", "GCP").
+Create a new connector of a supported type (among: "SQL", "FTP", "SFTP", "S3", "GCP").
 }

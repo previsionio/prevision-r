@@ -2,36 +2,42 @@
 % Please edit documentation in R/helper.R
 \name{helper_optimal_prediction}
 \alias{helper_optimal_prediction}
-\title{[BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested}
+\title{[BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested.}
 \usage{
 helper_optimal_prediction(
-  usecase_id,
+  project_id,
+  experiment_id,
   model_id,
   df,
   actionable_features,
   nb_sample,
   maximize,
-  zip = F
+  zip = F,
+  version = 1
 )
 }
 \arguments{
-\item{usecase_id}{the id of the usecase to be predicted on}
+\item{project_id}{id of the project containing the use case.}
 
-\item{model_id}{the id of the model to be predicted on}
+\item{experiment_id}{id of the experiment to be predicted on.}
 
-\item{df}{a data frame to be predicted on}
+\item{model_id}{id of the model to be predicted on.}
 
-\item{actionable_features}{a list of actionable_featuress features contained in the names of the data frame}
+\item{df}{a data frame to be predicted on.}
 
-\item{nb_sample}{a vector of number of sample for each actionable_features features}
+\item{actionable_features}{a list of actionable_featuress features contained in the names of the data frame.}
 
-\item{maximize}{a boolean indicating if we maximize or minimize the predicted target}
+\item{nb_sample}{a vector of number of sample for each actionable_features features.}
 
-\item{zip}{a boolean indicating if the data frame to predict should be zipped prior sending to the instance}
+\item{maximize}{a boolean indicating if we maximize or minimize the predicted target.}
+
+\item{zip}{a boolean indicating if the data frame to predict should be zipped prior sending to the instance.}
+
+\item{version}{version of the use case we want to make the prediction on.}
 }
 \value{
-row data.frame with the optimal vector and the prediction associated with for each rows in the original data frame
+row data.frame with the optimal vector and the prediction associated with for each rows in the original data frame.
 }
 \description{
-[BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested
+[BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested.
 }

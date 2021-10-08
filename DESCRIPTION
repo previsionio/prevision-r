@@ -1,13 +1,13 @@
 Package: previsionio
 Type: Package
-Title: Functions to Use the Prevision.io API
-Version: 11.1.0
+Title: Prevision.io R SDK
+Version: 11.3.0
 Author: Prevision.io
-Maintainer: Florian Laroumagne <support@prevision.io>
-Description: Set of functions to use the Prevision.io API directly from R environnement.
-License: file LICENSE
+Maintainer: Florian Laroumagne <florian.laroumagne@prevision.io>
+Description: For working with the 'Prevision.io' AI model management platform's API <https://prevision.io/>.
+License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 RoxygenNote: 7.1.1
 Imports:
     data.table,
@@ -17,7 +17,10 @@ Imports:
     Metrics,
     graphics,
     stats,
-    utils
+    utils,
+    XML,
+    magrittr,
+    plotly
 Suggests:
     testthat
 Depends:

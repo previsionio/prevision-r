@@ -25,7 +25,7 @@ pio_request <- function(endpoint, method, data = NULL, upload = FALSE) {
   #' @param data object to upload when using method POST.
   #' @param upload used parameter when uploading dataset (for encoding in API call), don't use it.
   #'
-  #' @examples \dontrun{pio_request(paste0('/jobs/', usecase$jobId), DELETE)}
+  #' @examples \dontrun{pio_request(paste0('/jobs/', experiment$jobId), DELETE)}
   #'
   #' @import httr
   #' @import futile.logger
@@ -67,8 +67,6 @@ pio_download <- function(endpoint, tempFile) {
   #' @param endpoint end of the url of the API call.
   #' @param tempFile temporary file to download.
   #'
-  #' @return write on disk the content of the temporary file.
-  #'
   #' @import httr
   #'
   #' @export
@@ -78,4 +76,20 @@ pio_download <- function(endpoint, tempFile) {
       write_disk(tempFile, overwrite = TRUE),
       add_headers(Authorization = pio_client$token),
       config = config(followlocation = 0L))
+}
+
+pio_list_to_df <- function(list) {
+  #' Convert a list returned from APIs to a dataframe. Only working for consistent list (same naming and number of columns).
+  #'
+  #' @param list named list comming from an API call.
+  #'
+  #' @export
+
+  if(length(list) == 0) {
+    return(data.frame())
+  }
+
+  df = data.frame(matrix(unlist(list), nrow = length(list), byrow = TRUE), stringsAsFactors = FALSE)
+  names(df) = names(list[[1]])
+  df
 }

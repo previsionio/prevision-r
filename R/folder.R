@@ -28,7 +28,7 @@ get_folders <- function(project_id) {
       }
     }
     else {
-      stop("Can't retrieve folders list - ", resp$status_code, ":", resp_parsed)
+      stop("can't retrieve folders list - ", resp$status_code, ":", resp_parsed)
     }
   }
   folders
@@ -52,7 +52,7 @@ get_folder_id_from_name <- function(project_id, folder_name) {
       return(folder$`_id`)
     }
   }
-  stop("There is no folder_id matching the folder_name ", folder_name)
+  stop("there is no folder_id matching the folder_name ", folder_name)
 }
 
 get_folder <- function(folder_id) {
@@ -73,7 +73,7 @@ get_folder <- function(folder_id) {
       if(resp_parsed$state == "done") {
         break
       }
-      message('Waiting for image folder')
+      message('waiting for image folder')
       Sys.sleep(5)
     }
   }
@@ -99,9 +99,10 @@ create_folder <- function(project_id, folder_name, file) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
+    message("upload of folder ", folder_name, "done")
     resp_parsed
   } else {
-    stop("Folder upload failed - ", resp_parsed$status, ":", resp_parsed$message)
+    stop("failed to upload folder ", folder_name, " - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
@@ -118,9 +119,9 @@ delete_folder <- function(folder_id) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("Delete OK - ", resp$status_code, ":", resp_parsed$message)
+    message("folder ", folder_id, " deleted with sucess")
     resp$status_code
   } else {
-    stop("Delete KO - ", resp$status_code, ":", resp_parsed$message)
+    stop("failed to delete folder ", folder_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
 }

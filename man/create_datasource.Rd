@@ -16,7 +16,7 @@ create_datasource(
 )
 }
 \arguments{
-\item{project_id}{id of the project, can be obtained with get_projects(project_id).}
+\item{project_id}{id of the project, can be obtained with get_projects().}
 
 \item{connector_id}{connector_id linked to the datasource.}
 
@@ -24,13 +24,13 @@ create_datasource(
 
 \item{path}{datasource path (for SFTP & FTP connector).}
 
-\item{database}{datasource database (for SQL & HIVE & HBASE connector).}
+\item{database}{datasource database (for SQL connector).}
 
-\item{table}{datasource table (for SQL & HIVE & HBASE connector).}
+\item{table}{datasource table (for SQL connector).}
 
 \item{bucket}{datasource bucket (for S3 connector).}
 
-\item{request}{datasource request (for SQL & HIVE connector).}
+\item{request}{datasource request (for SQLconnector).}
 }
 \value{
 parsed content of the datasource

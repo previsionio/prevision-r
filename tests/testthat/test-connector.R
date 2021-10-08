@@ -14,30 +14,6 @@ test_that("create_connector", {
                              username = SQL_CONNECTOR_USER,
                              password = SQL_CONNECTOR_PASS), "list", "create_connector() doesn't retrieve a list for SQL type")
 
-  # expect_is(create_connector(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                            type = "HIVE",
-  #                            name = "HIVE_CONNECTOR_TESTU",
-  #                            host = HIVE_CONNECTOR_HOST,
-  #                            port = HIVE_CONNECTOR_PORT,
-  #                            username = HIVE_CONNECTOR_USER,
-  #                            password = HIVE_CONNECTOR_PASS), "list", "create_connector() doesn't retrieve a list for HIVE type")
-
-  # expect_is(create_connector(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                           type = "HBASE",
-  #                           name = "HBASE_CONNECTOR_TESTU",
-  #                           host = HBASE_CONNECTOR_HOST,
-  #                           port = HBASE_CONNECTOR_PORT,
-  #                           username = HBASE_CONNECTOR_USER,
-  #                           password = HBASE_CONNECTOR_PASS), "list", "create_connector() doesn't retrieve a list for HBASE type")
-  #
-  # expect_is(create_connector(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                           type = "HDFS",
-  #                           name = "HDFS_CONNECTOR_TESTU",
-  #                           host = HDFS_CONNECTOR_HOST,
-  #                           port = HDFS_CONNECTOR_PORT,
-  #                           username = HDFS_CONNECTOR_USER,
-  #                           password = HDFS_CONNECTOR_PASS), "list", "create_connector() doesn't retrieve a list for HDFS type")
-
   expect_is(create_connector(project_id = get_project_id_from_name("PROJECT_TESTU"),
                              type = "S3",
                              name = "S3_CONNECTOR_TESTU",

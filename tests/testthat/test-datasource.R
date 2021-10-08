@@ -18,28 +18,6 @@ test_that("create_datasource", {
                               database = SQL_DATASOURCE_BASE,
                               request = SQL_DATASOURCE_REQUEST), "list", "create_datasource() doesn't retrieve a list for SQL connector type with request")
 
-  # expect_is(create_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                             connector_id = get_connector_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "HIVE_CONNECTOR_TESTU"),
-  #                             name = "HIVE_DATASOURCE_RAW_TESTU",
-  #                             database = HIVE_DATASOURCE_BASE,
-  #                             table = HIVE_DATASOURCE_TABLE), "list", "create_datasource() doesn't retrieve a list for HIVE connector type without request")
-
-  # expect_is(create_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                             connector_id = get_connector_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "HIVE_CONNECTOR_TESTU"),
-  #                             name = "HIVE_DATASOURCE_REQUEST_TESTU",
-  #                             database = HIVE_DATASOURCE_BASE,
-  #                             request = HIVE_DATASOURCE_REQUEST), "list", "create_datasource() doesn't retrieve a list for HIVE connector type with request")
-
-  # expect_is(create_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                            connector_id = get_connector_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "HBASE_CONNECTOR_TESTU"),
-  #                            name = "HBASE_DATASOURCE_RAW_TESTU",
-  #                            table = HBASE_DATASOURCE_TABLE), "list", "create_datasource() doesn't retrieve a list for HBASE connector type without request")
-  #
-  # expect_is(create_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                            connector_id = get_connector_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "HDFS_CONNECTOR_TESTU"),
-  #                            name = "HDFS_DATASOURCE_RAW_TESTU",
-  #                            path = HDFS_DATASOURCE_PATH), "list", "create_datasource() doesn't retrieve a list for HBASE connector type with path")
-
   expect_is(create_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
                               connector_id = get_connector_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "S3_CONNECTOR_TESTU"),
                               name = "S3_DATASOURCE_RAW_TESTU",
@@ -77,18 +55,6 @@ test_that("test_datasource", {
 
   expect(test_datasource(get_datasource_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                                      datasource_name = "SQL_DATASOURCE_REQUEST_TESTU")) == 200, "test_datasource() doesn't retrieve a 200 status code for SQL_DATASOURCE_REQUEST_TESTU")
-
-  # expect(test_datasource(get_datasource_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                                                    datasource_name = "HIVE_DATASOURCE_RAW_TESTU")) == 200, "test_datasource() doesn't retrieve a 200 status code for HIVE_DATASOURCE_RAW_TESTU")
-
-  # expect(test_datasource(get_datasource_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                                                    datasource_name = "HIVE_DATASOURCE_REQUEST_TESTU")) == 200, "test_datasource() doesn't retrieve a 200 status code for HIVE_DATASOURCE_REQUEST_TESTU")
-
-  # expect(test_datasource(get_datasource_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                                                    datasource_name = "HBASE_DATASOURCE_RAW_TESTU")) == 200, "test_datasource() doesn't retrieve a 200 status code for HBASE_DATASOURCE_RAW_TESTU")
-  #
-  # expect(test_datasource(get_datasource_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
-  #                                                    datasource_name = "HDFS_DATASOURCE_RAW_TESTU")) == 200, "test_datasource() doesn't retrieve a 200 status code for HDFS_DATASOURCE_RAW_TESTU")
 
   expect(test_datasource(get_datasource_id_from_name(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                                      datasource_name = "S3_DATASOURCE_RAW_TESTU")) == 200, "test_datasource() doesn't retrieve a 200 status code for S3_DATASOURCE_RAW_TESTU")

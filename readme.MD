@@ -3,7 +3,7 @@
 ```
 git clone https://bitbucket.org/previsionio/previsionio-r
 R CMD build previsionio-r
-R CMD INSTALL previsionio_11.1.0.tar.gz
+R CMD INSTALL previsionio_11.3.0.tar.gz
 ```
 
 # Using package
@@ -13,7 +13,7 @@ library(previsionio)
 
 # Building Documentation 
 
-1) To generate the Doxygen documentation
+1) To generate Doxygen documentation
 All the functions are commented directly in the code. 
 The following lines generate a new folder " man " in the R project. 
 In Rstudio, type : 
@@ -35,5 +35,5 @@ See : https://tex.stackexchange.com/questions/125274/error-font-ts1-zi4r-at-540-
 
 3) In order to check if package is viable on CRAN, type :
 ```
-R CMD check ./ --as-cran
+R CMD check ./ --as-cran or better devtools::check()
 ```

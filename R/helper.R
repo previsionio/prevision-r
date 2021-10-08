@@ -107,7 +107,8 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   #' @import data.table
   #' @import Metrics
   #' @import utils
-  #' @import graphics
+  #' @importFrom graphics abline
+  #' @importFrom graphics par
   #'
   #' @export
 
@@ -178,18 +179,20 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   return(res)
 }
 
-helper_optimal_prediction <- function(usecase_id, model_id, df, actionable_features, nb_sample, maximize, zip = F) {
-  #' [BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested
+helper_optimal_prediction <- function(project_id, experiment_id, model_id, df, actionable_features, nb_sample, maximize, zip = F, version = 1) {
+  #' [BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested.
   #'
-  #' @param usecase_id the id of the usecase to be predicted on
-  #' @param model_id the id of the model to be predicted on
-  #' @param df a data frame to be predicted on
-  #' @param actionable_features a list of actionable_featuress features contained in the names of the data frame
-  #' @param nb_sample a vector of number of sample for each actionable_features features
-  #' @param maximize a boolean indicating if we maximize or minimize the predicted target
-  #' @param zip a boolean indicating if the data frame to predict should be zipped prior sending to the instance
+  #' @param project_id id of the project containing the use case.
+  #' @param experiment_id id of the experiment to be predicted on.
+  #' @param model_id id of the model to be predicted on.
+  #' @param df a data frame to be predicted on.
+  #' @param actionable_features a list of actionable_featuress features contained in the names of the data frame.
+  #' @param nb_sample a vector of number of sample for each actionable_features features.
+  #' @param maximize a boolean indicating if we maximize or minimize the predicted target.
+  #' @param zip a boolean indicating if the data frame to predict should be zipped prior sending to the instance.
+  #' @param version version of the use case we want to make the prediction on.
   #'
-  #' @return row data.frame with the optimal vector and the prediction associated with for each rows in the original data frame
+  #' @return row data.frame with the optimal vector and the prediction associated with for each rows in the original data frame.
   #'
   #' @import data.table
   #'
@@ -205,7 +208,7 @@ helper_optimal_prediction <- function(usecase_id, model_id, df, actionable_featu
   }
 
   # GET THE TRAIN SET USED FOR MODELLING
-  dataset_id = get_usecase_info(usecase_id)$dataset_id
+  dataset_id = get_experiment_info(experiment_id)[[1]]$dataset_id
   train      = create_dataframe_from_dataset(dataset_id)
 
   # SELECT RANDOM SAMPLES FROM THE TRAIN SET GIVEN ACTIONNABLES FEATURES & nb_sampleS
@@ -228,15 +231,15 @@ helper_optimal_prediction <- function(usecase_id, model_id, df, actionable_featu
   # START PREDICTION
   message("the optimisation process will make ", nrow(df)," predictions")
 
-  df_prevision = create_dataset_from_dataframe("expensed_df", df, zip = zip)
-  pred         = create_prediction(usecase_id = usecase_id,
+  df_prevision = create_dataset_from_dataframe(project_id, "expensed_df", df, zip = zip)
+  pred         = create_prediction(experiment_version_id = get_experiment_version_id(experiment_id, version),
                                    model_id = model_id,
                                    dataset_id = df_prevision$`_id`,
                                    confidence = F)
 
   # GET PREDICTION
   Sys.sleep(30) ## SUBOPTIMAL, SHOULD BE A "WAIT UNTIL PREDICTION DONE"
-  res = get_prediction(usecase_id, pred$`_id`)
+  res = get_prediction(pred$`_id`)
   res = res[, ncol(res), with = F]
   res = cbind(df, res)
 
