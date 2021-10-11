@@ -155,7 +155,7 @@ create_dataset_from_file <- function(project_id, dataset_name, file, separator =
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("dataset ", dataset_name, "created")
+    message("dataset ", dataset_name, " created")
     get_dataset_info(resp_parsed$`_id`)
   } else {
     stop("failed to create dataset ", dataset_name, " - ", resp_parsed$status, ":", resp_parsed$message)
@@ -215,7 +215,7 @@ create_dataset_from_datasource <- function(project_id, dataset_name, datasource_
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("dataset ", dataset_name, "created")
+    message("dataset ", dataset_name, " created")
     get_dataset_info(resp_parsed$`_id`)
   } else {
     stop("failed to create dataset ", dataset_name, " - ", resp_parsed$status, ":", resp_parsed$message)
