@@ -2,17 +2,26 @@
 % Please edit documentation in R/project.R
 \name{create_project}
 \alias{create_project}
-\title{Create a new project.}
+\title{Create a new project.
+If check_if_exist is enabled, the function will check if a project with the same name already exists. If yes, it will return a message and the information of the existing project instead of creating a new one.}
 \usage{
-create_project(name, description = NULL, color = "#a748f5")
+create_project(
+  name,
+  description = NULL,
+  color = "#a748f5",
+  check_if_exist = FALSE
+)
 }
 \arguments{
 \item{name}{name of the project.}
 
 \item{description}{description of the project.}
 
-\item{color}{color of the project (#a748f5 by default).}
+\item{color}{color of the project among \"#4876be\", \"#4ab6eb\", \"#49cf7d\", \"#dc8218\", \"#ecba35\", \"#f45b69\", \"#a748f5\", \"#b34ca2\" or \"#2fe6d0\" (#a748f5 by default).}
+
+\item{check_if_exist}{boolean (FALSE by default). If TRUE, makes extra checks to see if a project with the same name is already existing.}
 }
 \description{
 Create a new project.
+If check_if_exist is enabled, the function will check if a project with the same name already exists. If yes, it will return a message and the information of the existing project instead of creating a new one.
 }

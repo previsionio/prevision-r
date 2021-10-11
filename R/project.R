@@ -74,17 +74,20 @@ get_project_info <- function(project_id) {
   }
 }
 
-create_project <- function(name, description = NULL, color = "#a748f5") {
+create_project <- function(name, description = NULL, color = "#a748f5", check_if_exist = FALSE) {
   #' Create a new project.
+  #' If check_if_exist is enabled, the function will check if a project with the same name already exists. If yes, it will return a message and the information of the existing project instead of creating a new one.
   #'
   #' @param name name of the project.
   #' @param description description of the project.
-  #' @param color color of the project (#a748f5 by default).
+  #' @param color color of the project among \"#4876be\", \"#4ab6eb\", \"#49cf7d\", \"#dc8218\", \"#ecba35\", \"#f45b69\", \"#a748f5\", \"#b34ca2\" or \"#2fe6d0\" (#a748f5 by default).
+  #' @param check_if_exist boolean (FALSE by default). If TRUE, makes extra checks to see if a project with the same name is already existing.
   #'
   #' @import httr
   #'
   #' @export
 
+  # CHECK TAHT COLOR MATCH AVAILABLE CHOICES
   if(!color %in% c("#4876be", "#4ab6eb", "#49cf7d", "#dc8218", "#ecba35", "#f45b69", "#a748f5", "#b34ca2", "#2fe6d0")) {
     stop("color should be either #4876be, #4ab6eb, #49cf7d, #dc8218, #ecba35, #f45b69, #a748f5, #b34ca2 or #2fe6d0")
   }
@@ -94,6 +97,18 @@ create_project <- function(name, description = NULL, color = "#a748f5") {
                  color = color)
 
   params <- params[!sapply(params, is.null)]
+
+  # DOUBLE CHECK ALREADY EXISTING PROJECTS
+  if(check_if_exist) {
+    projects = get_projects()
+    for(project in projects) {
+      if(project$name == name) {
+        message("a project named ", name, " already exists - aborting project creation")
+        return (get_project_info(project$`_id`))
+      }
+    }
+    message("there is no project named ", name, " - continuing")
+  }
 
   resp <- pio_request('/projects/', POST, params)
   resp_parsed <- content(resp, 'parsed')
