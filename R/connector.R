@@ -156,6 +156,6 @@ test_connector <- function(connector_id) {
     message("test of connector ", connector_id, " successful")
     resp$status_code
   } else {
-    stop("failed to test the connector ", connector_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("failed to test the connector ", connector_id, " - ", resp$status_code)
   }
 }

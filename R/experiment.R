@@ -271,7 +271,7 @@ get_model_feature_importance <- function(model_id, mode = "raw") {
     data
   }
   else {
-    stop("can't retrieve feature importance of mode ", mode, " for model ", model_id, " - ", resp$status_code, ":", resp_parsed)
+    stop("can't retrieve feature importance of mode ", mode, " for model ", model_id, " - ", resp$status_code)
   }
 }
 
