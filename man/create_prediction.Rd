@@ -8,8 +8,8 @@ create_prediction(
   experiment_version_id,
   dataset_id = NULL,
   folder_dataset_id = NULL,
-  confidence = F,
-  best_single = F,
+  confidence = FALSE,
+  best_single = FALSE,
   model_id = NULL,
   queries_dataset_id = NULL,
   queries_dataset_content_column = NULL,
@@ -42,7 +42,7 @@ create_prediction(
 \item{top_k}{number of class to retrieve (text-similarity).}
 }
 \value{
-parsed prediction list.
+list - parsed prediction information.
 }
 \description{
 Create a prediction on a specified experiment_version

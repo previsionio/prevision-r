@@ -12,7 +12,7 @@ get_folder_id_from_name(project_id, folder_name)
 \item{folder_name}{name of the folder we are searching its id from. Can be obtained with get_folders().}
 }
 \value{
-id of the folder if found.
+character - id of the folder if found.
 }
 \description{
 Get a folder_id from a folder_name. If duplicated name, the first folder_id that match it is retrieved.

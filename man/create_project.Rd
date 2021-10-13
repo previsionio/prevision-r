@@ -21,6 +21,9 @@ create_project(
 
 \item{check_if_exist}{boolean (FALSE by default). If TRUE, makes extra checks to see if a project with the same name is already existing.}
 }
+\value{
+list - information of the created project.
+}
 \description{
 Create a new project.
 If check_if_exist is enabled, the function will check if a project with the same name already exists. If yes, it will return a message and the information of the existing project instead of creating a new one.

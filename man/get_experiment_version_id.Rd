@@ -12,7 +12,7 @@ get_experiment_version_id(experiment_id, version_number = 1)
 \item{version_number}{number of the version of the experiment. 1 by default}
 }
 \value{
-experiment version id.
+character - experiment version id.
 }
 \description{
 Get a experiment version id from a experiment_id and its version number.

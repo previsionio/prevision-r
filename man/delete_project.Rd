@@ -10,7 +10,7 @@ delete_project(project_id)
 \item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-200 on success
+integer - 204 on success.
 }
 \description{
 Delete an existing project.

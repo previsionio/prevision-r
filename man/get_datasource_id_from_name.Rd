@@ -12,7 +12,7 @@ get_datasource_id_from_name(project_id, datasource_name)
 \item{datasource_name}{name of the datasource we are searching its id from. Can be obtained with get_datasources().}
 }
 \value{
-id of the datasource if found.
+character - id of the datasource if found.
 }
 \description{
 Get a datasource_id from a datasource_name If duplicated name, the first datasource_id that match it is retrieved

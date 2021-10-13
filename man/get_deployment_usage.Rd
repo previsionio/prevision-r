@@ -11,6 +11,9 @@ get_deployment_usage(deployment_id, usage_type)
 
 \item{usage_type}{type of usage to get, among "calls", "errors", "response_time".}
 }
+\value{
+list - plotly object.
+}
 \description{
 Get usage (calls, errors and response time) of the last version of a deployed model.
 }

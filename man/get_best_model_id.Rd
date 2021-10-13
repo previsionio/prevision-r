@@ -12,7 +12,7 @@ get_best_model_id(experiment_version_id, include_blend = TRUE)
 \item{include_blend}{boolean, indicating if you want to retrieve the best model among blended models too.}
 }
 \value{
-model_id.
+character - model_id.
 }
 \description{
 Get the model_id that provide the best predictive performance given experiment_version_id. If include_blend is false, it will return the model_id from the best "non blended" model.

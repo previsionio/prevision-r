@@ -10,7 +10,7 @@ get_dataset_info(dataset_id)
 \item{dataset_id}{id of the dataset, can be obtained with get_datasets().}
 }
 \value{
-parsed content of the dataset.
+list - parsed content of the dataset.
 }
 \description{
 Get a dataset from its id.

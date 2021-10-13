@@ -9,6 +9,9 @@ delete_deployment(deployment_id)
 \arguments{
 \item{deployment_id}{id of the deployment, can be obtained with get_deployments().}
 }
+\value{
+integer - 204 on success.
+}
 \description{
 Delete an existing deployment
 }

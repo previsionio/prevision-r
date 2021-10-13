@@ -10,7 +10,7 @@ get_experiment_version_features(experiment_version_id)
 \item{experiment_version_id}{id of the experiment_version, can be obtained with get_experiment_version_id().}
 }
 \value{
-parsed content of the experiment_version features information.
+list - parsed content of the experiment_version features information.
 }
 \description{
 Get features information related to a experiment_version_id.

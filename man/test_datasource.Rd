@@ -9,6 +9,9 @@ test_datasource(datasource_id)
 \arguments{
 \item{datasource_id}{id of the datasource to be tested, can be obtained with get_datasources().}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Test a datasource
 }

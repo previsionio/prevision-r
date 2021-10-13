@@ -12,7 +12,7 @@ delete_project_user(project_id, user_id)
 \item{user_id}{user_id of the user to be delete, can be obtained with get_project_users().}
 }
 \value{
-200 on success
+integer - 200 on success.
 }
 \description{
 Delete user in and existing project.

@@ -11,6 +11,9 @@ pio_init(token, url)
 
 \item{url}{the url of your instance.}
 }
+\value{
+list - url and token needed for connecting to the Prevision.io environment.
+}
 \description{
 Initialization of the connection to your instance Prevision.io.
 }

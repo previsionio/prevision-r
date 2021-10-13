@@ -36,7 +36,7 @@ create_deployment_model(
 \item{challenger_model_id}{id of the challenger model to deploy (will be removed in 11.3.0+)}
 }
 \value{
-parsed content of the deployment
+list - parsed content of the deployment.
 }
 \description{
 [BETA] Create a new deployment for a model.

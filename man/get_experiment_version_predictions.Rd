@@ -15,7 +15,7 @@ get_experiment_version_predictions(
 \item{generating_type}{can be "user" (= user predictions) or "auto" (= hold out predictions).}
 }
 \value{
-parsed prediction list items.
+list - parsed prediction list items.
 }
 \description{
 Get a list of prediction from a experiment_version_id.

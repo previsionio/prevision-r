@@ -12,7 +12,7 @@ get_exporter_id_from_name(project_id, exporter_name)
 \item{exporter_name}{name of the exporter we are searching its id from. Can be obtained with get_exporters().}
 }
 \value{
-id of the exporter if found.
+character - id of the exporter if found.
 }
 \description{
 Get a exporter_id from a exporter_name. If duplicated name, the first exporter_id that match it is retrieved

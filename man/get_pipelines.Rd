@@ -12,7 +12,7 @@ get_pipelines(project_id, type)
 \item{type}{type of the pipeline to retrieve among "component", "template", or "run".}
 }
 \value{
-parsed content of all pipelines of the given type for the supplied project_id.
+list - parsed content of all pipelines of the given type for the supplied project_id.
 }
 \description{
 Get information of all pipelines of a given type available for a given project_id.

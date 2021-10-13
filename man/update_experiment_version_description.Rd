@@ -11,6 +11,9 @@ update_experiment_version_description(experiment_version_id, description = "")
 
 \item{description}{Description of the experiment.}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Update the description of a given experiment_version_id.
 }

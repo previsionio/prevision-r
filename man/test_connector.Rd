@@ -9,6 +9,9 @@ test_connector(connector_id)
 \arguments{
 \item{connector_id}{id of the connector to be tested, can be obtained with get_connectors().}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Test an existing connector.
 }

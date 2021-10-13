@@ -4,10 +4,10 @@ tabular_dataset <- function(type_problem, n_row = 100, n_features = 5){
     df$TARGET = runif(n_row, min = 0, max = 10)
   }
   else if (type_problem == "classification") {
-    df$TARGET = sample(0:1, n_row, rep=T)
+    df$TARGET = sample(0:1, n_row, rep = TRUE)
   }
   else if (type_problem == "multiclassification") {
-    df$TARGET = sample(0:2, n_row, rep=T)
+    df$TARGET = sample(0:2, n_row, rep = TRUE)
   }
   df
 }

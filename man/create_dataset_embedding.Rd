@@ -9,6 +9,9 @@ create_dataset_embedding(dataset_id)
 \arguments{
 \item{dataset_id}{dataset id.}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Create a dataset embedding from a dataset_id.
 }

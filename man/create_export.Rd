@@ -16,7 +16,7 @@ create_export(exporter_id, type, dataset_id = NULL, prediction_id = NULL)
 \item{prediction_id}{id of the prediction to export (only for type == \"validation_prediction\" or type == \"deployment-prediction\")}
 }
 \value{
-parsed content of the export
+list - parsed content of the export.
 }
 \description{
 Export data using an existing exporter and the resource to export

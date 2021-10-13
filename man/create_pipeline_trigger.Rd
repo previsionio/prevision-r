@@ -9,6 +9,9 @@ create_pipeline_trigger(pipeline_id)
 \arguments{
 \item{pipeline_id}{id of the pipeline run to trigger, can be obtained with get_pipelines().}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 [BETA] Trigger an existing pipeline run.
 }

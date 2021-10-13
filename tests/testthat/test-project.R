@@ -12,11 +12,11 @@ test_that("create_project", {
   expect_is(create_project(name = "PROJECT_TESTU",
                            description = "DESCRIPTION_TESTU",
                            color = "#a748f5",
-                           check_if_exist = F), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
+                           check_if_exist = FALSE), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
   expect_is(create_project(name = "PROJECT_TESTU",
                            description = "DESCRIPTION_TESTU",
                            color = "#a748f5",
-                           check_if_exist = T), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
+                           check_if_exist = TRUE), "list", "create_project() doesn't retrieve a list for PROJECT_TESTU")
 })
 
 test_that("get_projects", {

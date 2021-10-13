@@ -16,7 +16,7 @@ helper_drift_analysis(dataset_1, dataset_2, p_value = 0.05, features = NULL)
 \item{features}{a vector of features names that should be tested. If NULL, only the intersection of the names() will be kept}
 }
 \value{
-a vector of suspicious features
+vector - a vector of suspicious features.
 }
 \description{
 [BETA] Return a data.frame that contains features, a boolean indicating if the feature may have a different distribution between the submitted datasets (if p-value < threshold), their exact p-value and the test used to compute it.

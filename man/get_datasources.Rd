@@ -10,7 +10,7 @@ get_datasources(project_id)
 \item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-parsed content of all data_sources for the suppled project_id.
+list - parsed content of all data_sources for the supplied project_id.
 }
 \description{
 Get information of all data sources available for a given project_id.

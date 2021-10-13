@@ -12,7 +12,7 @@ get_deployments(project_id, type)
 \item{type}{type of the deployment to retrieve among "model" or "app".}
 }
 \value{
-parsed content of all deployments of the given type for the supplied project_id.
+list - parsed content of all deployments of the given type for the supplied project_id.
 }
 \description{
 Get information of all deployments of a given type available for a given project_id.

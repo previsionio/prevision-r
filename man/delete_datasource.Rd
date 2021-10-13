@@ -9,6 +9,9 @@ delete_datasource(datasource_id)
 \arguments{
 \item{datasource_id}{id of the datasource to be deleted, can be obtained with get_datasources().}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Delete a datasource
 }

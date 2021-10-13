@@ -1,7 +1,7 @@
 get_projects <- function() {
   #' Retrieves all projects.
   #'
-  #' @return a project list.
+  #' @return list - list of existing projects.
   #'
   #' @import httr
   #'
@@ -37,7 +37,7 @@ get_project_id_from_name <- function(project_name) {
   #'
   #' @param project_name name of the project we are searching its id from. Can be obtained with get_projects().
   #'
-  #' @return project_id of the project_name if found.
+  #' @return character - project_id of the project_name if found.
   #'
   #' @import httr
   #'
@@ -57,7 +57,7 @@ get_project_info <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return parsed content of the project
+  #' @return list - information of the project.
   #'
   #' @import httr
   #'
@@ -83,11 +83,13 @@ create_project <- function(name, description = NULL, color = "#a748f5", check_if
   #' @param color color of the project among \"#4876be\", \"#4ab6eb\", \"#49cf7d\", \"#dc8218\", \"#ecba35\", \"#f45b69\", \"#a748f5\", \"#b34ca2\" or \"#2fe6d0\" (#a748f5 by default).
   #' @param check_if_exist boolean (FALSE by default). If TRUE, makes extra checks to see if a project with the same name is already existing.
   #'
+  #' @return list - information of the created project.
+  #'
   #' @import httr
   #'
   #' @export
 
-  # CHECK TAHT COLOR MATCH AVAILABLE CHOICES
+  # CHECK THAT COLOR MATCH AVAILABLE CHOICES
   if(!color %in% c("#4876be", "#4ab6eb", "#49cf7d", "#dc8218", "#ecba35", "#f45b69", "#a748f5", "#b34ca2", "#2fe6d0")) {
     stop("color should be either #4876be, #4ab6eb, #49cf7d, #dc8218, #ecba35, #f45b69, #a748f5, #b34ca2 or #2fe6d0")
   }
@@ -126,7 +128,7 @@ delete_project <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return 200 on success
+  #' @return integer - 204 on success.
   #'
   #' @import httr
   #'
@@ -148,7 +150,7 @@ get_project_users <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return parsed content of the project's users
+  #' @return list - information of project's users.
   #'
   #' @import httr
   #'
@@ -170,9 +172,9 @@ create_project_user <- function(project_id, user_mail, user_role) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param user_mail email of the user to be add, can be obtained with get_users().
-  #' @param user_role role to grand to the user among "admin", "contributor" and "viewer"
+  #' @param user_role role to grand to the user among "admin", "contributor" and "viewer".
   #'
-  #' @return list of users in the project
+  #' @return list - information of project's users.
   #'
   #' @import httr
   #'
@@ -200,9 +202,9 @@ update_project_user_role <- function(project_id, user_id, user_role) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param user_id user_id of the user to be delete, can be obtained with get_project_users().
-  #' @param user_role role to grand to the user among "admin", "contributor" and "viewer"
+  #' @param user_role role to grand to the user among "admin", "contributor" and "viewer".
   #'
-  #' @return list of users in the project
+  #' @return list - information of project's users.
   #'
   #' @import httr
   #'
@@ -231,7 +233,7 @@ delete_project_user <- function(project_id, user_id) {
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param user_id user_id of the user to be delete, can be obtained with get_project_users().
   #'
-  #' @return 200 on success
+  #' @return integer - 200 on success.
   #'
   #' @import httr
   #'

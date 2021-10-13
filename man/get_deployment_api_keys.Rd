@@ -9,6 +9,9 @@ get_deployment_api_keys(deployment_id)
 \arguments{
 \item{deployment_id}{id of the deployment to get API keys, can be obtained with get_deployments().}
 }
+\value{
+data.frame - API keys available for deployment_id.
+}
 \description{
 Get API keys for a deployed model.
 }

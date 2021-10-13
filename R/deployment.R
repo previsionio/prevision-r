@@ -3,6 +3,8 @@ test_deployment_type <- function(type) {
   #'
   #' @param type type of the deployment among "model" or "app".
   #'
+  #' @return no return value, called for side effects.
+  #'
   #' @import httr
   #'
   #' @export
@@ -18,7 +20,7 @@ get_deployments <- function(project_id, type) {
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param type type of the deployment to retrieve among "model" or "app".
   #'
-  #' @return parsed content of all deployments of the given type for the supplied project_id.
+  #' @return list - parsed content of all deployments of the given type for the supplied project_id.
   #'
   #' @import httr
   #'
@@ -57,7 +59,7 @@ get_deployment_info <- function(deployment_id) {
   #'
   #' @param deployment_id id of the deployment to be retrieved, can be obtained with get_deployments().
   #'
-  #' @return parsed content of the deployment
+  #' @return list - parsed content of the deployment.
   #'
   #' @import httr
   #'
@@ -81,7 +83,7 @@ get_deployment_id_from_name <- function(project_id, name, type) {
   #' @param name name of the deployment we are searching its id from.
   #' @param type type of the deployment to be retrieved among "model" or "app".
   #'
-  #' @return id of the connector if found.
+  #' @return character - id of the connector if found.
   #'
   #' @import httr
   #'
@@ -109,7 +111,7 @@ create_deployment_model <- function(project_id, name, experiment_id, main_model_
   #' @param main_model_id id of the model to deploy (will be removed in 11.3.0+)
   #' @param challenger_model_id id of the challenger model to deploy (will be removed in 11.3.0+)
   #'
-  #' @return parsed content of the deployment
+  #' @return list - parsed content of the deployment.
   #'
   #' @import httr
   #'
@@ -154,7 +156,7 @@ create_deployment_app <- function(project_id, name, git_url, git_branch, type, b
   #' @param access_type type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).
   #' @param description description of the deployment (optional).
   #'
-  #' @return parsed content of the deployment
+  #' @return list - parsed content of the deployment.
   #'
   #' @import httr
   #'
@@ -189,6 +191,8 @@ delete_deployment <- function(deployment_id) {
   #'
   #' @param deployment_id id of the deployment, can be obtained with get_deployments().
   #'
+  #' @return integer - 204 on success.
+  #'
   #' @import httr
   #'
   #' @export
@@ -210,6 +214,8 @@ get_deployment_app_logs <- function(deployment_id, log_type) {
   #'
   #' @param deployment_id id of the deployment to get the log, can be obtained with get_deployments().
   #' @param log_type type of logs we want to get among "build", "deploy" or "run".
+  #'
+  #' @return list - logs from deployed apps.
   #'
   #' @import httr
   #' @import XML
@@ -239,6 +245,8 @@ get_deployment_api_keys <- function(deployment_id) {
   #'
   #' @param deployment_id id of the deployment to get API keys, can be obtained with get_deployments().
   #'
+  #' @return data.frame - API keys available for deployment_id.
+  #'
   #' @import httr
   #'
   #' @export
@@ -258,6 +266,8 @@ create_deployment_api_key <- function(deployment_id) {
   #' Create a new API key for a deployed model.
   #'
   #' @param deployment_id id of the deployment to create an API key on, can be obtained with get_deployments().
+  #'
+  #' @return list - API key information.
   #'
   #' @import httr
   #'
@@ -279,6 +289,8 @@ get_deployment_predictions <- function(deployment_id) {
   #' Get listing of predictions related to a deployment_id.
   #'
   #' @param deployment_id id of the deployment, can be obtained with get_deployments().
+  #'
+  #' @return list - predictions available for a deployed model.
   #'
   #' @import httr
   #'
@@ -314,6 +326,8 @@ get_deployment_prediction_info <- function(prediction_id) {
   #'
   #' @param prediction_id id of the prediction returned by create_deployment_predictions or that can be obtained with get_deployment_predictions().
   #'
+  #' @return list - prediction information for a deployed model.
+  #'
   #' @import httr
   #'
   #' @export
@@ -334,6 +348,8 @@ create_deployment_predictions <- function(deployment_id, dataset_id) {
   #'
   #' @param deployment_id id of the deployment, can be obtained with get_deployments().
   #' @param dataset_id id of the dataset to predict, can be obtained with get_dataset_id_from_name().
+  #'
+  #' @return integer - 200 on success.
   #'
   #' @import httr
   #'
@@ -358,6 +374,8 @@ get_deployment_usage <- function(deployment_id, usage_type) {
   #'
   #' @param deployment_id id of the deployment to get usage, can be obtained with get_deployments().
   #' @param usage_type type of usage to get, among "calls", "errors", "response_time".
+  #'
+  #' @return list - plotly object.
   #'
   #' @import httr
   #' @importFrom magrittr %>%

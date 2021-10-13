@@ -14,7 +14,7 @@ get_pipeline_id_from_name(project_id, name, type)
 \item{type}{type of the pipeline to be retrieved among "component", "template", "run".}
 }
 \value{
-id of the connector if found.
+character - id of the connector if found.
 }
 \description{
 Get a pipeline_id from a pipeline_name and type for a given project_id. If duplicated name, the first pipeline_id that match it is retrieved.

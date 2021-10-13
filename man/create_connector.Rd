@@ -2,7 +2,8 @@
 % Please edit documentation in R/connector.R
 \name{create_connector}
 \alias{create_connector}
-\title{Create a new connector of a supported type (among: "SQL", "FTP", "SFTP", "S3", "GCP").}
+\title{Create a new connector of a supported type (among: "SQL", "FTP", "SFTP", "S3", "GCP").
+If check_if_exist is enabled, the function will check if a connector with the same name already exists. If yes, it will return a message and the information of the existing connector instead of creating a new one.}
 \usage{
 create_connector(
   project_id,
@@ -12,7 +13,8 @@ create_connector(
   port,
   username,
   password,
-  google_credentials = NULL
+  google_credentials = NULL,
+  check_if_exist = FALSE
 )
 }
 \arguments{
@@ -31,10 +33,13 @@ create_connector(
 \item{password}{connector password.}
 
 \item{google_credentials}{google credentials JSON (for GCP only).}
+
+\item{check_if_exist}{boolean (FALSE by default). If TRUE, makes extra checks to see if a connector with the same name is already existing.}
 }
 \value{
-parsed content of the connector.
+list - parsed content of the connector.
 }
 \description{
 Create a new connector of a supported type (among: "SQL", "FTP", "SFTP", "S3", "GCP").
+If check_if_exist is enabled, the function will check if a connector with the same name already exists. If yes, it will return a message and the information of the existing connector instead of creating a new one.
 }

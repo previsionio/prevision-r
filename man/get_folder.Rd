@@ -10,7 +10,7 @@ get_folder(folder_id)
 \item{folder_id}{id of the image folder, can be obtained with get_folders().}
 }
 \value{
-parsed content of the folder.
+list - parsed content of the folder.
 }
 \description{
 Get a folder from its id.

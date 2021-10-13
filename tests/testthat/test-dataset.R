@@ -32,12 +32,12 @@ test_that("create_dataset_from_dataframe", {
   expect_is(create_dataset_from_dataframe(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                           dataset_name = "DATASET_TESTU",
                                           dataframe = tabular_dataset(type_problem = "regression", n_row = n_row, n_features = n_features),
-                                          zip = F), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU if not zipped")
+                                          zip = FALSE), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU if not zipped")
 
   expect_is(create_dataset_from_dataframe(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                           dataset_name = "DATASET_TESTU_ZIPPED",
                                           dataframe = tabular_dataset(type_problem = "regression", n_row = n_row, n_features = n_features),
-                                          zip = T), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_ZIPPED if zipped")
+                                          zip = TRUE), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_ZIPPED if zipped")
 
   expect_is(create_dataset_from_dataframe(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                           dataset_name = "DATASET_TESTU_REGRESSION",
@@ -58,22 +58,22 @@ test_that("create_dataset_from_dataframe", {
   expect_is(create_dataset_from_dataframe(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                           dataset_name = "DATASET_TESTU_IMG",
                                           dataframe = fread(paste0(wd, "/tests/testthat/data/img.csv")),
-                                          zip = T), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_IMG")
+                                          zip = TRUE), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_IMG")
 
   expect_is(create_dataset_from_dataframe(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                           dataset_name = "DATASET_TESTU_TEXTSIM_ITEMS",
                                           dataframe = fread(paste0(wd, "/tests/testthat/data/txt_sim_items.csv")),
-                                          zip = T), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_TEXTSIM_ITEMS")
+                                          zip = TRUE), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_TEXTSIM_ITEMS")
 
   expect_is(create_dataset_from_dataframe(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                           dataset_name = "DATASET_TESTU_TEXTSIM_QUERIES",
                                           dataframe = fread(paste0(wd, "/tests/testthat/data/txt_sim_queries.csv")),
-                                          zip = T), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_TEXTSIM_QUERIES")
+                                          zip = TRUE), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_TEXTSIM_QUERIES")
 
   expect_is(create_dataset_from_dataframe(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                           dataset_name = "DATASET_TESTU_IMG",
                                           dataframe = fread(paste0(wd, "/tests/testthat/data/img.csv")),
-                                          zip = T), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_IMG")
+                                          zip = TRUE), "list", "create_dataset_from_dataframe() doesn't retrieve a list for DATASET_TESTU_IMG")
 })
 
 test_that("create_dataset_from_datasource", {

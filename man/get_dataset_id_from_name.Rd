@@ -12,7 +12,7 @@ get_dataset_id_from_name(project_id, dataset_name)
 \item{dataset_name}{name of the dataset we are searching its id from. Can be obtained with get_datasets().}
 }
 \value{
-id of the dataset if found.
+character - id of the dataset if found.
 }
 \description{
 Get a dataset_id from a dataset_name. If duplicated name, the first dataset_id that match it is retrieved.

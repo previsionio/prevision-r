@@ -46,6 +46,16 @@ test_that("create_connector", {
                              username = "",
                              password = "",
                              google_credentials = GCP_CREDENTIALS), "list", "create_connector() doesn't retrieve a list for GCP type")
+
+  expect_is(create_connector(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                             type = "GCP",
+                             name = "GCP_CONNECTOR_TESTU",
+                             host = "",
+                             port = "",
+                             username = "",
+                             password = "",
+                             google_credentials = GCP_CREDENTIALS,
+                             check_if_exist = TRUE), "list", "create_connector() doesn't retrieve a list for an existing GCP type with check enabled")
 })
 
 test_that("get_connectors", {

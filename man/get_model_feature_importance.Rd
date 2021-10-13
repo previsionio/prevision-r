@@ -12,7 +12,7 @@ get_model_feature_importance(model_id, mode = "raw")
 \item{mode}{character indicating the type of feature importance among "raw" (default) or "engineered".}
 }
 \value{
-dataset of the model's feature importance.
+data.frame - dataset of the model's feature importance.
 }
 \description{
 Get feature importance corresponding to a model_id.

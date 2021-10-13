@@ -42,7 +42,7 @@ create_pipeline(
 \item{pipeline_parameters}{list of parameters for the run.}
 }
 \value{
-parsed content of the pipeline
+list - parsed content of the pipeline.
 }
 \description{
 [BETA] Create a new connector of a supported type among "component", "template", "run".

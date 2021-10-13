@@ -12,7 +12,7 @@ get_experiment_id_from_name(project_id, experiment_name)
 \item{experiment_name}{name of the experiment we are searching its id from. Can be obtained with get_experiments().}
 }
 \value{
-experiment_id of the experiment_name if found.
+character - id matching the experiment_name if found.
 }
 \description{
 Get a experiment_id from a experiment_name If duplicated name, the first experiment_id that match it is retrieved.

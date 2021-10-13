@@ -9,6 +9,9 @@ delete_connector(connector_id)
 \arguments{
 \item{connector_id}{id of the connector to be deleted, can be obtained with get_connectors().}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Delete an existing connector.
 }

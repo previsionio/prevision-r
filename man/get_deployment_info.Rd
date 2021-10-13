@@ -10,7 +10,7 @@ get_deployment_info(deployment_id)
 \item{deployment_id}{id of the deployment to be retrieved, can be obtained with get_deployments().}
 }
 \value{
-parsed content of the deployment
+list - parsed content of the deployment.
 }
 \description{
 Get information about a deployment from its id.

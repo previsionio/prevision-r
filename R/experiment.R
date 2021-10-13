@@ -3,7 +3,7 @@ get_experiments <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return parsed content of all experiments for the suppled project_id.
+  #' @return list - parsed content of all experiments for the supplied project_id.
   #'
   #' @import httr
   #'
@@ -40,7 +40,7 @@ get_experiment_id_from_name <- function(project_id, experiment_name) {
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param experiment_name name of the experiment we are searching its id from. Can be obtained with get_experiments().
   #'
-  #' @return experiment_id of the experiment_name if found.
+  #' @return character - id matching the experiment_name if found.
   #'
   #' @import httr
   #'
@@ -60,7 +60,7 @@ get_experiment_info <- function(experiment_id) {
   #'
   #' @param experiment_id id of the experiment, can be obtained with get_experiments().
   #'
-  #' @return parsed content of the experiment.
+  #' @return list - parsed content of the experiment.
   #'
   #' @import httr
   #'
@@ -82,7 +82,7 @@ get_experiment_version_info <- function(experiment_version_id) {
   #'
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
-  #' @return parsed content of the experiment_version.
+  #' @return list - parsed content of the experiment_version.
   #'
   #' @import httr
   #'
@@ -105,7 +105,7 @@ get_experiment_version_id <- function(experiment_id, version_number = 1) {
   #' @param experiment_id id of the experiment, can be obtained with get_experiments().
   #' @param version_number number of the version of the experiment. 1 by default
   #'
-  #' @return experiment version id.
+  #' @return character - experiment version id.
   #'
   #' @import httr
   #'
@@ -132,7 +132,7 @@ get_experiment_version_features <- function(experiment_version_id) {
   #'
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
-  #' @return parsed content of the experiment_version features information.
+  #' @return list - parsed content of the experiment_version features information.
   #'
   #' @import httr
   #'
@@ -155,7 +155,7 @@ get_features_infos <- function(experiment_version_id, feature_name) {
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #' @param feature_name name of the feature to retrive information.
   #'
-  #' @return parsed content of the specific feature.
+  #' @return list - parsed content of the specific feature.
   #'
   #' @import httr
   #'
@@ -177,7 +177,7 @@ get_experiment_version_models <- function(experiment_version_id) {
   #'
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
-  #' @return parsed content of models attached to experiment_version_id.
+  #' @return list - parsed content of models attached to experiment_version_id.
   #'
   #' @import httr
   #'
@@ -199,7 +199,7 @@ get_model_infos <- function(model_id) {
   #'
   #' @param model_id id of the model, can be obtained with get_experiment_models().
   #'
-  #' @return parsed content of the model.
+  #' @return list - parsed content of the model.
   #'
   #' @import httr
   #'
@@ -221,7 +221,7 @@ get_model_hyperparameters <- function(model_id) {
   #'
   #' @param model_id id of the model, can be obtained with experimentModels(experiment_id).
   #'
-  #' @return parsed content of the model's hyperparameters.
+  #' @return list - parsed content of the model's hyperparameters.
   #'
   #' @import httr
   #'
@@ -244,7 +244,7 @@ get_model_feature_importance <- function(model_id, mode = "raw") {
   #' @param model_id id of the model, can be obtained with get_experiment_models().
   #' @param mode character indicating the type of feature importance among "raw" (default) or "engineered".
   #'
-  #' @return dataset of the model's feature importance.
+  #' @return data.frame - dataset of the model's feature importance.
   #'
   #' @import httr
   #' @import data.table
@@ -281,7 +281,7 @@ get_experiment_version_predictions <- function(experiment_version_id, generating
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #' @param generating_type can be "user" (= user predictions) or "auto" (= hold out predictions).
   #'
-  #' @return parsed prediction list items.
+  #' @return list - parsed prediction list items.
   #'
   #' @import httr
   #'
@@ -321,7 +321,7 @@ get_experiment_version_predictions <- function(experiment_version_id, generating
   predictions
 }
 
-create_prediction <- function(experiment_version_id, dataset_id = NULL, folder_dataset_id = NULL, confidence = F, best_single = F, model_id = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL) {
+create_prediction <- function(experiment_version_id, dataset_id = NULL, folder_dataset_id = NULL, confidence = FALSE, best_single = FALSE, model_id = NULL, queries_dataset_id = NULL, queries_dataset_content_column = NULL, queries_dataset_id_column = NULL, queries_dataset_matching_id_description_column = NULL, top_k = NULL) {
   #' Create a prediction on a specified experiment_version
   #'
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
@@ -336,7 +336,7 @@ create_prediction <- function(experiment_version_id, dataset_id = NULL, folder_d
   #' @param queries_dataset_matching_id_description_column name of the column matching the id (text-similarity).
   #' @param top_k number of class to retrieve (text-similarity).
   #'
-  #' @return parsed prediction list.
+  #' @return list - parsed prediction information.
   #'
   #' @import httr
   #'
@@ -380,7 +380,7 @@ get_prediction_infos <- function(prediction_id) {
   #'
   #' @param prediction_id id of the prediction to be retrieved, can be obtained with get_experiment_version_predictions().
   #'
-  #' @return list of prediction information.
+  #' @return list - parsed prediction information.
   #'
   #' @import httr
   #'
@@ -404,7 +404,7 @@ get_prediction <- function(prediction_id, prediction_type, time_out = 3600, wait
   #' @param time_out maximum number of seconds to wait for the prediction. 3 600 by default.
   #' @param wait_time number of seconds to wait between each retry. 10 by default.
   #'
-  #' @return a data.frame with the predictions.
+  #' @return data.frame - predictions coming from prediction_id.
   #'
   #' @import httr
   #' @import data.table
@@ -446,7 +446,9 @@ get_prediction <- function(prediction_id, prediction_type, time_out = 3600, wait
 delete_prediction <- function(prediction_id) {
   #' Delete a prediction.
   #'
-  #' @param prediction_id id of the prediction to be deleted, can be obtained with get_experiment_version_predictions()
+  #' @param prediction_id id of the prediction to be deleted, can be obtained with get_experiment_version_predictions().
+  #'
+  #' @return integer - 204 on success.
   #'
   #' @import httr
   #'
@@ -465,18 +467,20 @@ delete_prediction <- function(prediction_id) {
   return(resp$status_code)
 }
 
-create_experiment <- function(project_id, name, provider, data_type, training_type) {
-  #' Create a new experiment on the platform.
+create_experiment <- function(project_id, name, provider, data_type, training_type, check_if_exist = FALSE) {
+  #' Create a new experiment.
+  #' If check_if_exist is enabled, the function will check if an experiment with the same name already exists. If yes, it will return a message and the information of the existing experiment instead of creating a new one.
   #'
   #' @param project_id id of the project in which we create the experiment.
   #' @param name name of the experiment.
   #' @param provider provider of the experiment ("prevision-auto-ml" or "external")
   #' @param data_type type of data ("tabular", "images" or "timeseries").
   #' @param training_type type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection" or "text-similarity").
+  #' @param check_if_exist boolean (FALSE by default). If TRUE, makes extra checks to see if an experiment with the same name is already existing.
+  #'
+  #' @return list - experiment information.
   #'
   #' @import httr
-  #'
-  #' @return experiment information.
   #'
   #' @export
 
@@ -497,6 +501,18 @@ create_experiment <- function(project_id, name, provider, data_type, training_ty
                 training_type = training_type)
 
   params <- params[!sapply(params, is.null)]
+
+  # DOUBLE CHECK ALREADY EXISTING EXPERIMENTS
+  if(check_if_exist) {
+    experiments = get_experiments(project_id)
+    for(experiment in experiments) {
+      if(experiment$name == name) {
+        message("a experiment named ", name, " already exists - aborting experiment creation")
+        return (get_experiment_info(experiment$`_id`))
+      }
+    }
+    message("there is no experiment named ", name, " - continuing")
+  }
 
   resp <- pio_request(paste0('/projects/', project_id, '/experiments/'), POST, params)
   resp_parsed <- content(resp, 'parsed')
@@ -555,9 +571,9 @@ create_experiment_version <- function(experiment_id, dataset_id = NULL, target_c
   #' @param onnx_file path to the onnx file (external model).
   #' @param yaml_file path to the yaml file (external model).
   #'
-  #' @import httr
+  #' @return list - experiment information.
   #'
-  #' @return experiment information.
+  #' @import httr
   #'
   #' @export
 
@@ -645,6 +661,8 @@ update_experiment_version_description <- function(experiment_version_id, descrip
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #' @param description Description of the experiment.
   #'
+  #' @return integer - 200 on success.
+  #'
   #' @import httr
   #'
   #' @export
@@ -667,6 +685,8 @@ delete_experiment <- function(experiment_id) {
   #'
   #' @param experiment_id id of the experiment, can be obtained with get_experiments().
   #'
+  #' @return integer - 204 on success.
+  #'
   #' @import httr
   #'
   #' @export
@@ -686,6 +706,8 @@ pause_experiment_version <- function(experiment_version_id) {
   #' Pause a running experiment_version on the platform.
   #'
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
+  #'
+  #' @return integer - 200 on success.
   #'
   #' @import httr
   #'
@@ -707,6 +729,8 @@ resume_experiment_version <- function(experiment_version_id) {
   #'
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #'
+  #' @return integer - 200 on success.
+  #'
   #' @import httr
   #'
   #' @export
@@ -726,6 +750,8 @@ stop_experiment_version <- function(experiment_version_id) {
   #' Stop a running or paused experiment_version on the platform.
   #'
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
+  #'
+  #' @return integer - 200 on success.
   #'
   #' @import httr
   #'
@@ -747,7 +773,7 @@ get_model_cv <- function(model_id) {
   #'
   #' @param model_id id of the model to get the CV, can be obtained with get_experiment_version_models().
   #'
-  #' @return a dataframe containing cross validation data.
+  #' @return data.frame - cross validation data coming from model_id.
   #'
   #' @import httr
   #' @import data.table
@@ -773,7 +799,7 @@ get_best_model_id <- function(experiment_version_id, include_blend = TRUE) {
   #' @param experiment_version_id id of the experiment_version, can be obtained with get_experiment_version_id().
   #' @param include_blend boolean, indicating if you want to retrieve the best model among blended models too.
   #'
-  #' @return model_id.
+  #' @return character - model_id.
   #'
   #' @import httr
   #'
