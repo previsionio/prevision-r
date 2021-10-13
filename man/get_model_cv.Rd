@@ -10,7 +10,7 @@ get_model_cv(model_id)
 \item{model_id}{id of the model to get the CV, can be obtained with get_experiment_version_models().}
 }
 \value{
-a dataframe containing cross validation data.
+data.frame - cross validation data coming from model_id.
 }
 \description{
 Get the cross validation file from a specific model.

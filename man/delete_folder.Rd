@@ -9,6 +9,9 @@ delete_folder(folder_id)
 \arguments{
 \item{folder_id}{id of the folder to be deleted.}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Delete an existing folder.
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/datasource.R
 \name{create_datasource}
 \alias{create_datasource}
-\title{Create a new datasource}
+\title{Create a new datasource
+If check_if_exist is enabled, the function will check if a datasource with the same name already exists. If yes, it will return a message and the information of the existing datasource instead of creating a new one.}
 \usage{
 create_datasource(
   project_id,
@@ -12,7 +13,8 @@ create_datasource(
   database = "",
   table = "",
   bucket = "",
-  request = ""
+  request = "",
+  check_if_exist = FALSE
 )
 }
 \arguments{
@@ -31,10 +33,13 @@ create_datasource(
 \item{bucket}{datasource bucket (for S3 connector).}
 
 \item{request}{datasource request (for SQLconnector).}
+
+\item{check_if_exist}{boolean (FALSE by default). If TRUE, makes extra checks to see if a datasource with the same name is already existing.}
 }
 \value{
-parsed content of the datasource
+list - parsed content of the datasource.
 }
 \description{
 Create a new datasource
+If check_if_exist is enabled, the function will check if a datasource with the same name already exists. If yes, it will return a message and the information of the existing datasource instead of creating a new one.
 }

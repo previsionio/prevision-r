@@ -16,7 +16,7 @@ helper_plot_classif_analysis(actual, predicted, top, compute_every_n = 1)
 \item{compute_every_n}{compute indicators every n individuals (1 by default)}
 }
 \value{
-data.frame with metrics computed on the CV
+data.frame - metrics computed between actual and predicted vectors.
 }
 \description{
 Plot RECALL, PRECISION & F1 SCORE versus top n predictions for a binary classification use case

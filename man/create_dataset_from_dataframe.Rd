@@ -4,7 +4,7 @@
 \alias{create_dataset_from_dataframe}
 \title{Upload dataset from data frame.}
 \usage{
-create_dataset_from_dataframe(project_id, dataset_name, dataframe, zip = F)
+create_dataset_from_dataframe(project_id, dataset_name, dataframe, zip = FALSE)
 }
 \arguments{
 \item{project_id}{id of the project, can be obtained with get_projects().}
@@ -13,10 +13,10 @@ create_dataset_from_dataframe(project_id, dataset_name, dataframe, zip = F)
 
 \item{dataframe}{data.frame to upload.}
 
-\item{zip}{is the temp file zipped before sending it to Prevision.io (default = F).}
+\item{zip}{is the temp file zipped before sending it to Prevision.io (default = FALSE).}
 }
 \value{
-parsed content of the dataset.
+list - parsed content of the dataset.
 }
 \description{
 Upload dataset from data frame.

@@ -12,7 +12,7 @@ get_features_infos(experiment_version_id, feature_name)
 \item{feature_name}{name of the feature to retrive information.}
 }
 \value{
-parsed content of the specific feature.
+list - parsed content of the specific feature.
 }
 \description{
 Get information of a given feature related to a experiment_version_id.

@@ -9,6 +9,9 @@ create_deployment_api_key(deployment_id)
 \arguments{
 \item{deployment_id}{id of the deployment to create an API key on, can be obtained with get_deployments().}
 }
+\value{
+list - API key information.
+}
 \description{
 Create a new API key for a deployed model.
 }

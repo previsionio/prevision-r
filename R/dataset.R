@@ -3,7 +3,7 @@ get_datasets <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return parsed content of all datasets for the suppled project_id.
+  #' @return list - parsed content of all datasets for the suppled project_id.
   #'
   #' @import httr
   #'
@@ -40,7 +40,7 @@ get_dataset_id_from_name <- function(project_id, dataset_name) {
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param dataset_name name of the dataset we are searching its id from. Can be obtained with get_datasets().
   #'
-  #' @return id of the dataset if found.
+  #' @return character - id of the dataset if found.
   #'
   #' @import httr
   #'
@@ -60,7 +60,7 @@ get_dataset_info <- function(dataset_id) {
   #'
   #' @param dataset_id id of the dataset, can be obtained with get_datasets().
   #'
-  #' @return parsed content of the dataset.
+  #' @return list - parsed content of the dataset.
   #'
   #' @import httr
   #'
@@ -89,7 +89,7 @@ get_dataset_head <- function(dataset_id) {
   #'
   #' @param dataset_id id of the dataset, can be obtained with get_datasets().
   #'
-  #' @return head of the dataset as a data.frame object.
+  #' @return data.frame - head of the dataset.
   #'
   #' @import httr
   #'
@@ -119,6 +119,8 @@ delete_dataset <- function(dataset_id) {
   #'
   #' @param dataset_id id of the dataset, can be obtained with get_datasets().
   #'
+  #' @return integer - 204 on success.
+  #'
   #' @import httr
   #'
   #' @export
@@ -143,7 +145,7 @@ create_dataset_from_file <- function(project_id, dataset_name, file, separator =
   #' @param separator column separator in the file (default: ",")
   #' @param decimal decimal separator in the file (default: ".")
   #'
-  #' @return parsed content of the dataset.
+  #' @return list - parsed content of the dataset.
   #'
   #' @import httr
   #'
@@ -155,22 +157,22 @@ create_dataset_from_file <- function(project_id, dataset_name, file, separator =
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("dataset ", dataset_name, "created")
+    message("dataset ", dataset_name, " created")
     get_dataset_info(resp_parsed$`_id`)
   } else {
     stop("failed to create dataset ", dataset_name, " - ", resp_parsed$status, ":", resp_parsed$message)
   }
 }
 
-create_dataset_from_dataframe <- function(project_id, dataset_name, dataframe, zip = F) {
+create_dataset_from_dataframe <- function(project_id, dataset_name, dataframe, zip = FALSE) {
   #' Upload dataset from data frame.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param dataset_name given name of the dataset on the platform.
   #' @param dataframe data.frame to upload.
-  #' @param zip is the temp file zipped before sending it to Prevision.io (default = F).
+  #' @param zip is the temp file zipped before sending it to Prevision.io (default = FALSE).
   #'
-  #' @return parsed content of the dataset.
+  #' @return list - parsed content of the dataset.
   #'
   #' @import data.table
   #'
@@ -205,7 +207,7 @@ create_dataset_from_datasource <- function(project_id, dataset_name, datasource_
   #'
   #' @import httr
   #'
-  #' @return parsed content of the dataset.
+  #' @return list - parsed content of the dataset.
   #'
   #' @export
 
@@ -215,7 +217,7 @@ create_dataset_from_datasource <- function(project_id, dataset_name, datasource_
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("dataset ", dataset_name, "created")
+    message("dataset ", dataset_name, " created")
     get_dataset_info(resp_parsed$`_id`)
   } else {
     stop("failed to create dataset ", dataset_name, " - ", resp_parsed$status, ":", resp_parsed$message)
@@ -229,7 +231,7 @@ create_dataframe_from_dataset <- function(dataset_id, path = getwd(), is_folder 
   #' @param path path (without / at the end) were to write the downloaded dataset.
   #' @param is_folder TRUE if it's a folder dataset, FALSE (by default) otherwise.
   #'
-  #' @return a R dataframe.
+  #' @return data.frame - a R dataframe matching the dataset.
   #'
   #' @import httr
   #' @import data.table
@@ -255,10 +257,10 @@ create_dataframe_from_dataset <- function(dataset_id, path = getwd(), is_folder 
     stop("failed to create datafram from dataset ", dataset_id, " - ", complete_path)
   }
 
-  unzip(path, overwrite = T, exdir = dataset_id)
+  unzip(path, overwrite = TRUE, exdir = dataset_id)
   unlink(path)
   data <- fread(paste0(dataset_id, "/", list.files(dataset_id)))
-  unlink(paste0(dataset_id), recursive = T)
+  unlink(paste0(dataset_id), recursive = TRUE)
   data
 }
 
@@ -266,6 +268,8 @@ create_dataset_embedding <- function(dataset_id) {
   #' Create a dataset embedding from a dataset_id.
   #'
   #' @param dataset_id dataset id.
+  #'
+  #' @return integer - 200 on success.
   #'
   #' @import httr
   #'
@@ -287,6 +291,8 @@ get_dataset_embedding <- function(dataset_id) {
   #'
   #' @param dataset_id dataset id.
   #'
+  #' @return integer - 200 on success.
+  #'
   #' @import httr
   #'
   #' @import data.table
@@ -302,7 +308,7 @@ get_dataset_embedding <- function(dataset_id) {
     tensor_shape = resp_parsed[["embeddings"]][[1]][["tensorShape"]]
 
     resp_tensors = pio_request(paste0('/datasets/', dataset_id, "/explorer/tensors.bytes"), GET)
-    tensors = data.table(matrix(readBin(resp_tensors$content, "numeric", n = tensor_shape[[1]] * tensor_shape[[2]], size = 4), nrow = tensor_shape[[1]], ncol = tensor_shape[[2]], byrow = T))
+    tensors = data.table(matrix(readBin(resp_tensors$content, "numeric", n = tensor_shape[[1]] * tensor_shape[[2]], size = 4), nrow = tensor_shape[[1]], ncol = tensor_shape[[2]], byrow = TRUE))
     tensors
   }
   else {

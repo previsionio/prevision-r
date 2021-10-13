@@ -12,7 +12,7 @@ helper_optimal_prediction(
   actionable_features,
   nb_sample,
   maximize,
-  zip = F,
+  zip = FALSE,
   version = 1
 )
 }
@@ -36,7 +36,7 @@ helper_optimal_prediction(
 \item{version}{version of the use case we want to make the prediction on.}
 }
 \value{
-row data.frame with the optimal vector and the prediction associated with for each rows in the original data frame.
+data.frame - optimal vector and the prediction associated with for each rows in the original data frame.
 }
 \description{
 [BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested.

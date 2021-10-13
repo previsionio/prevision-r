@@ -7,7 +7,7 @@
 get_projects()
 }
 \value{
-a project list.
+list - list of existing projects.
 }
 \description{
 Retrieves all projects.

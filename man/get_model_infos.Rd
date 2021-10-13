@@ -10,7 +10,7 @@ get_model_infos(model_id)
 \item{model_id}{id of the model, can be obtained with get_experiment_models().}
 }
 \value{
-parsed content of the model.
+list - parsed content of the model.
 }
 \description{
 Get model information corresponding to a model_id.

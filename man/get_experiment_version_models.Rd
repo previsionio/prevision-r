@@ -10,7 +10,7 @@ get_experiment_version_models(experiment_version_id)
 \item{experiment_version_id}{id of the experiment_version, can be obtained with get_experiment_version_id().}
 }
 \value{
-parsed content of models attached to experiment_version_id.
+list - parsed content of models attached to experiment_version_id.
 }
 \description{
 Get a model list related to a experiment_version_id.

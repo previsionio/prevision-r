@@ -10,7 +10,7 @@ get_model_hyperparameters(model_id)
 \item{model_id}{id of the model, can be obtained with experimentModels(experiment_id).}
 }
 \value{
-parsed content of the model's hyperparameters.
+list - parsed content of the model's hyperparameters.
 }
 \description{
 Get hyperparameters corresponding to a model_id.

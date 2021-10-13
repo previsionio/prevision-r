@@ -3,7 +3,7 @@ get_exporters <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return parsed content of all exporters for the suppled project_id.
+  #' @return list - parsed content of all exporters for the supplied project_id.
   #'
   #' @import httr
   #'
@@ -39,7 +39,7 @@ get_exporter_info <- function(exporter_id) {
   #'
   #' @param exporter_id id of the exporter to be retrieved, can be obtained with get_exporters().
   #'
-  #' @return parsed content of the exporter
+  #' @return list - parsed content of the exporter.
   #'
   #' @import httr
   #'
@@ -62,7 +62,7 @@ get_exporter_id_from_name <- function(project_id, exporter_name) {
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param exporter_name name of the exporter we are searching its id from. Can be obtained with get_exporters().
   #'
-  #' @return id of the exporter if found.
+  #' @return character - id of the exporter if found.
   #'
   #' @import httr
   #'
@@ -91,7 +91,7 @@ create_exporter <- function(project_id, connector_id, name, description = "", fi
   #' @param database_write_mode writing type when exporting data within a database (for SQL connector, among \"append\" or \"replace\").
   #' @param bucket exporter bucket (for S3 connector).
   #'
-  #' @return parsed content of the exporter
+  #' @return list - parsed content of the exporter.
   #'
   #' @import httr
   #'
@@ -134,6 +134,8 @@ delete_exporter <- function(exporter_id) {
   #'
   #' @param exporter_id id of the exporter to be deleted, can be obtained with get_exporters().
   #'
+  #' @return integer - 204 on success.
+  #'
   #' @import httr
   #'
   #' @export
@@ -153,6 +155,8 @@ get_exporter_exports <- function(exporter_id) {
   #' Get all exports done from an exporter_id
   #'
   #' @param exporter_id id of the exporter to retrieve information, can be obtained with get_exporters().
+  #'
+  #' @return list - list of exports of the supplied exporter_id.
   #'
   #' @import httr
   #'
@@ -176,7 +180,7 @@ create_export <- function(exporter_id, type, dataset_id = NULL, prediction_id = 
   #' @param dataset_id id of the dataset to export (only for type == \"dataset\")
   #' @param prediction_id id of the prediction to export (only for type == \"validation_prediction\" or type == \"deployment-prediction\")
   #'
-  #' @return parsed content of the export
+  #' @return list - parsed content of the export.
   #'
   #' @import httr
   #'

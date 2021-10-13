@@ -77,6 +77,13 @@ test_that("create_experiment", {
                               provider = "external",
                               data_type = "tabular",
                               training_type = "multiclassification"), "list", "create_experiment() doesn't retrieve a list for EXPERIMENT_EXTERNAL_MULTICLASSIFICATION_TESTU")
+
+  expect_is(create_experiment(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                              name = "EXPERIMENT_EXTERNAL_MULTICLASSIFICATION_TESTU",
+                              provider = "external",
+                              data_type = "tabular",
+                              training_type = "multiclassification",
+                              check_if_exist = TRUE), "list", "create_experiment() doesn't retrieve a list for EXPERIMENT_EXTERNAL_MULTICLASSIFICATION_TESTU with check enabled")
 })
 
 test_that("create_experiment_version", {
@@ -86,7 +93,7 @@ test_that("create_experiment_version", {
                                       normal_models = list("LR", "RF"),
                                       lite_models = list("LR"),
                                       simple_models = list("LR", "DT"),
-                                      with_blend = F), "list", "get_experiments() doesn't retrieve a list for EXPERIMENT_PREVISION_REGRESSION_TESTU")
+                                      with_blend = FALSE), "list", "get_experiments() doesn't retrieve a list for EXPERIMENT_PREVISION_REGRESSION_TESTU")
 
   expect_is(create_experiment_version(experiment_id = get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "EXPERIMENT_PREVISION_CLASSIFICATION_TESTU"),
                                       dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "DATASET_TESTU_CLASSIFICATION"),
@@ -122,8 +129,8 @@ test_that("create_experiment_version", {
                                       queries_dataset_matching_id_description_column = "true_item_id",
                                       models_params = list(
                                         list("model_embedding" = "tf_idf", "preprocessing" = list("word_stemming" = "yes", "ignore_stop_word" = "auto", "ignore_punctuation" = "no"), "models" = list("brute_force", "cluster_pruning")),
-                                        list("model_embedding" = "transformer", "preprocessing" = NA, "models" = list("brute_force", "lsh", "hkm")),
-                                        list("model_embedding" = "transformer_fine_tuned", "preprocessing" = NA, models = list("brute_force", "lsh", "hkm"))
+                                        list("model_embedding" = "transformer", "preprocessing" = NULL, "models" = list("brute_force", "lsh", "hkm")),
+                                        list("model_embedding" = "transformer_fine_tuned", "preprocessing" = NULL, models = list("brute_force", "lsh", "hkm"))
                                       )), "list", "get_experiments() doesn't retrieve a list for EXPERIMENT_PREVISION_TEXTSIM_TESTU")
 
   expect_is(create_experiment_version(experiment_id = get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "EXPERIMENT_PREVISION_IMG_REGRESSION_TESTU"),

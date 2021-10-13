@@ -33,6 +33,12 @@ test_that("create_datasource", {
                               connector_id = get_connector_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "FTP_CONNECTOR_TESTU"),
                               name = "FTP_DATASOURCE_RAW_TESTU",
                               path = FTP_DATASOURCE_PATH), "list", "create_datasource() doesn't retrieve a list for FTP connector type with path")
+
+  expect_is(create_datasource(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                              connector_id = get_connector_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "FTP_CONNECTOR_TESTU"),
+                              name = "FTP_DATASOURCE_RAW_TESTU",
+                              path = FTP_DATASOURCE_PATH,
+                              check_if_exist = TRUE), "list", "create_datasource() doesn't retrieve a list for FTP connector type with path and check enabled")
 })
 
 test_that("get_datasources", {

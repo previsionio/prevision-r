@@ -12,7 +12,7 @@ get_connector_id_from_name(project_id, connector_name)
 \item{connector_name}{name of the connector we are searching its id from.}
 }
 \value{
-id of the connector if found.
+character - id of the connector if found.
 }
 \description{
 Get a connector_id from a connector_name for a given project_id. If duplicated name, the first connector_id that match it is retrieved.

@@ -9,6 +9,9 @@ test_deployment_type(type)
 \arguments{
 \item{type}{type of the deployment among "model" or "app".}
 }
+\value{
+no return value, called for side effects.
+}
 \description{
 Check if a type of a deployment is supported
 }

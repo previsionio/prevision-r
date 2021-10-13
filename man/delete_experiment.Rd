@@ -9,6 +9,9 @@ delete_experiment(experiment_id)
 \arguments{
 \item{experiment_id}{id of the experiment, can be obtained with get_experiments().}
 }
+\value{
+integer - 204 on success.
+}
 \description{
 Delete a experiment on the platform.
 }

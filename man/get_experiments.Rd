@@ -10,7 +10,7 @@ get_experiments(project_id)
 \item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-parsed content of all experiments for the suppled project_id.
+list - parsed content of all experiments for the supplied project_id.
 }
 \description{
 Get information of all experiments available for a given project_id.

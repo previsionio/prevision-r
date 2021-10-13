@@ -9,6 +9,9 @@ delete_dataset(dataset_id)
 \arguments{
 \item{dataset_id}{id of the dataset, can be obtained with get_datasets().}
 }
+\value{
+integer - 204 on success.
+}
 \description{
 Delete an existing dataset.
 }

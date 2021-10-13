@@ -10,7 +10,7 @@ get_experiment_info(experiment_id)
 \item{experiment_id}{id of the experiment, can be obtained with get_experiments().}
 }
 \value{
-parsed content of the experiment.
+list - parsed content of the experiment.
 }
 \description{
 Get a experiment from its experiment_id.

@@ -9,6 +9,9 @@ get_deployment_predictions(deployment_id)
 \arguments{
 \item{deployment_id}{id of the deployment, can be obtained with get_deployments().}
 }
+\value{
+list - predictions available for a deployed model.
+}
 \description{
 Get listing of predictions related to a deployment_id.
 }

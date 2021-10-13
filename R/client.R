@@ -7,6 +7,8 @@ pio_init <- function(token, url) {
   #' @param token your master token, can be found on your instance on the "API KEY" page.
   #' @param url the url of your instance.
   #'
+  #' @return list - url and token needed for connecting to the Prevision.io environment.
+  #'
   #' @examples \dontrun{pio_init('eyJhbGciOiJIUz', 'https://xxx.prevision.io')}
   #'
   #' @export
@@ -24,6 +26,8 @@ pio_request <- function(endpoint, method, data = NULL, upload = FALSE) {
   #' @param method the method needed according the API (Available: POST, GET, DELETE).
   #' @param data object to upload when using method POST.
   #' @param upload used parameter when uploading dataset (for encoding in API call), don't use it.
+  #'
+  #' @return list - response from the request.
   #'
   #' @examples \dontrun{pio_request(paste0('/jobs/', experiment$jobId), DELETE)}
   #'
@@ -50,7 +54,7 @@ pio_request <- function(endpoint, method, data = NULL, upload = FALSE) {
       config = config(followlocation = 0L)
     )
   } else {
-    flog.debug(paste("request complete body", toJSON(data, auto_unbox=TRUE)))
+    flog.debug(paste("request complete body", toJSON(data, auto_unbox = TRUE)))
     resp <- method(
       request_url,
       add_headers("Authorization" = pio_client$token, "Content-Type" = "application/json"),
@@ -67,6 +71,8 @@ pio_download <- function(endpoint, tempFile) {
   #' @param endpoint end of the url of the API call.
   #' @param tempFile temporary file to download.
   #'
+  #' @return list - response from the request.
+  #'
   #' @import httr
   #'
   #' @export
@@ -82,6 +88,8 @@ pio_list_to_df <- function(list) {
   #' Convert a list returned from APIs to a dataframe. Only working for consistent list (same naming and number of columns).
   #'
   #' @param list named list comming from an API call.
+  #'
+  #' @return data.frame - cast a consistent list to a data.frame.
   #'
   #' @export
 

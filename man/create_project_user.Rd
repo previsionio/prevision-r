@@ -11,10 +11,10 @@ create_project_user(project_id, user_mail, user_role)
 
 \item{user_mail}{email of the user to be add, can be obtained with get_users().}
 
-\item{user_role}{role to grand to the user among "admin", "contributor" and "viewer"}
+\item{user_role}{role to grand to the user among "admin", "contributor" and "viewer".}
 }
 \value{
-list of users in the project
+list - information of project's users.
 }
 \description{
 Add user in and existing project.

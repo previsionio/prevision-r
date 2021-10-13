@@ -9,6 +9,9 @@ pio_list_to_df(list)
 \arguments{
 \item{list}{named list comming from an API call.}
 }
+\value{
+data.frame - cast a consistent list to a data.frame.
+}
 \description{
 Convert a list returned from APIs to a dataframe. Only working for consistent list (same naming and number of columns).
 }

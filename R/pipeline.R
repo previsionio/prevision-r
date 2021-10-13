@@ -3,6 +3,8 @@ test_pipeline_type <- function(type) {
   #'
   #' @param type type of the pipeline among "component", "template", "run".
   #'
+  #' @return no return value, called for side effects.
+  #'
   #' @import httr
   #'
   #' @export
@@ -18,7 +20,7 @@ get_pipelines <- function(project_id, type) {
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param type type of the pipeline to retrieve among "component", "template", or "run".
   #'
-  #' @return parsed content of all pipelines of the given type for the supplied project_id.
+  #' @return list - parsed content of all pipelines of the given type for the supplied project_id.
   #'
   #' @import httr
   #'
@@ -59,7 +61,7 @@ get_pipeline_info <- function(pipeline_id, type) {
   #' @param pipeline_id id of the pipeline to be retrieved, can be obtained with get_pipelines().
   #' @param type type of the pipeline to be retrieved among "component", "template", "run".
   #'
-  #' @return parsed content of the pipeline
+  #' @return list - parsed content of the pipeline.
   #'
   #' @import httr
   #'
@@ -88,7 +90,7 @@ get_pipeline_id_from_name <- function(project_id, name, type) {
   #' @param name name of the pipeline we are searching its id from.
   #' @param type type of the pipeline to be retrieved among "component", "template", "run".
   #'
-  #' @return id of the connector if found.
+  #' @return character - id of the connector if found.
   #'
   #' @import httr
   #'
@@ -125,8 +127,7 @@ create_pipeline <- function(project_id, type, name, git_url = NULL, git_branch =
   #' @param pipeline_template_id id of the pipeline template to add for a run.
   #' @param pipeline_parameters list of parameters for the run.
   #'
-  #'
-  #' @return parsed content of the pipeline
+  #' @return list - parsed content of the pipeline.
   #'
   #' @import httr
   #'
@@ -166,6 +167,8 @@ delete_pipeline <- function(pipeline_id, type) {
   #' @param pipeline_id id of the pipeline to be retrieved, can be obtained with get_pipelines().
   #' @param type type of the pipeline to be retrieved among "component", "template", "run".
   #'
+  #' @return integer - 204 on success.
+  #'
   #' @import httr
   #'
   #' @export
@@ -191,6 +194,8 @@ create_pipeline_trigger <- function(pipeline_id) {
   #' [BETA] Trigger an existing pipeline run.
   #'
   #' @param pipeline_id id of the pipeline run to trigger, can be obtained with get_pipelines().
+  #'
+  #' @return integer - 200 on success.
   #'
   #' @import httr
   #'

@@ -10,7 +10,7 @@ get_folders(project_id)
 \item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-parsed content of all folders.
+list - parsed content of all folders.
 }
 \description{
 Get information of all image folders available for a given project_id.

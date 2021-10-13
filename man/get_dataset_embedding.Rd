@@ -9,6 +9,9 @@ get_dataset_embedding(dataset_id)
 \arguments{
 \item{dataset_id}{dataset id.}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Get a dataset embedding from a dataset_id.
 }

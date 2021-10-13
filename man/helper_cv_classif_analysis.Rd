@@ -18,7 +18,7 @@ helper_cv_classif_analysis(actual, predicted, fold, thresh = NULL, step = 1000)
 \item{step}{number of iteration done to find optimal thresh (1000 by default = 0.1\% resolution per fold)}
 }
 \value{
-data.frame with metrics computed on the CV
+data.frame - metrics computed between actual and predicted vectors.
 }
 \description{
 Get metrics on a CV file retrieved by Prevision.io for a binary classification use case

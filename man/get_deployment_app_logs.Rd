@@ -11,6 +11,9 @@ get_deployment_app_logs(deployment_id, log_type)
 
 \item{log_type}{type of logs we want to get among "build", "deploy" or "run".}
 }
+\value{
+list - logs from deployed apps.
+}
 \description{
 Get logs from a deployed app.
 }

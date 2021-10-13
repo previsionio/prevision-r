@@ -24,7 +24,7 @@ create_dataset_from_file(
 \item{decimal}{decimal separator in the file (default: ".")}
 }
 \value{
-parsed content of the dataset.
+list - parsed content of the dataset.
 }
 \description{
 Upload dataset from file name.

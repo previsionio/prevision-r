@@ -3,7 +3,7 @@ get_datasources <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return parsed content of all data_sources for the suppled project_id.
+  #' @return list - parsed content of all data_sources for the supplied project_id.
   #'
   #' @import httr
   #'
@@ -39,7 +39,7 @@ get_datasource_info <- function(datasource_id) {
   #'
   #' @param datasource_id id of the data_sources to be retrieved, can be obtained with get_datasources().
   #'
-  #' @return parsed content of the data_sources
+  #' @return list - parsed content of the data_sources.
   #'
   #' @import httr
   #'
@@ -62,7 +62,7 @@ get_datasource_id_from_name <- function(project_id, datasource_name) {
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param datasource_name name of the datasource we are searching its id from. Can be obtained with get_datasources().
   #'
-  #' @return id of the datasource if found.
+  #' @return character - id of the datasource if found.
   #'
   #' @import httr
   #'
@@ -77,8 +77,9 @@ get_datasource_id_from_name <- function(project_id, datasource_name) {
   stop("there is no datasource_id matching the datasource_name ", datasource_name)
 }
 
-create_datasource <- function(project_id, connector_id, name, path= "", database= "", table = "", bucket = "", request = "") {
+create_datasource <- function(project_id, connector_id, name, path= "", database= "", table = "", bucket = "", request = "", check_if_exist = FALSE) {
   #' Create a new datasource
+  #' If check_if_exist is enabled, the function will check if a datasource with the same name already exists. If yes, it will return a message and the information of the existing datasource instead of creating a new one.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param connector_id connector_id linked to the datasource.
@@ -88,8 +89,9 @@ create_datasource <- function(project_id, connector_id, name, path= "", database
   #' @param table datasource table (for SQL connector).
   #' @param bucket datasource bucket (for S3 connector).
   #' @param request datasource request (for SQLconnector).
+  #' @param check_if_exist boolean (FALSE by default). If TRUE, makes extra checks to see if a datasource with the same name is already existing.
   #'
-  #' @return parsed content of the datasource
+  #' @return list - parsed content of the datasource.
   #'
   #' @import httr
   #'
@@ -114,6 +116,20 @@ create_datasource <- function(project_id, connector_id, name, path= "", database
                  bucket = bucket,
                  request = request)
 
+  params <- params[!sapply(params, is.null)]
+
+  # DOUBLE CHECK ALREADY EXISTING DATASOURCES
+  if(check_if_exist) {
+    datasources = get_datasources(project_id)
+    for(datasource in datasources) {
+      if(datasource$name == name) {
+        message("a datasource named ", name, " already exists - aborting datasource creation")
+        return (get_datasource_info(datasource$`_id`))
+      }
+    }
+    message("there is no datasource named ", name, " - continuing")
+  }
+
   resp <- pio_request(paste0('/projects/', project_id, '/data-sources'), POST, params)
   resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
 
@@ -129,6 +145,8 @@ delete_datasource <- function(datasource_id) {
   #' Delete a datasource
   #'
   #' @param datasource_id id of the datasource to be deleted, can be obtained with get_datasources().
+  #'
+  #' @return integer - 200 on success.
   #'
   #' @import httr
   #'
@@ -149,6 +167,8 @@ test_datasource <- function(datasource_id) {
   #' Test a datasource
   #'
   #' @param datasource_id id of the datasource to be tested, can be obtained with get_datasources().
+  #'
+  #' @return integer - 200 on success.
   #'
   #' @import httr
   #'

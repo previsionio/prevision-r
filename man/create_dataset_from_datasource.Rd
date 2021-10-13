@@ -14,7 +14,7 @@ create_dataset_from_datasource(project_id, dataset_name, datasource_id)
 \item{datasource_id}{datasource id.}
 }
 \value{
-parsed content of the dataset.
+list - parsed content of the dataset.
 }
 \description{
 Create a dataset from an existing datasource.

@@ -39,7 +39,7 @@ create_exporter(
 \item{bucket}{exporter bucket (for S3 connector).}
 }
 \value{
-parsed content of the exporter
+list - parsed content of the exporter.
 }
 \description{
 Create a new exporter

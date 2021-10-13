@@ -3,7 +3,7 @@ get_folders <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return parsed content of all folders.
+  #' @return list - parsed content of all folders.
   #'
   #' @import httr
   #'
@@ -40,7 +40,7 @@ get_folder_id_from_name <- function(project_id, folder_name) {
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param folder_name name of the folder we are searching its id from. Can be obtained with get_folders().
   #'
-  #' @return id of the folder if found.
+  #' @return character - id of the folder if found.
   #'
   #' @import httr
   #'
@@ -60,7 +60,7 @@ get_folder <- function(folder_id) {
   #'
   #' @param folder_id id of the image folder, can be obtained with get_folders().
   #'
-  #' @return parsed content of the folder.
+  #' @return list - parsed content of the folder.
   #'
   #' @import httr
   #'
@@ -87,7 +87,7 @@ create_folder <- function(project_id, folder_name, file) {
   #' @param folder_name given name of the folder on the platform.
   #' @param file path to the folder.
   #'
-  #' @return parsed content of the folder.
+  #' @return list - parsed content of the folder.
   #'
   #' @import httr
   #'
@@ -110,6 +110,8 @@ delete_folder <- function(folder_id) {
   #' Delete an existing folder.
   #'
   #' @param folder_id id of the folder to be deleted.
+  #'
+  #' @return integer - 200 on success.
   #'
   #' @import httr
   #'

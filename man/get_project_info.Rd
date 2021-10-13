@@ -10,7 +10,7 @@ get_project_info(project_id)
 \item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-parsed content of the project
+list - information of the project.
 }
 \description{
 Get a project from its project_id.

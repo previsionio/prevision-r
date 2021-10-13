@@ -10,7 +10,7 @@ get_exporters(project_id)
 \item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-parsed content of all exporters for the suppled project_id.
+list - parsed content of all exporters for the supplied project_id.
 }
 \description{
 Get information of all exporters available for a given project_id.

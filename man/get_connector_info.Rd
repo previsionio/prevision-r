@@ -10,7 +10,7 @@ get_connector_info(connector_id)
 \item{connector_id}{id of the connector to be retrieved, can be obtained with get_connectors().}
 }
 \value{
-parsed content of the connector.
+list - parsed content of the connector.
 }
 \description{
 Get information about connector from its id.

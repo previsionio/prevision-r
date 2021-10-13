@@ -10,7 +10,7 @@ get_prediction_infos(prediction_id)
 \item{prediction_id}{id of the prediction to be retrieved, can be obtained with get_experiment_version_predictions().}
 }
 \value{
-list of prediction information.
+list - parsed prediction information.
 }
 \description{
 Get a information about a prediction_id.

@@ -15,6 +15,9 @@ pio_request(endpoint, method, data = NULL, upload = FALSE)
 
 \item{upload}{used parameter when uploading dataset (for encoding in API call), don't use it.}
 }
+\value{
+list - response from the request.
+}
 \description{
 Request the platform. Thanks to an endpoint, the url and the API, you can create request.
 }

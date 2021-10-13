@@ -16,7 +16,7 @@ get_prediction(prediction_id, prediction_type, time_out = 3600, wait_time = 10)
 \item{wait_time}{number of seconds to wait between each retry. 10 by default.}
 }
 \value{
-a data.frame with the predictions.
+data.frame - predictions coming from prediction_id.
 }
 \description{
 Get a specific prediction from a prediction_id. Wait up until time_out is reached and wait wait_time between each retry.

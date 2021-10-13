@@ -10,7 +10,7 @@ get_dataset_head(dataset_id)
 \item{dataset_id}{id of the dataset, can be obtained with get_datasets().}
 }
 \value{
-head of the dataset as a data.frame object.
+data.frame - head of the dataset.
 }
 \description{
 Show the head of a dataset from its id.

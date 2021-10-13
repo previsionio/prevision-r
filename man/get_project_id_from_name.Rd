@@ -10,7 +10,7 @@ get_project_id_from_name(project_name)
 \item{project_name}{name of the project we are searching its id from. Can be obtained with get_projects().}
 }
 \value{
-project_id of the project_name if found.
+character - project_id of the project_name if found.
 }
 \description{
 Get a project_id from a project_name If duplicated name, the first project_id that match it is retrieved.

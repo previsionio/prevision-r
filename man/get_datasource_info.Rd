@@ -10,7 +10,7 @@ get_datasource_info(datasource_id)
 \item{datasource_id}{id of the data_sources to be retrieved, can be obtained with get_datasources().}
 }
 \value{
-parsed content of the data_sources
+list - parsed content of the data_sources.
 }
 \description{
 Get a datasource from its id.

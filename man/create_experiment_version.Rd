@@ -135,7 +135,7 @@ create_experiment_version(
 \item{yaml_file}{path to the yaml file (external model).}
 }
 \value{
-experiment information.
+list - experiment information.
 }
 \description{
 Create a new version of an existing experiment.

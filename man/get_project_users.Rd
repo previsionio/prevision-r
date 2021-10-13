@@ -10,7 +10,7 @@ get_project_users(project_id)
 \item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-parsed content of the project's users
+list - information of project's users.
 }
 \description{
 Get users from a project.

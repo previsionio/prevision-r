@@ -10,7 +10,7 @@ get_exporter_info(exporter_id)
 \item{exporter_id}{id of the exporter to be retrieved, can be obtained with get_exporters().}
 }
 \value{
-parsed content of the exporter
+list - parsed content of the exporter.
 }
 \description{
 Get an exporter from its id.

@@ -9,6 +9,9 @@ test_pipeline_type(type)
 \arguments{
 \item{type}{type of the pipeline among "component", "template", "run".}
 }
+\value{
+no return value, called for side effects.
+}
 \description{
 Check if a type of a pipeline is supported
 }

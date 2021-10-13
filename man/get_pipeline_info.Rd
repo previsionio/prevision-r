@@ -12,7 +12,7 @@ get_pipeline_info(pipeline_id, type)
 \item{type}{type of the pipeline to be retrieved among "component", "template", "run".}
 }
 \value{
-parsed content of the pipeline
+list - parsed content of the pipeline.
 }
 \description{
 Get information about a pipeline from its id and its type.

@@ -7,9 +7,11 @@
 delete_prediction(prediction_id)
 }
 \arguments{
-\item{prediction_id}{id of the prediction to be deleted, can be obtained with get_experiment_version_predictions()}
+\item{prediction_id}{id of the prediction to be deleted, can be obtained with get_experiment_version_predictions().}
 }
 \value{
+integer - 204 on success.
+
 list of predictions of experiment_id.
 }
 \description{

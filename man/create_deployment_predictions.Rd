@@ -11,6 +11,9 @@ create_deployment_predictions(deployment_id, dataset_id)
 
 \item{dataset_id}{id of the dataset to predict, can be obtained with get_dataset_id_from_name().}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Create predictions on a deployed model using a dataset.
 }

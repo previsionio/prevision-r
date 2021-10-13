@@ -11,6 +11,9 @@ delete_pipeline(pipeline_id, type)
 
 \item{type}{type of the pipeline to be retrieved among "component", "template", "run".}
 }
+\value{
+integer - 204 on success.
+}
 \description{
 Delete an existing pipeline
 }

@@ -14,7 +14,7 @@ create_folder(project_id, folder_name, file)
 \item{file}{path to the folder.}
 }
 \value{
-parsed content of the folder.
+list - parsed content of the folder.
 }
 \description{
 Upload folder from a local file.

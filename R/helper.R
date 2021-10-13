@@ -9,7 +9,7 @@ helper_cv_classif_analysis <- function(actual, predicted, fold, thresh = NULL, s
   #' @param thresh threshold to use. If not provided optimal threshold given F1 score will be computed
   #' @param step number of iteration done to find optimal thresh (1000 by default = 0.1\% resolution per fold)
   #'
-  #' @return data.frame with metrics computed on the CV
+  #' @return data.frame - metrics computed between actual and predicted vectors.
   #'
   #' @import data.table
   #' @import Metrics
@@ -102,7 +102,7 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   #' @param top top individual to analyse
   #' @param compute_every_n compute indicators every n individuals (1 by default)
   #'
-  #' @return data.frame with metrics computed on the CV
+  #' @return data.frame - metrics computed between actual and predicted vectors.
   #'
   #' @import data.table
   #' @import Metrics
@@ -134,7 +134,7 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   f1    = NULL
 
   # SORT THE 2 VECTORS BY PREDICTED DECREASING
-  idx       = order(predicted, decreasing = T)
+  idx       = order(predicted, decreasing = TRUE)
   actual    = actual[idx]
   predicted = predicted[idx]
 
@@ -157,6 +157,11 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   top = f1[which.max(f1[,2]),1]
 
   # PLOT RESULTS
+  ## SAVE PAR PREFERENCES AND RESTORE THEM ON EXIT
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
+  ## CHANGE LAYOUT AND PLOT CHARTS
   par(mfrow=c(3,1))
 
   plot(rec, type="l", ylab = "RECALL", xlab = "TOP INDIVIDUS", main = "Recall en fonction du top n individus", ylim = c(0,1), col = I("#27818D"))
@@ -179,7 +184,7 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   return(res)
 }
 
-helper_optimal_prediction <- function(project_id, experiment_id, model_id, df, actionable_features, nb_sample, maximize, zip = F, version = 1) {
+helper_optimal_prediction <- function(project_id, experiment_id, model_id, df, actionable_features, nb_sample, maximize, zip = FALSE, version = 1) {
   #' [BETA] Compute the optimal prediction for each rows in a data frame, for a given model, a list of actionable features and a number of samples for each features to be tested.
   #'
   #' @param project_id id of the project containing the use case.
@@ -192,7 +197,7 @@ helper_optimal_prediction <- function(project_id, experiment_id, model_id, df, a
   #' @param zip a boolean indicating if the data frame to predict should be zipped prior sending to the instance.
   #' @param version version of the use case we want to make the prediction on.
   #'
-  #' @return row data.frame with the optimal vector and the prediction associated with for each rows in the original data frame.
+  #' @return data.frame - optimal vector and the prediction associated with for each rows in the original data frame.
   #'
   #' @import data.table
   #'
@@ -214,7 +219,7 @@ helper_optimal_prediction <- function(project_id, experiment_id, model_id, df, a
   # SELECT RANDOM SAMPLES FROM THE TRAIN SET GIVEN ACTIONNABLES FEATURES & nb_sampleS
   temp = list()
   for(i in 1:length(actionable_features)) {
-    temp[[i]] = sample(x = train[[actionable_features[i]]], size =  nb_sample[i], replace = T)
+    temp[[i]] = sample(x = train[[actionable_features[i]]], size =  nb_sample[i], replace = TRUE)
   }
 
   # EXPEND THE ORIGINAL DATASET WITH CARTESIAN PRODUCT OF ACTIONNABLE FEATURES
@@ -235,12 +240,12 @@ helper_optimal_prediction <- function(project_id, experiment_id, model_id, df, a
   pred         = create_prediction(experiment_version_id = get_experiment_version_id(experiment_id, version),
                                    model_id = model_id,
                                    dataset_id = df_prevision$`_id`,
-                                   confidence = F)
+                                   confidence = FALSE)
 
   # GET PREDICTION
   Sys.sleep(30) ## SUBOPTIMAL, SHOULD BE A "WAIT UNTIL PREDICTION DONE"
   res = get_prediction(pred$`_id`)
-  res = res[, ncol(res), with = F]
+  res = res[, ncol(res), with = FALSE]
   res = cbind(df, res)
 
   # RETURN MAX OR MIN OF PREDICTION GROUPED BY EVERY NON ACTIONNABLE FEATURE
@@ -265,7 +270,7 @@ helper_drift_analysis <- function(dataset_1, dataset_2, p_value = 0.05, features
   #' @param p_value a p-value that will be the decision criteria for deciding if a feature is suspicious 5\% by default
   #' @param features a vector of features names that should be tested. If NULL, only the intersection of the names() will be kept
   #'
-  #' @return a vector of suspicious features
+  #' @return vector - a vector of suspicious features.
   #'
   #' @import data.table
   #' @import utils
@@ -303,7 +308,7 @@ helper_drift_analysis <- function(dataset_1, dataset_2, p_value = 0.05, features
       ### COMPUTE CONTAGENCY TABLE AND MAKE TEST ON IT ONLY IF AT LEAST 2 MODALITIES
       if(length(val) > 1) {
         mat = cbind(table(dataset_1[[f]][dataset_1[[f]] %in% val]), table(dataset_2[[f]][dataset_2[[f]] %in% val]))
-        res = chisq.test(mat, simulate.p.value = T, B = 5000)
+        res = chisq.test(mat, simulate.p.value = TRUE, B = 5000)
         suspicious[match(f, features),] = c(f, ifelse(res$p.value < p_value, 1, 0), res$p.value, "chisq.test")
       }
     }

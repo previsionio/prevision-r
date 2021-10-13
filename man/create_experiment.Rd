@@ -2,9 +2,17 @@
 % Please edit documentation in R/experiment.R
 \name{create_experiment}
 \alias{create_experiment}
-\title{Create a new experiment on the platform.}
+\title{Create a new experiment.
+If check_if_exist is enabled, the function will check if an experiment with the same name already exists. If yes, it will return a message and the information of the existing experiment instead of creating a new one.}
 \usage{
-create_experiment(project_id, name, provider, data_type, training_type)
+create_experiment(
+  project_id,
+  name,
+  provider,
+  data_type,
+  training_type,
+  check_if_exist = FALSE
+)
 }
 \arguments{
 \item{project_id}{id of the project in which we create the experiment.}
@@ -16,10 +24,13 @@ create_experiment(project_id, name, provider, data_type, training_type)
 \item{data_type}{type of data ("tabular", "images" or "timeseries").}
 
 \item{training_type}{type of the training you want to achieve ("regression", "classification", "multiclassification", "clustering", "object-detection" or "text-similarity").}
+
+\item{check_if_exist}{boolean (FALSE by default). If TRUE, makes extra checks to see if an experiment with the same name is already existing.}
 }
 \value{
-experiment information.
+list - experiment information.
 }
 \description{
-Create a new experiment on the platform.
+Create a new experiment.
+If check_if_exist is enabled, the function will check if an experiment with the same name already exists. If yes, it will return a message and the information of the existing experiment instead of creating a new one.
 }

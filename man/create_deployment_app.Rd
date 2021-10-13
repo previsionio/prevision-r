@@ -45,7 +45,7 @@ create_deployment_app(
 \item{description}{description of the deployment (optional).}
 }
 \value{
-parsed content of the deployment
+list - parsed content of the deployment.
 }
 \description{
 [BETA] Create a new deployment for an application.

@@ -9,6 +9,9 @@ pause_experiment_version(experiment_version_id)
 \arguments{
 \item{experiment_version_id}{id of the experiment_version, can be obtained with get_experiment_version_id().}
 }
+\value{
+integer - 200 on success.
+}
 \description{
 Pause a running experiment_version on the platform.
 }

@@ -9,6 +9,9 @@ delete_exporter(exporter_id)
 \arguments{
 \item{exporter_id}{id of the exporter to be deleted, can be obtained with get_exporters().}
 }
+\value{
+integer - 204 on success.
+}
 \description{
 Delete an exporter
 }
