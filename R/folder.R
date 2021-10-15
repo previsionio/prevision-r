@@ -121,7 +121,7 @@ delete_folder <- function(folder_id) {
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("folder ", folder_id, " deleted with sucess")
+    message("folder ", folder_id, " deleted with success")
     resp$status_code
   } else {
     stop("failed to delete folder ", folder_id, " - ", resp$status_code, ":", resp_parsed$message)
