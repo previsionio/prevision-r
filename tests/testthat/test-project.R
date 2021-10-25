@@ -40,7 +40,7 @@ test_that("get_project_users", {
 test_that("create_project_user", {
   expect_is(create_project_user(project_id = get_project_id_from_name("PROJECT_TESTU"),
                                 user_mail = "gerome.pistre@prevision.io",
-                                user_role = "viewer"), "list", "create_project_user() doesn't retrieve a list")
+                                user_role = "end_user"), "list", "create_project_user() doesn't retrieve a list")
 })
 
 test_that("update_project_user_role", {

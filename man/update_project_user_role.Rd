@@ -11,7 +11,7 @@ update_project_user_role(project_id, user_id, user_role)
 
 \item{user_id}{user_id of the user to be delete, can be obtained with get_project_users().}
 
-\item{user_role}{role to grand to the user among "admin", "contributor" and "viewer".}
+\item{user_role}{role to grand to the user among "admin", "contributor", "viewer" and "end_user".}
 }
 \value{
 list - information of project's users.
