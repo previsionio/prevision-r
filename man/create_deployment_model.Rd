@@ -31,9 +31,9 @@ create_deployment_model(
 
 \item{description}{description of the deployment.}
 
-\item{main_model_id}{id of the model to deploy (will be removed in 11.3.0+)}
+\item{main_model_id}{id of the model to deploy}
 
-\item{challenger_model_id}{id of the challenger model to deploy (will be removed in 11.3.0+)}
+\item{challenger_model_id}{id of the challenger model to deploy}
 }
 \value{
 list - parsed content of the deployment.

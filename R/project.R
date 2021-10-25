@@ -116,7 +116,7 @@ create_project <- function(name, description = NULL, color = "#a748f5", check_if
   resp_parsed <- content(resp, 'parsed')
 
   if(resp$status_code == 200) {
-    message("project ", name, " created with sucess")
+    message("project ", name, " created with success")
     get_project_info(resp_parsed$`_id`)
   } else {
     stop("project creation failed - ", resp_parsed$status, ":", resp_parsed$message)
@@ -171,8 +171,8 @@ create_project_user <- function(project_id, user_mail, user_role) {
   #' Add user in and existing project.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
-  #' @param user_mail email of the user to be add, can be obtained with get_users().
-  #' @param user_role role to grand to the user among "admin", "contributor" and "viewer".
+  #' @param user_mail email of the user to be add.
+  #' @param user_role role to grand to the user among "admin", "contributor", "viewer" or "end_user".
   #'
   #' @return list - information of project's users.
   #'
@@ -180,8 +180,8 @@ create_project_user <- function(project_id, user_mail, user_role) {
   #'
   #' @export
 
-  if(!user_role %in% c("admin", "contributor", "viewer")) {
-    stop("user_role must be either \"admin\", \"contributor\" or \"viewer\"")
+  if(!user_role %in% c("admin", "contributor", "viewer", "end_user")) {
+    stop("user_role must be either \"admin\", \"contributor\", \"viewer\" or \"end_user\"")
   }
 
   params <- list(email = user_mail, projectRole = user_role)
@@ -202,7 +202,7 @@ update_project_user_role <- function(project_id, user_id, user_role) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param user_id user_id of the user to be delete, can be obtained with get_project_users().
-  #' @param user_role role to grand to the user among "admin", "contributor" and "viewer".
+  #' @param user_role role to grand to the user among "admin", "contributor", "viewer" and "end_user".
   #'
   #' @return list - information of project's users.
   #'
@@ -210,8 +210,8 @@ update_project_user_role <- function(project_id, user_id, user_role) {
   #'
   #' @export
 
-  if(!user_role %in% c("admin", "contributor", "viewer")) {
-    stop("user_role must be either \"admin\", \"contributor\" or \"viewer\"")
+  if(!user_role %in% c("admin", "contributor", "viewer", "end_user")) {
+    stop("user_role must be either \"admin\", \"contributor\", \"viewer\" or \"end_user\"")
   }
 
   params <- list(projectRole = user_role)

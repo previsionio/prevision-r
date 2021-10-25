@@ -172,7 +172,7 @@ test_that("create_experiment_version", {
                                       yaml_file = paste0(wd, "/tests/testthat/data/multiclassification_model.yaml")), "list", "get_experiments() doesn't retrieve a list for EXPERIMENT_EXTERNAL_MULTICLASSIFICATION_TESTU")
 })
 
-Sys.sleep(240)
+Sys.sleep(300)
 
 test_that("get_experiments", {
   expect_is(get_experiments(get_project_id_from_name("PROJECT_TESTU")), "list", "get_experiments() doesn't retrieve a list")

@@ -9,9 +9,9 @@ create_project_user(project_id, user_mail, user_role)
 \arguments{
 \item{project_id}{id of the project, can be obtained with get_projects().}
 
-\item{user_mail}{email of the user to be add, can be obtained with get_users().}
+\item{user_mail}{email of the user to be add.}
 
-\item{user_role}{role to grand to the user among "admin", "contributor" and "viewer".}
+\item{user_role}{role to grand to the user among "admin", "contributor", "viewer" or "end_user".}
 }
 \value{
 list - information of project's users.

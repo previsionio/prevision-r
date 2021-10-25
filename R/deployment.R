@@ -108,8 +108,8 @@ create_deployment_model <- function(project_id, name, experiment_id, main_model_
   #' @param challenger_model_experiment_version_id id of the challenger experiment_version to deploy, can be obtained with get_experiment_version_id().
   #' @param access_type type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).
   #' @param description description of the deployment.
-  #' @param main_model_id id of the model to deploy (will be removed in 11.3.0+)
-  #' @param challenger_model_id id of the challenger model to deploy (will be removed in 11.3.0+)
+  #' @param main_model_id id of the model to deploy
+  #' @param challenger_model_id id of the challenger model to deploy
   #'
   #' @return list - parsed content of the deployment.
   #'
