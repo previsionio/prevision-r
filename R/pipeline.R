@@ -191,7 +191,7 @@ delete_pipeline <- function(pipeline_id, type) {
 }
 
 create_pipeline_trigger <- function(pipeline_id) {
-  #' [BETA] Trigger an existing pipeline run.
+  #' Trigger an existing pipeline run.
   #'
   #' @param pipeline_id id of the pipeline run to trigger, can be obtained with get_pipelines().
   #'

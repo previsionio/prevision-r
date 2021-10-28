@@ -1,5 +1,16 @@
 # NEWS
 
+## TBD
+
+Release date - TBD
+
+Cosmetic:
+
+Bug fix:
+  - Removed support of APP deployment (not supported)
+
+Features:
+
 ## 11.3.1
 
 Release date - 25th October 2021

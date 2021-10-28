@@ -2,7 +2,7 @@
 % Please edit documentation in R/pipeline.R
 \name{create_pipeline_trigger}
 \alias{create_pipeline_trigger}
-\title{[BETA] Trigger an existing pipeline run.}
+\title{Trigger an existing pipeline run.}
 \usage{
 create_pipeline_trigger(pipeline_id)
 }
@@ -13,5 +13,5 @@ create_pipeline_trigger(pipeline_id)
 integer - 200 on success.
 }
 \description{
-[BETA] Trigger an existing pipeline run.
+Trigger an existing pipeline run.
 }
