@@ -5,9 +5,11 @@
 Release date - TBD
 
 Cosmetic:
+  - Minor documentation update
 
 Bug fix:
-  - Removed support of APP deployment (not supported)
+  - Removed support of APP deployment
+  - Removed support of pipeline component creation
 
 Features:
 
