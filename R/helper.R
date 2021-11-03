@@ -126,7 +126,7 @@ helper_plot_classif_analysis <- function(actual, predicted, top, compute_every_n
   }
 
   if(compute_every_n > 1) {
-    message("indicators may be approximated due to compute_every_n beeing greater than 1")
+    message("indicators may be approximated due to compute_every_n being greater than 1")
   }
 
   rec   = NULL
