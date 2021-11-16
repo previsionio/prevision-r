@@ -1,17 +1,22 @@
 # NEWS
 
-## TBD
+## 11.3.3
 
-Release date - TBD
+Release date - 16th November 2021
 
 Cosmetic:
+  - Version bump to 11.3.3
   - Minor documentation update
+  - Test function changed to remove deprecated calls
 
 Bug fix:
   - Removed support of APP deployment
   - Removed support of pipeline component creation
+  - Removed support of folder for data frame creation
 
-Features:
+## 11.3.2
+
+No change in R SDK
 
 ## 11.3.1
 
