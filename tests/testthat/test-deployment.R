@@ -40,37 +40,6 @@ test_that("create_deployment_model", {
                                     main_model_id = get_best_model_id(get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "EXPERIMENT_PREVISION_REGRESSION_TESTU")))), "list", "create_deployment_model() doesn't retrieve a list for MODEL_DEPLOYMENT_TESTU_MAIN_CHALLENGER_PUBLIC")
 })
 
-# test_that("create_deployment_app", {
-#   expect_is(create_deployment_app(project_id = get_project_id_from_name("PROJECT_TESTU"),
-#                                   name = "APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED",
-#                                   git_url = "gitlab.com/prevision-app/rte-electricity-forecast.git",
-#                                   git_branch = "master",
-#                                   type = "r",
-#                                   broker = "gitlabrepositories",
-#                                   access_type = "fine_grained"), "list", "create_deployment_app() doesn't retrieve a list for APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED")
-#
-#   expect_is(create_deployment_app(project_id = get_project_id_from_name("PROJECT_TESTU"),
-#                                   name = "APP_DEPLOYMENT_TESTU_R_2_256_2_PUBLIC",
-#                                   git_url = "gitlab.com/prevision-app/rte-electricity-forecast.git",
-#                                   git_branch = "master",
-#                                   type = "r",
-#                                   broker = "gitlabrepositories",
-#                                   app_cpu = 2,
-#                                   app_ram = "256Mi",
-#                                   app_replica_count = 2,
-#                                   access_type = "public"), "list", "create_deployment_app() doesn't retrieve a list for APP_DEPLOYMENT_TESTU_R_2_256_2_PUBLIC")
-#
-#   expect_is(create_deployment_app(project_id = get_project_id_from_name("PROJECT_TESTU"),
-#                                   name = "APP_DEPLOYMENT_TESTU_R_ENVVAR_PRIVATE",
-#                                   git_url = "gitlab.com/prevision-app/rte-electricity-forecast.git",
-#                                   git_branch = "master",
-#                                   type = "r",
-#                                   broker = "gitlabrepositories",
-#                                   access_type = "private",
-#                                   env_vars = jsonlite::toJSON(list(list("var1" = "val1"),
-#                                                                    list("var2" = "val2")))), "list", "create_deployment_app() doesn't retrieve a list for APP_DEPLOYMENT_TESTU_R_ENVVAR_PRIVATE")
-# })
-
 Sys.sleep(300)
 
 test_that("get_deployments", {
@@ -94,7 +63,6 @@ test_that("get_deployment_info", {
   # expect_is(get_deployment_info(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED", "app")), "list", "get_deployment_info() doesn't retrieve a list for a deployed app")
 })
 
-# Logs can take lot of time to come...
 # test_that("get_deployment_app_logs", {
   # expect_error(get_deployment_app_logs(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED", "app"), "bonjour"), info = "get_deployment_app_logs() needs a valid type argument")
   # expect_is(get_deployment_app_logs(get_deployment_id_from_name(get_project_id_from_name("PROJECT_TESTU"), "APP_DEPLOYMENT_TESTU_R_1_128_1_FINE_GRAINED", "app"), "build"), "character", "get_deployment_app_logs() doesn't retrieve a character for build logs of a deployed app")

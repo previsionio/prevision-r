@@ -4,14 +4,10 @@
 \alias{create_dataframe_from_dataset}
 \title{Create a dataframe from a dataset_id.}
 \usage{
-create_dataframe_from_dataset(dataset_id, path = getwd(), is_folder = FALSE)
+create_dataframe_from_dataset(dataset_id)
 }
 \arguments{
 \item{dataset_id}{dataset id.}
-
-\item{path}{path (without / at the end) were to write the downloaded dataset.}
-
-\item{is_folder}{TRUE if it's a folder dataset, FALSE (by default) otherwise.}
 }
 \value{
 data.frame - a R dataframe matching the dataset.

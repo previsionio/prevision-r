@@ -112,55 +112,6 @@ get_pipeline_id_from_name <- function(project_id, name, type) {
   stop("there is no pipeline matching the name ", name, " for the type ", type)
 }
 
-create_pipeline <- function(project_id, type, name, git_url = NULL, git_branch = NULL, repository_name = NULL, broker = NULL, config_dataset_id = NULL, nodes = NULL, pipeline_template_id = NULL, pipeline_parameters = NULL) {
-  #' [BETA] Create a new pipeline of a supported type among "component", "template", "run".
-  #'
-  #' @param project_id id of the project, can be obtained with get_projects().
-  #' @param type type of the pipeline to be retrieved among "component", "template", "run".
-  #' @param name name of the pipeline.
-  #' @param git_url url of the git repository than contains the component.
-  #' @param git_branch branch of the git repository than contains the component.
-  #' @param repository_name name of the git repository that contains the component.
-  #' @param broker broker of the git repository that contains the component.
-  #' @param config_dataset_id only for templates.
-  #' @param nodes list, only for templates.
-  #' @param pipeline_template_id id of the pipeline template to add for a run.
-  #' @param pipeline_parameters list of parameters for the run.
-  #'
-  #' @return list - parsed content of the pipeline.
-  #'
-  #' @import httr
-  #'
-  #' @export
-
-  test_pipeline_type(type)
-
-  params <- list(name = name,
-                 git_branch = git_branch,
-                 git_url = git_url,
-                 repository_name = repository_name,
-                 broker = broker,
-                 config_dataset_id = config_dataset_id,
-                 nodes = nodes,
-                 pipeline_template_id = pipeline_template_id,
-                 pipeline_parameters = pipeline_parameters)
-
-  params <- params[!sapply(params, is.null)]
-
-  if(type == "component") {resp <- pio_request(paste0('/projects/', project_id, '/pipeline-components/'), POST, params)}
-  if(type == "template")  {resp <- pio_request(paste0('/projects/', project_id, '/pipeline-templates/'), POST, params)}
-  if(type == "run")       {resp <- pio_request(paste0('/projects/', project_id, '/pipeline-scheduled-runs/'), POST, params)}
-
-  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
-  if(resp$status_code == 200) {
-    message("pipeline ", name, " created")
-    get_pipeline_info(resp_parsed$`_id`, type)
-  }
-  else {
-    stop("failed to create pipeline ", name, " - ", resp$status_code, ":", resp_parsed)
-  }
-}
-
 delete_pipeline <- function(pipeline_id, type) {
   #' Delete an existing pipeline
   #'
@@ -191,7 +142,7 @@ delete_pipeline <- function(pipeline_id, type) {
 }
 
 create_pipeline_trigger <- function(pipeline_id) {
-  #' [BETA] Trigger an existing pipeline run.
+  #' Trigger an existing pipeline run.
   #'
   #' @param pipeline_id id of the pipeline run to trigger, can be obtained with get_pipelines().
   #'

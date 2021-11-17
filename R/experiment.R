@@ -430,7 +430,7 @@ get_prediction <- function(prediction_id, prediction_type, time_out = 3600, wait
 
     # IF STATUS 404 SLEEP AND RETRY
     else if(resp$status_code == 404 | resp$status_code == 400) {
-      message("Prediction is beeing computed...")
+      message("Prediction is being computed...")
       Sys.sleep(wait_time)
       attempt = attempt + 1
     }

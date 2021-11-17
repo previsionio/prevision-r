@@ -2,7 +2,7 @@
 % Please edit documentation in R/deployment.R
 \name{delete_deployment}
 \alias{delete_deployment}
-\title{Delete an existing deployment}
+\title{Delete an existing deployment.}
 \usage{
 delete_deployment(deployment_id)
 }
@@ -13,5 +13,5 @@ delete_deployment(deployment_id)
 integer - 204 on success.
 }
 \description{
-Delete an existing deployment
+Delete an existing deployment.
 }

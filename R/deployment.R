@@ -99,7 +99,7 @@ get_deployment_id_from_name <- function(project_id, name, type) {
 }
 
 create_deployment_model <- function(project_id, name, experiment_id, main_model_experiment_version_id, challenger_model_experiment_version_id = NULL, access_type = c("fine_grained", "private", "public"), description = NULL, main_model_id, challenger_model_id = NULL) {
-  #' [BETA] Create a new deployment for a model.
+  #' Create a new deployment for a model.
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #' @param name name of the deployment.
@@ -140,54 +140,8 @@ create_deployment_model <- function(project_id, name, experiment_id, main_model_
   }
 }
 
-create_deployment_app <- function(project_id, name, git_url, git_branch, type, broker, app_cpu = 1, app_ram = "128Mi", app_replica_count = 1, env_vars = list(), access_type = "fine_grained", description = NULL) {
-  #' [BETA] Create a new deployment for an application.
-  #'
-  #' @param project_id id of the project, can be obtained with get_projects().
-  #' @param name name of the deployment.
-  #' @param git_url url of the git repository than contains the app to be deployed.
-  #' @param git_branch branch of the git repository than contains the app to be deployed.
-  #' @param type type of language in which the app is written among "r", "python" or "node".
-  #' @param broker broker of the git repository (gitlab, github) that contains the application.
-  #' @param app_cpu number of CPU that is allocated for the application deployment (1 default, 2 or 4)
-  #' @param app_ram quantity of RAM that is allocated for the application deployment (128Mi default, 256Mi, 512Mi, 1Gi, 2Gi, 4Gi or 8Gi)
-  #' @param app_replica_count number of replica allocated for the application deployment (1 default, 2, 3, 4, 5, 6, 7, 8, 9 or 10)
-  #' @param env_vars list of environment variables (optional).
-  #' @param access_type type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).
-  #' @param description description of the deployment (optional).
-  #'
-  #' @return list - parsed content of the deployment.
-  #'
-  #' @import httr
-  #'
-  #' @export
-
-  params <- list(name = name,
-                 git_url = git_url,
-                 git_branch = git_branch,
-                 type = type,
-                 broker = broker,
-                 app_cpu = app_cpu,
-                 app_ram = app_ram,
-                 app_replica_count = app_replica_count,
-                 env_vars = env_vars,
-                 access_type = access_type,
-                 description = description)
-
-  resp <- pio_request(paste0('/projects/', project_id, '/application-deployments/'), POST, params)
-  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
-
-  if(resp$status_code == 200) {
-    message("deployment ", name, " created")
-    get_deployment_info(resp_parsed$`_id`)
-  }
-  else {
-    stop("failed to create deployment ", name, " - ", resp$status_code, ":", resp_parsed)
-  }
-}
-
 delete_deployment <- function(deployment_id) {
-  #' Delete an existing deployment
+  #' Delete an existing deployment.
   #'
   #' @param deployment_id id of the deployment, can be obtained with get_deployments().
   #'

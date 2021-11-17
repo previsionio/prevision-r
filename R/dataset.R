@@ -224,12 +224,10 @@ create_dataset_from_datasource <- function(project_id, dataset_name, datasource_
   }
 }
 
-create_dataframe_from_dataset <- function(dataset_id, path = getwd(), is_folder = FALSE) {
+create_dataframe_from_dataset <- function(dataset_id) {
   #' Create a dataframe from a dataset_id.
   #'
   #' @param dataset_id dataset id.
-  #' @param path path (without / at the end) were to write the downloaded dataset.
-  #' @param is_folder TRUE if it's a folder dataset, FALSE (by default) otherwise.
   #'
   #' @return data.frame - a R dataframe matching the dataset.
   #'
@@ -238,30 +236,19 @@ create_dataframe_from_dataset <- function(dataset_id, path = getwd(), is_folder 
   #'
   #' @export
 
-  dataset_name <- get_dataset_info(dataset_id)$name
-  file_name <- paste0(dataset_name, ".zip")
-  complete_path <- paste0(path, "/", file_name)
+  temp <- tempfile()
 
-  if(is_folder) {
-    resp <- pio_download(paste0('/image-folders/', dataset_id, "/download"), complete_path)
-  }
-  else {
-    resp <- pio_download(paste0('/datasets/', dataset_id, "/download"), complete_path)
-  }
+  resp <- pio_download(paste0('/datasets/', dataset_id, "/download"), temp)
 
   if(resp$status_code == 200) {
-    message("dataset ", dataset_id, " retrieved - ", complete_path)
-    path <- complete_path
+    message("dataset ", dataset_id, " retrieved - ", temp)
+    data <- fread(unzip(temp))
+    file.remove(unzip(temp))
+    data
   }
   else {
-    stop("failed to create datafram from dataset ", dataset_id, " - ", complete_path)
+    stop("failed to create datafram from dataset ", dataset_id, " - ", temp)
   }
-
-  unzip(path, overwrite = TRUE, exdir = dataset_id)
-  unlink(path)
-  data <- fread(paste0(dataset_id, "/", list.files(dataset_id)))
-  unlink(paste0(dataset_id), recursive = TRUE)
-  data
 }
 
 create_dataset_embedding <- function(dataset_id) {
