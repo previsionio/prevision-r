@@ -1,5 +1,15 @@
 # NEWS
 
+## 11.3.4
+
+Release date - TBD
+
+Cosmetic:
+  - Version bump to 11.3.4
+
+Features:
+  - Improvement of file download and zip extraction that will be done un /tmp directory
+
 ## 11.3.3
 
 Release date - 16th November 2021

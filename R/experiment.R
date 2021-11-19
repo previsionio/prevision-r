@@ -255,19 +255,19 @@ get_model_feature_importance <- function(model_id, mode = "raw") {
     stop(mode, "should be equal to \"raw\" or \"engineered\"")
   }
 
-  temp <- tempfile()
+  temp_file <- tempfile()
 
   if(mode == "raw") {
-    resp <- pio_download(paste0('/models/', model_id, '/features-importances/download'), temp)
+    resp <- pio_download(paste0('/models/', model_id, '/features-importances/download'), temp_file)
   }
 
   if(mode == "engineered") {
-    resp <- pio_download(paste0('/models/', model_id, '/features-engineering-importances/download'), temp)
+    resp <- pio_download(paste0('/models/', model_id, '/features-engineering-importances/download'), temp_file)
   }
 
   if(resp$status_code == 200) {
-    data <- fread(unzip(temp))
-    file.remove(unzip(temp))
+    file <- unzip(temp_file, overwrite = T, exdir = tempdir())
+    data <- fread(file)
     data
   }
   else {
@@ -417,14 +417,14 @@ get_prediction <- function(prediction_id, prediction_type, time_out = 3600, wait
 
   attempt = 0
   while(attempt < time_out/wait_time) {
-    temp <- tempfile()
-    resp <- pio_download(paste0('/', prediction_type, '-predictions/', prediction_id, '/download'), temp)
+    temp_file <- tempfile()
+    resp <- pio_download(paste0('/', prediction_type, '-predictions/', prediction_id, '/download'), temp_file)
 
     # IF STATUS 200 RETURN PREDICTION
     if(resp$status_code == 200) {
-      data <- fread(unzip(temp))
-      file.remove(unzip(temp))
-      file.remove(temp)
+      file <- unzip(temp_file, overwrite = T, exdir = tempdir())
+      data <- fread(file)
+      data
       return(data)
     }
 
@@ -780,13 +780,12 @@ get_model_cv <- function(model_id) {
   #'
   #' @export
 
-  temp <- tempfile()
-  resp <- pio_download(paste0('/models/', model_id, '/cross-validation/download'), temp)
+  temp_file <- tempfile()
+  resp <- pio_download(paste0('/models/', model_id, '/cross-validation/download'), temp_file)
 
   if(resp$status_code == 200) {
-    data <- fread(unzip(temp))
-    file.remove(unzip(temp))
-    file.remove(temp)
+    file <- unzip(temp_file, overwrite = T, exdir = tempdir())
+    data <- fread(file)
     data
   } else {
     stop("can't retrieve CV file for model ", model_id)

@@ -236,18 +236,18 @@ create_dataframe_from_dataset <- function(dataset_id) {
   #'
   #' @export
 
-  temp <- tempfile()
+  temp_file <- tempfile()
 
-  resp <- pio_download(paste0('/datasets/', dataset_id, "/download"), temp)
+  resp <- pio_download(paste0('/datasets/', dataset_id, "/download"), temp_file)
 
   if(resp$status_code == 200) {
-    message("dataset ", dataset_id, " retrieved - ", temp)
-    data <- fread(unzip(temp))
-    file.remove(unzip(temp))
+    message("dataset ", dataset_id, " retrieved - ", temp_file)
+    file <- unzip(temp_file, overwrite = T, exdir = tempdir())
+    data <- fread(file)
     data
   }
   else {
-    stop("failed to create datafram from dataset ", dataset_id, " - ", temp)
+    stop("failed to create datafram from dataset ", dataset_id, " - ", temp_file)
   }
 }
 
