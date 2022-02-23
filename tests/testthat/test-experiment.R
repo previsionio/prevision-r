@@ -247,10 +247,8 @@ test_that("create_prediction", {
                                                                     "DATASET_TESTU_TS")), "list", "create_prediction() doesn't retrieve a list for EXPERIMENT_PREVISION_TIMESERIES_TESTU")
   expect_is(create_prediction(experiment_version_id = get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
                                                                                                             "EXPERIMENT_PREVISION_TEXTSIM_TESTU")),
-                              model_id = get_best_model_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                                       "EXPERIMENT_PREVISION_TEXTSIM_TESTU")),
                               queries_dataset_id = get_dataset_id_from_name(get_project_id_from_name("PROJECT_TESTU"),
-                                                                            "DATASET_TEXT_SIM_QUERY_TESTU"),
+                                                                            "DATASET_TESTU_TEXTSIM_QUERIES"),
                               queries_dataset_content_column = "query",
                               top_k = 10), "list", "create_prediction() doesn't retrieve a list for EXPERIMENT_PREVISION_TEXTSIM_TESTU")
   expect_is(create_prediction(experiment_version_id = get_experiment_version_id(get_experiment_id_from_name(get_project_id_from_name("PROJECT_TESTU"),

@@ -10,7 +10,8 @@ create_deployment_model(
   experiment_id,
   main_model_experiment_version_id,
   challenger_model_experiment_version_id = NULL,
-  access_type = c("fine_grained", "private", "public"),
+  access_type = c("fine_grained"),
+  type_violation_policy = c("best_effort"),
   description = NULL,
   main_model_id,
   challenger_model_id = NULL
@@ -28,6 +29,8 @@ create_deployment_model(
 \item{challenger_model_experiment_version_id}{id of the challenger experiment_version to deploy, can be obtained with get_experiment_version_id().}
 
 \item{access_type}{type of access of the deployment among "fine_grained" (project defined, default), "private" (instance) or "public" (everyone).}
+
+\item{type_violation_policy}{handling of type violation when making predictions among "best_effort" (default) or "strict" (stops the prediction if there is a type violation).}
 
 \item{description}{description of the deployment.}
 

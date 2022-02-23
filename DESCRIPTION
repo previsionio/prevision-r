@@ -1,7 +1,7 @@
 Package: previsionio
 Type: Package
 Title: 'Prevision.io' R SDK
-Version: 11.3.4
+Version: 11.6.0
 Authors@R:
     c(person(given = "Florian",
              family = "Laroumagne",

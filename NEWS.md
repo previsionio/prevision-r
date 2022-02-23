@@ -1,14 +1,27 @@
 # NEWS
 
+## 11.6.0
+
+Release date - 1st March 2022
+
+Cosmetic:
+  - Version bump to 11.6.0
+
+Bug fix:
+  - Updated unitary tests for text similarity
+
+Features:
+  - Added support of type violation when deploying an experiment
+
 ## 11.3.4
 
-Release date - TBD
+Release date - 2nd December 2021
 
 Cosmetic:
   - Version bump to 11.3.4
 
 Features:
-  - Improvement of file download and zip extraction that will be done un /tmp directory
+  - Improvement of file download and zip extraction that will be done in /tmp directory
 
 ## 11.3.3
 
