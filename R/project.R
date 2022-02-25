@@ -249,3 +249,145 @@ delete_project_user <- function(project_id, user_id) {
     stop("failed to delete user ", user_id, " from project ", project_id, " - ", resp$status_code, ":", resp_parsed$message)
   }
 }
+
+get_contact_points <- function(project_id) {
+  #' Get information of all contact points available for a given project_id.
+  #'
+  #' @param project_id id of the project, can be obtained with get_projects().
+  #'
+  #' @return list - parsed content of all contact points for the supplied project_id.
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  page = 1
+  contact_points = c()
+
+  # Looping over page to get all information
+  while(T) {
+    resp <- pio_request(paste0('/projects/', project_id, '/contact-points?page=', page), GET)
+    resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+    if(resp$status_code == 200) {
+      # Store information
+      contact_points = c(contact_points, resp_parsed[["items"]])
+      page = page + 1
+
+      # Stop if next page == FALSE
+      if(resp_parsed[["metaData"]]$nextPage==FALSE) {
+        break
+      }
+    }
+    else {
+      stop("can't retrieve contact points list - ", resp$status_code, ":", resp_parsed)
+    }
+  }
+  contact_points
+}
+
+get_contact_point_info <- function(contact_point_id) {
+  #' Get a contact point information from its contact_point_id.
+  #'
+  #' @param contact_point_id id of the contact point, can be obtained with get_contact_points().
+  #'
+  #' @return list - information of the contact point.
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/contact-points/', contact_point_id), GET)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    resp_parsed
+  }
+  else {
+    stop("can't retrieve information from contact point ", contact_point_id, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+create_contact_point <- function(project_id, type, name, addresses = NULL, webhook_url = NULL) {
+  #' Create a new contact point of a supported type (among: "email", "slack").
+  #'
+  #' @param project_id id of the project, can be obtained with get_projects().
+  #' @param type contact point type among "email" or "slack".
+  #' @param name contact point name.
+  #' @param addresses contact point addresses.
+  #' @param webhook_url contact point webhook_url.
+  #'
+  #' @return list - parsed content of the contact point.
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  # CHECK THAT CONTACT POINT TYPE MATCH AVAILABLE CHOICES
+  supported_type = c("email", "slack")
+  if(!(type %in% supported_type)) {
+    stop("contact point type ", type, " is not in supported types : ", supported_type)
+  }
+
+  params <- list(type = type,
+                 name = name,
+                 addresses = addresses,
+                 webhook_url = webhook_url)
+
+  params <- params[!sapply(params, is.null)]
+
+  resp <- pio_request(paste0('/projects/', project_id, '/contact-points'), POST, params)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 200) {
+    message("contact point ", name, " created")
+    get_contact_point_info(resp_parsed$`_id`)
+  }
+  else {
+    stop("failed to create contact point ", name, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+delete_contact_point <- function(contact_point_id) {
+  #' Delete an existing contact_point
+  #'
+  #' @param contact_point_id id of the contact point to be deleted, can be obtained with get_contact_points().
+  #'
+  #' @return integer - 204 on success.
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/contact-points/', contact_point_id), DELETE)
+  resp_parsed <- content(resp, 'parsed', encoding = "UTF-8")
+
+  if(resp$status_code == 204) {
+    message("Contact point ", contact_point_id, " deleted")
+    resp$status_code
+  }
+  else {
+    stop("failed to delete contact point ", contact_point_id, " - ", resp$status_code, ":", resp_parsed)
+  }
+}
+
+test_contact_point <- function(contact_point_id) {
+  #' Test an existing contact point
+  #'
+  #' @param contact_point_id id of the contact point to be tested, can be obtained with get_contact_points().
+  #'
+  #' @return integer - 200 on success.
+  #'
+  #' @import httr
+  #'
+  #' @export
+
+  resp <- pio_request(paste0('/contact-points/', contact_point_id, "/test"), POST)
+
+  if(resp$status_code == 200) {
+    message("test of contact point ", contact_point_id, " successful")
+    resp$status_code
+  } else {
+    stop("failed to test the contact point ", contact_point_id, " - ", resp$status_code)
+  }
+}

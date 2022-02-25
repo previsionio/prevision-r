@@ -10,7 +10,7 @@ get_connectors(project_id)
 \item{project_id}{id of the project, can be obtained with get_projects().}
 }
 \value{
-list - parsed content of all connectors for the suppled project_id.
+list - parsed content of all connectors for the supplied project_id.
 }
 \description{
 Get information of all connectors available for a given project_id.

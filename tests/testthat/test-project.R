@@ -53,3 +53,18 @@ test_that("delete_project_user", {
   expect(delete_project_user(project_id = get_project_id_from_name("PROJECT_TESTU"),
                              user_id = get_project_users(get_project_id_from_name("PROJECT_TESTU"))[[2]]$id) == 200, "delete_project_user() doesn't retrieve a 200 status code")
 })
+
+test_that("create_contact_point", {
+  expect_is(create_contact_point(project_id = get_project_id_from_name("PROJECT_TESTU"),
+                                 type = "email",
+                                 name = "CONTACT_POINT_EMAIL_TESTU",
+                                 addresses = list("florian.laroumagne@prevision.io")), "list", "create_contact_point() doesn't retrieve a list")
+})
+
+test_that("test_contact_point", {
+  expect(test_contact_point(get_contact_points(get_project_id_from_name("PROJECT_TESTU"))[[1]]$"_id") == 200, "test_contact_point() doesn't retrieve a 200 status code")
+})
+
+test_that("delete_contact_point", {
+  expect(delete_contact_point(get_contact_points(get_project_id_from_name("PROJECT_TESTU"))[[1]]$"_id") ==  204, "delete_contact_point() doesn't retrieve a 204 status code")
+})

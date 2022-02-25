@@ -3,7 +3,7 @@ get_connectors <- function(project_id) {
   #'
   #' @param project_id id of the project, can be obtained with get_projects().
   #'
-  #' @return list - parsed content of all connectors for the suppled project_id.
+  #' @return list - parsed content of all connectors for the supplied project_id.
   #'
   #' @import httr
   #'
