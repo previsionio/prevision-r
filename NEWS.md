@@ -1,17 +1,18 @@
 # NEWS
 
-## 11.6.0
+## 11.7.0
 
-Release date - 1st March 2022
+Release date - XX March 2022
 
 Cosmetic:
-  - Version bump to 11.6.0
+  - Version bump to 11.7.0
 
 Bug fix:
   - Updated unitary tests for text similarity
 
 Features:
   - Added support of type violation when deploying an experiment
+  - Added support of contact points
 
 ## 11.3.4
 

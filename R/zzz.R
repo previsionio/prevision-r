@@ -1,3 +1,3 @@
 .onAttach <- function(...) {
-  packageStartupMessage("Welcome to Prevision.io R SDK [11.6.0]")
+  packageStartupMessage("Welcome to Prevision.io R SDK [11.7.0]")
 }
