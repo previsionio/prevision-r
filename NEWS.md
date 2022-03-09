@@ -2,7 +2,7 @@
 
 ## 11.7.0
 
-Release date - XX March 2022
+Release date - 11 March 2022
 
 Cosmetic:
   - Version bump to 11.7.0
@@ -13,6 +13,7 @@ Bug fix:
 Features:
   - Added support of type violation when deploying an experiment
   - Added support of contact points
+  - Added first level of support for getting info about deployed model's alerts
 
 ## 11.3.4
 

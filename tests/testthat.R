@@ -1,3 +1,4 @@
+library(devtools)
 library(testthat)
 library(data.table)
 library(previsionio)
@@ -14,6 +15,7 @@ library(previsionio)
 # test_active_file(paste0(wd, "/tests/testthat/test-experiment.R"))
 # test_active_file(paste0(wd, "/tests/testthat/test-pipeline.R"))
 # test_active_file(paste0(wd, "/tests/testthat/test-deployment.R"))
+# test_active_file(paste0(wd, "/tests/testthat/test-deployment-alert.R"))
 # test_active_file(paste0(wd, "/tests/testthat/test-exporter.R"))
 
 # test_active_file(paste0(wd, "/tests/testthat/test-exporter-delete.R"))

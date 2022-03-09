@@ -83,7 +83,7 @@ get_deployment_id_from_name <- function(project_id, name, type) {
   #' @param name name of the deployment we are searching its id from.
   #' @param type type of the deployment to be retrieved among "model" or "app".
   #'
-  #' @return character - id of the connector if found.
+  #' @return character - id of the deployment if found.
   #'
   #' @import httr
   #'

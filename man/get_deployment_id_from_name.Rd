@@ -14,7 +14,7 @@ get_deployment_id_from_name(project_id, name, type)
 \item{type}{type of the deployment to be retrieved among "model" or "app".}
 }
 \value{
-character - id of the connector if found.
+character - id of the deployment if found.
 }
 \description{
 Get a deployment_id from a name and type for a given project_id. If duplicated name, the first deployment_id that match it is retrieved.
